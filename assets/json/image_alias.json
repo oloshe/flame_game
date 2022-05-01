@@ -1,0 +1,80 @@
+{
+  "player": {
+    "path": "characters/player.png",
+    "srcSize": [48, 48]
+  },
+  "skeleton": {
+    "path": "characters/skeleton.png"
+  },
+  "slime": {
+    "path": "characters/slime.png"
+  },
+  "rockInWaterA": {
+    "path": "objects/rock_in_water_a/rock_in_water_a-sheet.png"
+  },
+  "chest_01": {
+    "path": "objects/chest_01.png"
+  },
+  "chest_02": {
+    "path": "objects/chest_02.png"
+  },
+  "objects": {
+    "path": "objects/objects.png",
+    "srcSize": [16, 16]
+  },
+  "carpet": {
+    "path": "tiles/floors/carpet.png"
+  },
+  "wooden": {
+    "path": "tiles/floors/wooden.png"
+  },
+  "walls": {
+    "path": "tiles/walls/walls.png"
+  },
+  "woodenDoor": {
+    "path": "tiles/walls/wooden_door.png"
+  },
+  "woodenDoorB": {
+    "path": "tiles/walls/wooden_door_b.png"
+  },
+  "decor_8": {
+    "path": "tiles/decor_8x8.png"
+  },
+  "decor_16": {
+    "path": "tiles/decor_16x16.png"
+  },
+  "fences": {
+    "path": "tiles/fences.png"
+  },
+  "grass": {
+    "path": "tiles/grass.png"
+  },
+  "plains": {
+    "path": "tiles/plains.png",
+    "srcSize": [16, 16]
+  },
+  "water1": {
+    "path": "tiles/water1.png"
+  },
+  "water2": {
+    "path": "tiles/water2.png"
+  },
+  "water3": {
+    "path": "tiles/water3.png"
+  },
+  "water4": {
+    "path": "tiles/water4.png"
+  },
+  "water5": {
+    "path": "tiles/water5.png"
+  },
+  "water6": {
+    "path": "tiles/water6.png"
+  },
+  "waterDecorations": {
+    "path": "tiles/water_decorations.png"
+  },
+  "joystick": {
+    "path": "joystick.png"
+  }
+}

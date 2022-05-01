@@ -1,0 +1,26 @@
+{
+  "player": {
+    "pic": "player",
+    "enum": "PlayerStatus",
+    "animations": {
+      "idle": {
+        "row": 0,
+        "stepTime": 0.2
+      },
+      "running": {
+        "row": 1,
+        "stepTime": 0.2
+      },
+      "attack": {
+        "row": 2,
+        "to": 3,
+        "stepTime": 0.2
+      },
+      "die": {
+        "row": 4,
+        "to": 4,
+        "stepTime": 0.2
+      }
+    }
+  }
+}

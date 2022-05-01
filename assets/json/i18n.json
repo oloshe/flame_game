@@ -1,0 +1,35 @@
+{
+  "lang": ["zh-CN", "en-US"],
+  "zh-CN": {
+    "grass": "草地",
+    "sign": "告示牌",
+    "barrel": "水桶",
+    "barrel_open": "水桶(开)",
+    "plains": "地形",
+    "modify": "修改",
+    "modifySuccess": "修改成功!",
+    "formatError": "输入格式错误",
+    "layer1": "图层1",
+    "newLayer": "新图层",
+    "width": "宽",
+    "height": "高",
+    "widthMin": "不能这么窄哦，宽要大于$width",
+    "heightMin": "不能这么窄哦，高要大于$height"
+  },
+  "en-US": {
+    "grass": "grass",
+    "sign": "sign",
+    "barrel": "barrel",
+    "barrel_open": "barrel(open)",
+    "plains": "plains",
+    "modify": "modify",
+    "modifySuccess": "modify successfully!",
+    "formatError": "incorrect input format",
+    "layer1": "Layer 1",
+    "newLayer": "New Layer",
+    "width": "width",
+    "height": "height",
+    "widthMin": "The width must greater than $width",
+    "heightMin": "The height must greater than $height"
+  }
+}
