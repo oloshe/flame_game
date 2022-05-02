@@ -38,11 +38,11 @@ class MyApp extends StatelessWidget {
           builder: (context, _, __) {
             return MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: const MapEditor(),
               navigatorKey: navKey,
-              // home: GameWidget(
-              //   game: MyGame(),
-              // )
+              // home: const MapEditor(),
+              home: GameWidget(
+                game: MyGame(),
+              )
             );
           },
         );

@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flame/components.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
+import 'package:game/common/provider_helper.dart';
 import 'package:game/pages/map_editor/map_painter.dart';
 import 'package:game/pages/map_editor/tile_painter.dart';
 import 'package:game/widgets/button.dart';
@@ -47,11 +51,7 @@ class MapEditor extends StatelessWidget {
                           child: Row(
                             children: [
                               _buildGrid(context),
-                              const VerticalDivider(
-                                color: Color(0xff333841),
-                                width: 2,
-                              ),
-                              _buildHeader(context),
+                              const _SidePanel(),
                             ],
                           ),
                         ),
@@ -134,148 +134,309 @@ class MapEditor extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    const inputBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xffaab2bf)),
-    );
-    return SizedBox(
-      width: 300,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Builder(builder: (context) {
-                String inputW =
-                    context.read<MapEditorProvider>().width.toString();
-                String inputH =
-                    context.read<MapEditorProvider>().height.toString();
-                return Row(
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        onChanged: (val) => inputW = val,
-                        initialValue: inputW,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Color(0xffa0a7b4)),
-                        decoration: const InputDecoration(
-                            isCollapsed: true,
-                            contentPadding: EdgeInsets.all(5),
-                            fillColor: Color(0xff2c313c),
-                            filled: true,
-                            border: inputBorder,
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 10,
-                            )).copyWith(hintText: 'width'.langWatch),
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('X', style: TextStyle(color: Colors.white)),
-                    ),
-                    SizedBox(
-                      width: 60,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        onChanged: (val) => inputH = val,
-                        initialValue: inputH,
-                        style: const TextStyle(color: Color(0xffa0a7b4)),
-                        decoration: const InputDecoration(
-                            filled: true,
-                            isCollapsed: true,
-                            contentPadding: EdgeInsets.all(5),
-                            fillColor: Color(0xff2c313c),
-                            border: inputBorder,
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 10,
-                            )).copyWith(hintText: 'height'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                        child: MainButton(
-                      text: 'modify'.langWatch,
-                      onTap: () {
-                        int? w = int.tryParse(inputW);
-                        int? h = int.tryParse(inputH);
-                        if (w != null && h != null) {
-                          if (w < minWidth) {
-                            Fluttertoast.showToast(
-                              msg: 'widthMin'.lang.args('width', minWidth),
-                            );
-                            return;
-                          }
-                          if (h < minHeight) {
-                            Fluttertoast.showToast(
-                              msg: 'heightMin'.lang.args('height', minHeight),
-                            );
-                            return;
-                          }
-                          context.read<MapEditorProvider>().setSize(w, h);
-                          Fluttertoast.showToast(msg: 'modifySuccess'.lang);
-                        } else {
-                          Fluttertoast.showToast(msg: 'formatError'.lang);
-                        }
-                      },
-                    )),
-                  ],
-                );
-              }),
-            ),
-            const SizedBox(height: 5),
-            const SizedBox(height: 5),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: _buildTileSet(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTileSet() {
-    final list = R.getAllTiles();
-    Widget func(MapEntry<int, RTileData> e) {
-      return Builder(builder: (context) {
-        return InkWell(
-          onTap: () {
-            context.read<MapEditorProvider>().setTileId(e.key);
-          },
-          child: Selector<MapEditorProvider, bool>(
-            selector: (_, p) => p.currTileId == e.key,
-            builder: (context, isSelected, child) {
-              return RepaintBoundary(
-                child: CustomPaint(
-                  painter: TilePainter(isSelected, spriteCached[e.key]),
-                  size: const Size.square(len2 + 2),
-                ),
-              );
-            },
-          ),
-        );
-      });
-    }
-
-    return Wrap(
-      children: list.map(func).toList(growable: false),
-    );
-  }
-
   Future<void> loadAllSprite() async {
     final list = R.getAllTiles();
     for (var item in list) {
       final sprite = await item.value.getSprite();
       spriteCached[item.key] = sprite;
     }
+  }
+}
+
+class _SidePanel extends StatelessWidget {
+  const _SidePanel({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const inputBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xffaab2bf)),
+    );
+    return VMProvider<bool>(
+        create: () => false,
+        builder: (context) {
+          return VMProvider<double>(
+            create: () => 300,
+            builder: (context) {
+              const minWidth = 280;
+              final maxWidth = MediaQuery.of(context).size.width * 0.7;
+              return Row(
+                children: [
+                  GestureDetector(
+                    onPanDown: (_) {
+                      context.vmSet<bool>(true);
+                    },
+                    onPanUpdate: (details) {
+                      final newVal =
+                          context.vmData<double>() - details.delta.dx;
+                      if (newVal >= minWidth && newVal <= maxWidth) {
+                        context.vmSet<double>(newVal);
+                      }
+                    },
+                    onPanEnd: (_) {
+                      context.vmSet<bool>(false);
+                    },
+                    behavior: HitTestBehavior.translucent,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                      ),
+                      child: SizedBox(
+                          width: 5,
+                          height: double.infinity,
+                          child: VMObserver<bool>(
+                            builder: (resizing) {
+                              return AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  color: resizing
+                                      ? const Color(0xff528bff)
+                                      : const Color(0xff323845),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Positioned(
+                                        left: -5,
+                                        right: -5,
+                                        child: Container(
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                      ),
+                                      const Positioned(
+                                        left: -5,
+                                        right: -5,
+                                        child: Icon(
+                                          Icons.drag_handle,
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            },
+                          )),
+                    ),
+                  ),
+                  Consumer<ValueModel<double>>(
+                    builder: (context, width, child) {
+                      print(width.data);
+                      return SizedBox(
+                        width: context.vmData<double>(),
+                        child: child,
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Builder(builder: (context) {
+                              String inputW = context
+                                  .read<MapEditorProvider>()
+                                  .width
+                                  .toString();
+                              String inputH = context
+                                  .read<MapEditorProvider>()
+                                  .height
+                                  .toString();
+                              return Row(
+                                children: [
+                                  SizedBox(
+                                    width: 60,
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (val) => inputW = val,
+                                      initialValue: inputW,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          color: Color(0xffa0a7b4)),
+                                      decoration: const InputDecoration(
+                                              isCollapsed: true,
+                                              contentPadding: EdgeInsets.all(5),
+                                              fillColor: Color(0xff2c313c),
+                                              filled: true,
+                                              border: inputBorder,
+                                              hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 10,
+                                              ))
+                                          .copyWith(
+                                              hintText: 'width'.langWatch),
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text('X',
+                                        style: TextStyle(color: Colors.white)),
+                                  ),
+                                  SizedBox(
+                                    width: 60,
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.center,
+                                      onChanged: (val) => inputH = val,
+                                      initialValue: inputH,
+                                      style: const TextStyle(
+                                          color: Color(0xffa0a7b4)),
+                                      decoration: const InputDecoration(
+                                          filled: true,
+                                          isCollapsed: true,
+                                          contentPadding: EdgeInsets.all(5),
+                                          fillColor: Color(0xff2c313c),
+                                          border: inputBorder,
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 10,
+                                          )).copyWith(hintText: 'height'),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  MainButton(
+                                    text: 'modify'.langWatch,
+                                    onTap: () {
+                                      int? w = int.tryParse(inputW);
+                                      int? h = int.tryParse(inputH);
+                                      if (w != null && h != null) {
+                                        if (w < MapEditor.minWidth) {
+                                          Fluttertoast.showToast(
+                                            msg: 'widthMin'.lang.args(
+                                                'width', MapEditor.minWidth),
+                                          );
+                                          return;
+                                        }
+                                        if (h < MapEditor.minHeight) {
+                                          Fluttertoast.showToast(
+                                            msg: 'heightMin'.lang.args(
+                                                'height', MapEditor.minHeight),
+                                          );
+                                          return;
+                                        }
+                                        context
+                                            .read<MapEditorProvider>()
+                                            .setSize(w, h);
+                                        Fluttertoast.showToast(
+                                            msg: 'modifySuccess'.lang);
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: 'formatError'.lang);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            }),
+                          ),
+                          const SizedBox(height: 5),
+                          const SizedBox(height: 5),
+                          const Expanded(child: _TileSet()),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+  }
+}
+
+class _TileSet extends StatefulWidget {
+  const _TileSet({Key? key}) : super(key: key);
+
+  @override
+  State<_TileSet> createState() => _TileSetState();
+}
+
+class _TileSetState extends State<_TileSet> {
+  final Map<String, List<MapEntry<int, RTileData>>> typedListMap = {};
+  late String currTab;
+  @override
+  void initState() {
+    super.initState();
+    final list = R.getAllTiles();
+    for (final item in list) {
+      if (!typedListMap.containsKey(item.value.type)) {
+        typedListMap[item.value.type] = [];
+      }
+      typedListMap[item.value.type]!.add(item);
+    }
+    currTab = typedListMap.keys.first;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        DefaultTabController(
+          length: typedListMap.length,
+          child: SizedBox(
+            height: 30,
+            child: TabBar(
+              tabs: typedListMap.entries
+                  .map((e) => Text(e.key.langWatch))
+                  .toList(growable: false),
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorWeight: 3,
+              isScrollable: true,
+              onTap: (tab) {
+                setState(() {
+                  currTab =
+                      typedListMap.entries.toList(growable: false)[tab].key;
+                });
+              },
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Wrap(
+              spacing: 2,
+              runSpacing: 2,
+              children: typedListMap[currTab]!
+                  .map(_buildItem)
+                  .toList(growable: false),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildItem(MapEntry<int, RTileData> e) {
+    return Builder(builder: (context) {
+      return InkWell(
+        onTap: () {
+          context.read<MapEditorProvider>().setTileId(e.key);
+        },
+        child: Selector<MapEditorProvider, bool>(
+          selector: (_, p) => p.currTileId == e.key,
+          builder: (context, isSelected, child) {
+            return RepaintBoundary(
+              child: CustomPaint(
+                painter: TilePainter(
+                  selected: isSelected,
+                  sprite: MapEditor.spriteCached[e.key],
+                  tileSize: e.value.size,
+                ),
+                size: Size(
+                  MapEditor.len2 * e.value.size.x,
+                  MapEditor.len2 * e.value.size.y,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    });
   }
 }
 
@@ -312,6 +473,7 @@ class _FooterState extends State<Footer> {
               right: true,
               child: Row(
                 children: [
+                  const SizedBox(width: 10),
                   ConstrainedBox(
                     constraints: const BoxConstraints(
                       maxWidth: 400,
@@ -356,6 +518,23 @@ class _FooterState extends State<Footer> {
                     color: Color(0xff333841),
                     width: 1,
                   ),
+                  const Spacer(),
+                  MainButton(
+                    text: 'export',
+                    icon: const Icon(
+                      Icons.save,
+                      size: 15,
+                      color: Colors.white,
+                    ),
+                    gap: 2,
+                    onTap: () {
+                      final json = jsonEncode(
+                        context.read<MapEditorProvider>().rMap,
+                      );
+                      Clipboard.setData(ClipboardData(text: json));
+                    },
+                  ),
+                  const SizedBox(width: 10),
                 ],
               ),
             ),

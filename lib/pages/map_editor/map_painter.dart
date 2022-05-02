@@ -1,4 +1,3 @@
-
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
@@ -26,9 +25,13 @@ class MapPainter extends CustomPainter {
         if (id == RMapGlobal.emptyTile) {
           return;
         } else {
+          final tileData = R.getTileById(id);
           MapEditor.spriteCached[id]!.render(
             canvas,
-            size: Vector2(len, len),
+            size: Vector2(
+              len * (tileData?.size.x ?? 1),
+              len * (tileData?.size.y ?? 1),
+            ),
             position: Vector2(len * x, len * y),
           );
           // canvas.drawImage(image, offset, paint)

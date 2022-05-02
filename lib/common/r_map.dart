@@ -53,6 +53,14 @@ class RMap {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "width": width,
+      "height": height,
+      "layers": layers.map((key, value) => MapEntry(key, value.toJson())),
+    };
+  }
+
   Future<void> forEachLayer(LayerForEachFunction action) async {
     final sortedList = layers.entries.toList(growable: false);
     sortedList.sort((a, b) => a.value.index - b.value.index);
@@ -127,6 +135,18 @@ class RMapLayerData {
       fill: fill,
       matrix: matrix,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> result = {
+      "index": index,
+      "obj": obj,
+      "matrix": matrix,
+    };
+    if (fill != null) {
+      result["fill"] = fill;
+    }
+    return result;
   }
 }
 //

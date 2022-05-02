@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
@@ -38,25 +39,35 @@ class Player extends PositionComponent
   Future<void>? onLoad() async {
     await super.onLoad();
 
+    final _size = Vector2(48, 48) * MyMap.scaleFactor; // MyMap.base,
     statusComp = SpriteAnimationGroupComponent(
       animations: await R.createAnimations(PlayerStatus.values, R.animations.player),
       current: PlayerStatus.idle,
-      size: Vector2(100, 100), // MyMap.base,
+      size: _size,
       position: Vector2.zero(),
       anchor: Anchor.center,
     );
-
     add(statusComp);
-    add(RectangleHitbox());
+    size = _size;
+
+    final hitBoxPaint = BasicPalette.white.paint()
+      ..style = PaintingStyle.stroke;
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1, 1),
+          Vector2(1, 1),
+          Vector2(1, -1),
+          Vector2(-1, -1),
+        ],
+        parentSize: size,
+      )
+        ..paint = hitBoxPaint
+        ..renderShape = true,
+    );
   }
 
   final painter = Paint()..color= Colors.black12;
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    // canvas.drawRect(toAbsoluteRect(), painter);
-  }
 
   @override
   void update(double dt) {
@@ -80,9 +91,14 @@ class Player extends PositionComponent
   }
 
   @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+  }
+
+  @override
   void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollisionStart(intersectionPoints, other);
-    changeStatus(PlayerStatus.attack);
+    print('hit');
   }
 
   void changeStatus(PlayerStatus status) {

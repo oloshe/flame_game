@@ -2,10 +2,17 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:game/common.dart';
+import 'package:game/components/collision_sprite.dart';
 
 class MyMap extends PositionComponent {
+  /// 源地图的基本尺寸
   static final srcBase = Vector2(16, 16);
-  static final base = Vector2(30, 30);
+
+  /// 显示上缩放的倍数
+  static const scaleFactor = 30 / 16; // 1.875
+
+  /// 缩放之后的实际显示向量
+  static final base = srcBase * scaleFactor;
 
   @override
   Future<void>? onLoad() async {
@@ -36,8 +43,20 @@ class MyMap extends PositionComponent {
     RTileData tileData = R.getTileById(id)!;
     Vector2 spriteSize = tileData.size.clone()..multiply(base);
     Vector2 spritePosition = pos..multiply(base);
+    final sprite = await tileData.getSprite();
+    if (id == 201) {
+      final ret = CollisionSprite(
+        sprite,
+        size: spriteSize,
+        position: spritePosition,
+        priority: layer.index,
+      );
+      await add(ret);
+      print(ret.size);
+      return;
+    }
     await add(SpriteComponent(
-      sprite: await tileData.getSprite(),
+      sprite: sprite,
       size: spriteSize,
       position: spritePosition,
       priority: layer.index,

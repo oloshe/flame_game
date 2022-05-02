@@ -1,13 +1,13 @@
 import 'dart:math' as math;
 
 void main() {
-  var startId = 2;
-  var amountPerRow = 6;
-  var row = 12;
-  Set<int> jumpIndex = {22, 23, 46, 47, 70, 71};
-  const pic = 'plains';
-  const type = 'plains';
-  final amount = 12 * amountPerRow;
+  var startId = 137;
+  var amountPerRow = 8;
+  var row = 6;
+  Set<int> jumpIndex = {6, 7, 10, 14, 15, 20, 21, 22, 23, 28,29,30,31,38,39,46,47};
+  const pic = 'walls';
+  const type = 'walls';
+  final amount = row * amountPerRow;
   var ret = '';
   for(var i = 0; i < amount; i++) {
     if (jumpIndex.contains(i)) {

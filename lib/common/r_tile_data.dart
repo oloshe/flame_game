@@ -13,11 +13,15 @@ class RTileData {
   /// 尺寸 不是像素尺寸，是占用的格子
   final Vector2 size;
 
+  /// 分类
+  final String type;
+
   RTileData({
     // required this.id,
     required this.pic,
     required this.pos,
     required this.size,
+    required this.type
   });
 
   factory RTileData.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,7 @@ class RTileData {
       pic: json['pic'],
       pos: utils.vec2fromJsonDefault(json['pos']),
       size: Vector2(w.toDouble(), h.toDouble()),
+      type: json['type'],
     );
   }
 

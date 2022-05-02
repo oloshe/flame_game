@@ -23,13 +23,15 @@
     "srcSize": [16, 16]
   },
   "carpet": {
-    "path": "tiles/floors/carpet.png"
+    "path": "tiles/floors/carpet.png",
+    "srcSize": [16, 16]
   },
   "wooden": {
     "path": "tiles/floors/wooden.png"
   },
   "walls": {
-    "path": "tiles/walls/walls.png"
+    "path": "tiles/walls/walls.png",
+    "srcSize": [16, 16]
   },
   "woodenDoor": {
     "path": "tiles/walls/wooden_door.png"
@@ -41,10 +43,12 @@
     "path": "tiles/decor_8x8.png"
   },
   "decor_16": {
-    "path": "tiles/decor_16x16.png"
+    "path": "tiles/decor_16x16.png",
+    "srcSize": [16, 16]
   },
   "fences": {
-    "path": "tiles/fences.png"
+    "path": "tiles/fences.png",
+    "srcSize": [16, 16]
   },
   "grass": {
     "path": "tiles/grass.png"

@@ -27,10 +27,16 @@ class NormalButton extends StatelessWidget {
 class MainButton extends StatelessWidget {
   final VoidCallback? onTap;
   final String text;
+  final EdgeInsets? padding;
+  final Icon? icon;
+  final double? gap;
   const MainButton({
     Key? key,
     this.onTap,
     required this.text,
+    this.padding,
+    this.icon,
+    this.gap,
   }) : super(key: key);
 
   @override
@@ -40,9 +46,19 @@ class MainButton extends StatelessWidget {
         backgroundColor: const Color(0xff568af2),
         side: BorderSide.none,
         primary: const Color(0xFF13598E),
+        padding: padding,
       ),
       onPressed: onTap,
-      child: Text(text, style: const TextStyle(color: Colors.white)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null)
+            icon!,
+          if (icon != null && gap != null)
+            SizedBox(width: gap),
+          Text(text, style: const TextStyle(color: Colors.white))
+        ],
+      ),
     );
   }
 }
