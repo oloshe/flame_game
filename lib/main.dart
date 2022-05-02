@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game/common.dart';
 import 'package:game/game.dart';
-import 'package:game/pages/map_editor.dart';
+import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -24,6 +24,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navKey = GlobalKey();
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -35,9 +36,10 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return Consumer<I18N>(
           builder: (context, _, __) {
-            return const MaterialApp(
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: MapEditor(),
+              home: const MapEditor(),
+              navigatorKey: navKey,
               // home: GameWidget(
               //   game: MyGame(),
               // )

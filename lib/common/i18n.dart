@@ -36,9 +36,11 @@ extension I18NExt on String {
   String get lang {
     return i18n.dictionary[this] ?? this;
   }
-  String langWatch(material.BuildContext context) {
-    return context.watch<I18N>().dictionary[this] ?? this;
+
+  String get langWatch {
+    return MyApp.navKey.currentContext!.watch<I18N>().dictionary[this] ?? this;
   }
+
   String args(String arg, Object value) {
     return replaceAll('\$$arg', value.toString());
   }

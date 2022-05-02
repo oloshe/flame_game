@@ -90,14 +90,14 @@ class RMap {
 typedef LayerForEachFunction = FutureOr<void> Function(RMapLayerData);
 
 class RMapLayerData {
-  final String name;
+  // final String name;
   final int index;
   final int? fill;
   final bool obj;
   final List<List<int>> matrix;
 
   RMapLayerData({
-    required this.name,
+    // required this.name,
     required this.index,
     required this.fill,
     required this.obj,
@@ -121,7 +121,7 @@ class RMapLayerData {
     }
 
     return RMapLayerData(
-      name: json['name'],
+      // name: json['name'],
       index: json['index'],
       obj: json['obj'] ?? false,
       fill: fill,

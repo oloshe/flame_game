@@ -6,6 +6,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:game/main.dart';
 import 'package:provider/provider.dart';
 
 part 'common/r.dart';
