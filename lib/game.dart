@@ -15,22 +15,20 @@ class MyGame extends FlameGame with HasDraggables, HasCollisionDetection, FPSCou
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
-    // 地图
-    myMap = MyMap();
-    await add(myMap);
-
     // 轮盘
     final joystick = await createJoystick();
 
     // 玩家
     player = Player(joystick: joystick);
-    player.position = size / 2;
+
+    // 地图
+    myMap = MyMap(player);
+    await add(myMap);
 
     camera.followComponent(
       player,
       worldBounds: myMap.size.toRect(),
     );
-    await add(player);;
     add(joystick);
   }
 

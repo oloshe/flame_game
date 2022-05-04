@@ -806,68 +806,79 @@
     "pic": "objects",
     "type": "objects",
     "subType": "sign",
-    "pos": [0, 0]
+    "pos": [0, 0],
+    "hit": true
   },
   "201": {
     "pic": "objects",
     "type": "objects",
     "subType": "barrel",
-    "pos": [1, 0]
+    "pos": [1, 0],
+    "hit": true
   },
   "202": {
     "pic": "objects",
     "type": "objects",
     "subType": "box",
-    "pos": [2, 0]
+    "pos": [2, 0],
+    "hit": true
   },
   "203": {
     "pic": "objects",
     "type": "objects",
     "subType": "barrel",
-    "pos": [3, 0]
+    "pos": [3, 0],
+    "hit": true
   },
   "204": {
     "pic": "objects",
     "type": "objects",
     "subType": "barrel",
-    "pos": [4, 0]
+    "pos": [4, 0],
+    "hit": true
   },
   "205": {
     "pic": "objects",
     "type": "objects",
     "subType": "box",
-    "pos": [5, 0]
+    "pos": [5, 0],
+    "hit": true
   },
   "206": {
     "pic": "objects",
     "type": "objects",
     "subType": "tombstone",
-    "pos": [6, 0]
+    "pos": [6, 0],
+    "hit": true
   },
   "207": {
     "pic": "objects",
     "type": "objects",
     "subType": "skeleton",
-    "pos": [7, 0]
+    "pos": [7, 0],
+    "hit": true
   },
   "208": {
     "pic": "objects",
     "type": "objects",
     "subType": "skeleton",
-    "pos": [8, 0]
+    "pos": [8, 0],
+    "hit": true
   },
   "209": {
     "pic": "objects",
     "type": "objects",
     "subType": "table",
-    "pos": [9, 0]
+    "pos": [9, 0],
+    "hit": true
   },
   "210": {
     "pic": "objects",
     "type": "objects",
     "subType": "table",
     "pos": [10, 0],
-    "width": 2
+    "width": 2,
+    "hit": true
   },
   "211": {
     "pic": "objects",
@@ -879,44 +890,51 @@
     "pic": "objects",
     "type": "objects",
     "subType": "table",
-    "pos": [9, 1]
+    "pos": [9, 1],
+    "hit": true
   },
   "213": {
     "pic": "objects",
     "type": "objects",
     "subType": "table",
-    "pos": [10, 1]
+    "pos": [10, 1],
+    "hit": true
   },
   "214": {
     "pic": "objects",
     "type": "objects",
     "subType": "table",
-    "pos": [11, 1]
+    "pos": [11, 1],
+    "hit": true
   },
   "215": {
     "pic": "objects",
     "type": "objects",
     "subType": "stone",
-    "pos": [0, 1]
+    "pos": [0, 1],
+    "hit": true
   },
   "216": {
     "pic": "objects",
     "type": "objects",
     "subType": "stone",
-    "pos": [1, 1]
+    "pos": [1, 1],
+    "hit": true
   },
   "217": {
     "pic": "objects",
     "type": "objects",
     "subType": "stone",
-    "pos": [2, 1]
+    "pos": [2, 1],
+    "hit": true
   },
   "218": {
     "pic": "objects",
     "type": "objects",
     "subType": "bench",
     "pos": [3, 1],
-    "width": 2
+    "width": 2,
+    "hit": true
   },
   "219": {
     "pic": "objects",
@@ -929,33 +947,38 @@
     "type": "objects",
     "subType": "plants",
     "pos": [9, 2],
-    "height": 2
+    "height": 2,
+    "hit": true
   },
   "221": {
     "pic": "objects",
     "type": "objects",
     "subType": "plants",
-    "pos": [10, 2]
+    "pos": [10, 2],
+    "hit": true
   },
   "222": {
     "pic": "objects",
     "type": "objects",
     "subType": "plants",
-    "pos": [10, 3]
+    "pos": [10, 3],
+    "hit": true
   },
   "223": {
     "pic": "objects",
     "type": "objects",
     "subType": "bed",
     "pos": [11, 2],
-    "height": 2
+    "height": 2,
+    "hit": true
   },
   "224": {
     "pic": "objects",
     "type": "objects",
     "subType": "shelf",
     "pos": [12, 2],
-    "height": 2
+    "height": 2,
+    "hit": true
   },
   "225": {
     "pic": "objects",
@@ -980,34 +1003,69 @@
     "type": "tree",
     "pos": [0, 5],
     "width": 3,
-    "height": 4
+    "height": 4,
+    "hit": true,
+    "polygon": [
+      [0.5, 0.3],
+      [0.5, 0.8],
+      [-0.5, 0.8],
+      [-0.5, 0.3]
+    ]
   },
   "229": {
     "pic": "objects",
     "type": "tree",
     "pos": [3, 5],
     "width": 3,
-    "height": 4
+    "height": 4,
+    "hit": true,
+    "polygon": [
+      [0.5, 0.3],
+      [0.5, 0.8],
+      [-0.5, 0.8],
+      [-0.5, 0.3]
+    ],
+    "cover": [
+      [1, 0.5],
+      [1, -1],
+      [-1, -1],
+      [-1, 0.5]
+    ]
   },
   "230": {
     "pic": "objects",
     "type": "tree",
     "pos": [0, 9],
     "width": 3,
-    "height": 4
+    "height": 4,
+    "hit": true,
+    "polygon": [
+      [0.5, 0.3],
+      [0.5, 0.8],
+      [-0.5, 0.8],
+      [-0.5, 0.3]
+    ]
   },
   "231": {
     "pic": "objects",
     "type": "tree",
     "pos": [3, 9],
     "width": 3,
-    "height": 4
+    "height": 4,
+    "hit": true,
+    "polygon": [
+      [0.5, 0.3],
+      [0.5, 0.9],
+      [-0.4, 0.9],
+      [-0.4, 0.3]
+    ]
   },
   "232": {
     "pic": "objects",
     "type": "tree",
     "pos": [6, 5],
-    "width": 2
+    "width": 2,
+    "hit": true
   },
   "233": {
     "pic": "objects",
@@ -1024,42 +1082,58 @@
     "type": "tree",
     "pos": [10, 5],
     "width": 2,
-    "height": 2
+    "height": 2,
+    "hit": true
   },
   "236": {
     "pic": "objects",
     "type": "tree",
     "pos": [10, 7],
     "width": 2,
-    "height": 2
+    "height": 2,
+    "hit": true,
+    "polygon": [
+      [0.3, -0.5],
+      [0.8, 0],
+      [0.8, 0.6],
+      [-0.5, 0.6],
+      [-0.8, 0.4],
+      [-0.8, -0.1],
+      [-0.3, -0.5]
+    ]
   },
   "237": {
     "pic": "objects",
     "type": "tree",
     "pos": [6, 7],
     "width": 2,
-    "height": 2
+    "height": 2,
+    "hit": true
   },
   "238": {
     "pic": "objects",
     "type": "tree",
     "pos": [8, 6],
     "width": 2,
-    "height": 3
+    "height": 3,
+    "hit": true
   },
   "239": {
     "pic": "objects",
     "type": "tree",
-    "pos": [6, 9]
+    "pos": [6, 9],
+    "hit": true
   },
   "240": {
     "pic": "objects",
     "type": "tree",
-    "pos": [7, 9]
+    "pos": [7, 9],
+    "hit": true
   },
   "241": {
     "pic": "objects",
     "type": "tree",
-    "pos": [8, 9]
+    "pos": [8, 9],
+    "hit": true
   }
 }

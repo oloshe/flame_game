@@ -13,7 +13,7 @@ class RImageData {
   factory RImageData.fromJson(Map<String, dynamic> json) {
     return RImageData(
       path: json['path'],
-      srcSize: utils.vec2fromJson(json['srcSize']),
+      srcSize: utils.vec2Field(json['srcSize']),
     );
   }
 

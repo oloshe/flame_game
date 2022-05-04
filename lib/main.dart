@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game/common.dart';
+import 'package:game/common/i18n.dart';
 import 'package:game/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ void main() async {
 
   await R.init();
 
-  i18n = await I18N.create();
+  await Translations.getInstance();
 
   runApp(const MyApp());
 }
@@ -31,23 +32,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: i18n),
+        ChangeNotifierProvider.value(
+          value: Translations.instance,
+        ),
       ],
       builder: (context, child) {
-        return Consumer<I18N>(
-          builder: (context, _, __) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              navigatorKey: navKey,
-              // home: const MapEditor(),
-              home: GameWidget(
-                game: MyGame(),
-              )
-            );
-          },
+        return MaterialApp(
+          locale: const Locale('zh', 'CN'),
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navKey,
+          home: GameWidget(game: MyGame()),
+          // home: Consumer<Translations>(
+          //   builder: (context, tr, child) {
+          //     return const MapEditor();
+          //   },
+          // ),
         );
-      }
+      },
     );
   }
-
 }

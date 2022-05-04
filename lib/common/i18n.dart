@@ -1,47 +1,53 @@
-part of '../common.dart';
+import 'package:flame/flame.dart';
+import 'package:flutter/material.dart';
+import 'package:game/common.dart';
 
-class I18N with material.ChangeNotifier {
-  final Map<String, dynamic> json;
-  late final List<String> lang;
+class Translations with ChangeNotifier {
+  final List<Locale> supportLang;
+  final Map<Locale, Map<String, String>> keys;
+
+  Locale locale;
+
+  /// 当前语言。使用的时候读取系统默认语言
   late Map<String, String> dictionary;
 
-  I18N._(this.json) {
-    lang = List.from(json['lang'])
-        .map((e) => e.toString())
-        .toList(growable: false);
-    dictionary =
-        Map.from(json[lang[0]]).map((key, value) => MapEntry(key, value));
+  Translations._internal({
+    required this.supportLang,
+    required this.keys,
+    this.locale = const Locale('zh', 'CN'),
+  }) {
+    dictionary = keys[locale]!;
   }
 
-  static Future<I18N> create() async {
+  static late Translations instance;
+
+  static Future<Translations> getInstance() async {
     final json = await Flame.assets.readJson('json/i18n.json');
-    final instance = I18N._(json);
-    return instance;
+    List<dynamic> _lang = json.remove('lang');
+    final lang = _lang.map((e) => utils.str2Locale(e)).toList(growable: false);
+    final i18n = Translations._internal(
+      supportLang: lang,
+      keys: json.map(
+        (key, value) => MapEntry(
+          utils.str2Locale(key),
+          Map.from(value).map((key, value) => MapEntry(key, value)),
+        ),
+      ),
+    );
+    instance = i18n;
+    return i18n;
   }
 
-  void changeLang(String language) {
-    if (json[language] != null) {
-      dictionary =
-          Map.from(json[language]).map((key, value) => MapEntry(key, value));
+  void updateLocale(Locale newLocale) {
+    final key = newLocale.toString();
+    if (keys.containsKey(key)) {
+      locale = newLocale;
+      dictionary = keys[key]!;
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: '没有该语言！');
+      // 提示没有该语言
     }
   }
-}
 
-late I18N i18n;
-
-extension I18NExt on String {
-  String get lang {
-    return i18n.dictionary[this] ?? this;
-  }
-
-  String get langWatch {
-    return MyApp.navKey.currentContext!.watch<I18N>().dictionary[this] ?? this;
-  }
-
-  String args(String arg, Object value) {
-    return replaceAll('\$$arg', value.toString());
-  }
+  String translate(String key) => dictionary[key] ?? key;
 }

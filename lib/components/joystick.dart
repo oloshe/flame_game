@@ -17,11 +17,11 @@ Future<JoystickComponent> createJoystick() async {
     // 旋钮
     knob: SpriteComponent(
       sprite: sheet.getSpriteById(1),
-      size: Vector2.all(80),
+      size: Vector2.all(100),
     )..setOpacity(0.8),
     background: SpriteComponent(
       sprite: sheet.getSpriteById(0),
-      size: Vector2.all(100),
+      size: Vector2.all(120),
     )..setOpacity(0.8),
     margin: const EdgeInsets.only(left: 40, bottom: 40),
   );

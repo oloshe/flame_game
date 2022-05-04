@@ -223,7 +223,6 @@ class _SidePanel extends StatelessWidget {
                   ),
                   Consumer<ValueModel<double>>(
                     builder: (context, width, child) {
-                      print(width.data);
                       return SizedBox(
                         width: context.vmData<double>(),
                         child: child,
@@ -305,15 +304,17 @@ class _SidePanel extends StatelessWidget {
                                       if (w != null && h != null) {
                                         if (w < MapEditor.minWidth) {
                                           Fluttertoast.showToast(
-                                            msg: 'widthMin'.lang.args(
-                                                'width', MapEditor.minWidth),
+                                            msg: 'widthMin'.lang.args({
+                                              'width': MapEditor.minWidth
+                                            }),
                                           );
                                           return;
                                         }
                                         if (h < MapEditor.minHeight) {
                                           Fluttertoast.showToast(
-                                            msg: 'heightMin'.lang.args(
-                                                'height', MapEditor.minHeight),
+                                            msg: 'heightMin'.lang.args({
+                                              'height': MapEditor.minHeight
+                                            }),
                                           );
                                           return;
                                         }
@@ -595,7 +596,9 @@ class _FooterState extends State<Footer> {
       title: 'deleteLayer'.lang,
       width: 250,
       builder: (context) {
-        return Text('deleteLayerConfirm'.lang.args('layer', curName));
+        return Text('deleteLayerConfirm'.lang.args({
+          'layer': curName,
+        }));
       },
       onConfirm: (fail) {
         context.read<MapEditorProvider>().deleteLayer(curName);

@@ -19,7 +19,7 @@ class RAnimationData {
       animations: Map.from(json['animations']).map(
         (key, value) => MapEntry(key, RAnimationItemData.fromJson(value)),
       ),
-      srcSize: utils.vec2fromJson(json['srcSize']),
+      srcSize: utils.vec2Field(json['srcSize']),
     );
   }
 

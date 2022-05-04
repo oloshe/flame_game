@@ -1,6 +1,6 @@
 {
-  "lang": ["zh-CN", "en-US"],
-  "zh-CN": {
+  "lang": ["zh_CN", "en_US"],
+  "zh_CN": {
     "plains": "地形",
     "fences": "栅栏",
     "decor": "装饰",
@@ -20,8 +20,8 @@
     "newLayer": "新图层",
     "width": "宽",
     "height": "高",
-    "widthMin": "不能这么窄哦，宽要大于$width",
-    "heightMin": "不能这么窄哦，高要大于$height",
+    "widthMin": "不能这么窄哦，宽要大于@width",
+    "heightMin": "不能这么窄哦，高要大于@height",
     "editorLoading": "加载资源中...",
     "cancel": "取消",
     "confirm": "确定",
@@ -30,12 +30,12 @@
     "createLayer": "创建图层",
     "modifyLayerName": "修改图层名",
     "deleteLayer": "删除图层",
-    "deleteLayerConfirm": "是否删除$layer？",
+    "deleteLayerConfirm": "是否删除@layer？",
     "layerDeleted": "已删除",
     "layerAdded": "添加成功",
     "layerMax": "图层到达上限啦～"
   },
-  "en-US": {
+  "en_US": {
     "plains": "plains",
     "fences": "fences",
     "decor": "decor",
@@ -55,8 +55,8 @@
     "newLayer": "New Layer",
     "width": "width",
     "height": "height",
-    "widthMin": "The width must greater than $width",
-    "heightMin": "The height must greater than $height",
+    "widthMin": "The width must greater than @width",
+    "heightMin": "The height must greater than @height",
     "editorLoading": "Loading resource...",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -65,7 +65,7 @@
     "createLayer": "Create Layer",
     "modifyLayerName": "Modify Layer's Name",
     "deleteLayer": "Delete Layer",
-    "deleteLayerConfirm": "Are you sure to delete $layer？",
+    "deleteLayerConfirm": "Are you sure to delete @layer？",
     "layerDeleted": "Layer Deleted!",
     "layerAdded": "Layer Added",
     "layerMax": "Too many layers～"
