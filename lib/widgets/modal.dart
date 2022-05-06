@@ -74,37 +74,43 @@ class Modal {
                           ),
                         ),
                       // 按钮
-                      Row(
-                        children: [
-                          const Spacer(),
-                          NormalButton(
-                            text: cancelText ?? 'cancel'.lang,
-                            onTap: () {
-                              onCancel?.call();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          const SizedBox(width: 20),
-                          MainButton(
-                            text: confirmText ?? 'confirm'.lang,
-                            onTap: () async {
-                              if (onConfirm != null) {
-                                bool close = true;
-                                final result = await onConfirm.call(() {
-                                  close = false;
-                                });
-                                if (close == false) {
-                                  return;
-                                }
-                                Navigator.pop(context, result);
-                                return;
-                              } else {
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 10,
+                          bottom: 5
+                        ),
+                        child: Row(
+                          children: [
+                            const Spacer(),
+                            NormalButton(
+                              text: cancelText ?? 'cancel'.lang,
+                              onTap: () {
+                                onCancel?.call();
                                 Navigator.pop(context);
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 12),
-                        ],
+                              },
+                            ),
+                            const SizedBox(width: 20),
+                            MainButton(
+                              text: confirmText ?? 'confirm'.lang,
+                              onTap: () async {
+                                if (onConfirm != null) {
+                                  bool close = true;
+                                  final result = await onConfirm.call(() {
+                                    close = false;
+                                  });
+                                  if (close == false) {
+                                    return;
+                                  }
+                                  Navigator.pop(context, result);
+                                  return;
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                            const SizedBox(width: 12),
+                          ],
+                        ),
                       ),
                     ],
                   ),

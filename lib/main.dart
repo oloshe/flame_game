@@ -41,12 +41,12 @@ class MyApp extends StatelessWidget {
           locale: const Locale('zh', 'CN'),
           debugShowCheckedModeBanner: false,
           navigatorKey: navKey,
-          home: GameWidget(game: MyGame()),
-          // home: Consumer<Translations>(
-          //   builder: (context, tr, child) {
-          //     return const MapEditor();
-          //   },
-          // ),
+          // home: GameWidget(game: MyGame()),
+          home: Consumer<Translations>(
+            builder: (context, tr, child) {
+              return const MapEditor();
+            },
+          ),
         );
       },
     );

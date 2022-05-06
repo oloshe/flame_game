@@ -32,6 +32,13 @@ class RMap {
   int height;
   final Map<String, RMapLayerData> layers;
 
+  /// 根据index升序排序
+  List<MapEntry<String, RMapLayerData>> get layerList {
+    final list = layers.entries.toList(growable: false);
+    list.sort((a, b) => a.value.index - b.value.index);
+    return list;
+  }
+
   Vector2 get size => Vector2(width.toDouble(), height.toDouble());
 
   RMap({

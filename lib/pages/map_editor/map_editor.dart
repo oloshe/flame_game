@@ -100,6 +100,7 @@ class MapEditor extends StatelessWidget {
           right: 50,
           bottom: 50,
         ),
+        // child: MapRenderWidget(context.read<MapEditorProvider>()),
         child: GestureDetector(
           onTapUp: (details) {
             // print(details.localPosition);
@@ -108,23 +109,86 @@ class MapEditor extends StatelessWidget {
             context.read<MapEditorProvider>().paintCell(x, y);
           },
           onDoubleTapDown: (details) {},
-          child: Selector<MapEditorProvider, Tuple3<int, int, UniqueKey>>(
+          child: Selector<MapEditorProvider, Tuple2<Coord, int>>(
             selector: (_, p) {
-              return Tuple3(p.width, p.height, p.layersVersion);
+              /// 宽高发生变化
+              return Tuple2(
+                Coord(p.width, p.height),
+                p.rMap.layers.length,
+                // p.layersVersion,
+                // p.currCell,
+              );
             },
             builder: (context, _, child) {
-              final rMap = context.read<MapEditorProvider>().rMap;
-              final size = Size(
-                rMap.width * len2,
-                rMap.height * len2,
-              );
+              final model = context.read<MapEditorProvider>();
+              final rMap = model.rMap;
+              final width = rMap.width;
+              final height = rMap.height;
+              final size = Size(width * len2, height * len2);
               return SizedBox.fromSize(
                 size: size,
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    painter: MapPainter(rMap),
-                    size: size,
-                  ),
+                child: Stack(
+                  children: [
+                    // 网格
+                    RepaintBoundary(
+                      child: CustomPaint(
+                        painter: MapGridPainter(width, height),
+                        willChange: false,
+                      ),
+                    ),
+                    // 每个图层
+                    for (var layer in rMap.layerList)
+                      Selector<MapEditorProvider, bool>(
+                        selector: (c, p) => p.currLayerName == layer.key,
+                        builder: (_, isCurr, child) {
+                          if (isCurr) {
+                            return Selector<MapEditorProvider, UniqueKey>(
+                              selector: (_, p) => p.layersVersion,
+                              builder: (context, _, __) {
+                                return RepaintBoundary(
+                                  child: CustomPaint(
+                                    painter: MapPainter(
+                                      layer.value,
+                                      width,
+                                      height,
+                                    ),
+                                    size: size,
+                                    willChange: false,
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return child!;
+                          }
+                        },
+                        child: RepaintBoundary(
+                          child: CustomPaint(
+                            painter: MapPainter(
+                              layer.value,
+                              width,
+                              height,
+                            ),
+                            size: size,
+                            willChange: false,
+                          ),
+                        ),
+                      ),
+                    // 选中框
+                    Selector<MapEditorProvider, Coord?>(
+                        selector: (_, p) => p.currCell,
+                        builder: (_, coord, __) {
+                          if (coord == null) {
+                            return const SizedBox();
+                          }
+                          return RepaintBoundary(
+                            child: CustomPaint(
+                              painter: CurrTilePainter(coord),
+                              willChange: false,
+                            ),
+                          );
+                        }),
+                  ],
                 ),
               );
             },
@@ -148,203 +212,193 @@ class _SidePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const inputBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: Color(0xffaab2bf)),
-    );
     return VMProvider<bool>(
-        create: () => false,
-        builder: (context) {
-          return VMProvider<double>(
-            create: () => 300,
-            builder: (context) {
-              const minWidth = 280;
-              final maxWidth = MediaQuery.of(context).size.width * 0.7;
-              return Row(
-                children: [
-                  GestureDetector(
-                    onPanDown: (_) {
-                      context.vmSet<bool>(true);
-                    },
-                    onPanUpdate: (details) {
-                      final newVal =
-                          context.vmData<double>() - details.delta.dx;
-                      if (newVal >= minWidth && newVal <= maxWidth) {
-                        context.vmSet<double>(newVal);
-                      }
-                    },
-                    onPanEnd: (_) {
-                      context.vmSet<bool>(false);
-                    },
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                      ),
-                      child: SizedBox(
-                          width: 5,
-                          height: double.infinity,
-                          child: VMObserver<bool>(
-                            builder: (resizing) {
-                              return AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  color: resizing
-                                      ? const Color(0xff528bff)
-                                      : const Color(0xff323845),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Positioned(
-                                        left: -5,
-                                        right: -5,
-                                        child: Container(
-                                          height: 80,
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                        ),
-                                      ),
-                                      const Positioned(
-                                        left: -5,
-                                        right: -5,
-                                        child: Icon(
-                                          Icons.drag_handle,
-                                          color: Colors.white,
-                                          size: 15,
-                                        ),
-                                      ),
-                                    ],
-                                  ));
-                            },
-                          )),
+      create: () => false,
+      builder: (context) {
+        return VMProvider<double>(
+          create: () => 300,
+          builder: (context) {
+            const minWidth = 280;
+            final maxWidth = MediaQuery.of(context).size.width * 0.7;
+            return Row(
+              children: [
+                GestureDetector(
+                  onPanDown: (_) {
+                    context.vmSet<bool>(true);
+                  },
+                  onPanUpdate: (details) {
+                    final newVal = context.vmData<double>() - details.delta.dx;
+                    if (newVal >= minWidth && newVal <= maxWidth) {
+                      context.vmSet<double>(newVal);
+                    }
+                  },
+                  onPanEnd: (_) {
+                    context.vmSet<bool>(false);
+                  },
+                  behavior: HitTestBehavior.translucent,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
                     ),
-                  ),
-                  Consumer<ValueModel<double>>(
-                    builder: (context, width, child) {
-                      return SizedBox(
-                        width: context.vmData<double>(),
-                        child: child,
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Builder(builder: (context) {
-                              String inputW = context
-                                  .read<MapEditorProvider>()
-                                  .width
-                                  .toString();
-                              String inputH = context
-                                  .read<MapEditorProvider>()
-                                  .height
-                                  .toString();
-                              return Row(
-                                children: [
-                                  SizedBox(
-                                    width: 60,
-                                    child: TextFormField(
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (val) => inputW = val,
-                                      initialValue: inputW,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color: Color(0xffa0a7b4)),
-                                      decoration: const InputDecoration(
-                                              isCollapsed: true,
-                                              contentPadding: EdgeInsets.all(5),
-                                              fillColor: Color(0xff2c313c),
-                                              filled: true,
-                                              border: inputBorder,
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 10,
-                                              ))
-                                          .copyWith(
-                                              hintText: 'width'.langWatch),
+                    child: SizedBox(
+                      width: 5,
+                      height: double.infinity,
+                      child: VMObserver<bool>(
+                        builder: (resizing) {
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            color: resizing
+                                ? const Color(0xff528bff)
+                                : const Color(0xff323845),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              clipBehavior: Clip.none,
+                              children: [
+                                Positioned(
+                                  left: -5,
+                                  right: -5,
+                                  child: Container(
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                   ),
-                                  const Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text('X',
-                                        style: TextStyle(color: Colors.white)),
+                                ),
+                                const Positioned(
+                                  left: -5,
+                                  right: -5,
+                                  child: Icon(
+                                    Icons.drag_handle,
+                                    color: Colors.white,
+                                    size: 15,
                                   ),
-                                  SizedBox(
-                                    width: 60,
-                                    child: TextFormField(
-                                      keyboardType: TextInputType.number,
-                                      textAlign: TextAlign.center,
-                                      onChanged: (val) => inputH = val,
-                                      initialValue: inputH,
-                                      style: const TextStyle(
-                                          color: Color(0xffa0a7b4)),
-                                      decoration: const InputDecoration(
-                                          filled: true,
-                                          isCollapsed: true,
-                                          contentPadding: EdgeInsets.all(5),
-                                          fillColor: Color(0xff2c313c),
-                                          border: inputBorder,
-                                          hintStyle: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 10,
-                                          )).copyWith(hintText: 'height'),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  MainButton(
-                                    text: 'modify'.langWatch,
-                                    onTap: () {
-                                      int? w = int.tryParse(inputW);
-                                      int? h = int.tryParse(inputH);
-                                      if (w != null && h != null) {
-                                        if (w < MapEditor.minWidth) {
-                                          Fluttertoast.showToast(
-                                            msg: 'widthMin'.lang.args({
-                                              'width': MapEditor.minWidth
-                                            }),
-                                          );
-                                          return;
-                                        }
-                                        if (h < MapEditor.minHeight) {
-                                          Fluttertoast.showToast(
-                                            msg: 'heightMin'.lang.args({
-                                              'height': MapEditor.minHeight
-                                            }),
-                                          );
-                                          return;
-                                        }
-                                        context
-                                            .read<MapEditorProvider>()
-                                            .setSize(w, h);
-                                        Fluttertoast.showToast(
-                                            msg: 'modifySuccess'.lang);
-                                      } else {
-                                        Fluttertoast.showToast(
-                                            msg: 'formatError'.lang);
-                                      }
-                                    },
-                                  ),
-                                ],
-                              );
-                            }),
-                          ),
-                          const SizedBox(height: 5),
-                          const SizedBox(height: 5),
-                          const Expanded(child: _TileSet()),
-                        ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
-                ],
-              );
-            },
-          );
-        });
+                ),
+                Consumer<ValueModel<double>>(
+                  builder: (context, width, child) {
+                    return SizedBox(
+                      width: context.vmData<double>(),
+                      child: child,
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Builder(builder: (context) {
+                            String inputW = context
+                                .read<MapEditorProvider>()
+                                .width
+                                .toString();
+                            String inputH = context
+                                .read<MapEditorProvider>()
+                                .height
+                                .toString();
+                            const inputBorder = OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xff5c5b62)),
+                            );
+                            const inputDecor = InputDecoration(
+                              isCollapsed: true,
+                              contentPadding: EdgeInsets.all(10),
+                              fillColor: Color(0xff0f0f0f),
+                              filled: true,
+                              border: inputBorder,
+                              focusedBorder: inputBorder,
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
+                            );
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: 40,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (val) => inputW = val,
+                                    initialValue: inputW,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: Color(0xffa0a7b4),
+                                      fontSize: 12,
+                                    ),
+                                    decoration: inputDecor.copyWith(
+                                        hintText: 'width'.langWatch),
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                SizedBox(
+                                  width: 40,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    textAlign: TextAlign.center,
+                                    onChanged: (val) => inputH = val,
+                                    initialValue: inputH,
+                                    style: const TextStyle(
+                                      color: Color(0xffa0a7b4),
+                                      fontSize: 12,
+                                    ),
+                                    decoration: inputDecor.copyWith(
+                                        hintText: 'height'.langWatch),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                MainButton(
+                                  text: 'modify'.langWatch,
+                                  onTap: () {
+                                    resizeTileMap(inputW, inputH, context);
+                                  },
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 5),
+                        const SizedBox(height: 5),
+                        const Expanded(child: _TileSet()),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void resizeTileMap(String inputW, String inputH, BuildContext context) {
+    int? w = int.tryParse(inputW);
+    int? h = int.tryParse(inputH);
+    if (w != null && h != null) {
+      if (w < MapEditor.minWidth) {
+        Fluttertoast.showToast(
+          msg: 'widthMin'.lang.args({'width': MapEditor.minWidth}),
+        );
+        return;
+      }
+      if (h < MapEditor.minHeight) {
+        Fluttertoast.showToast(
+          msg: 'heightMin'.lang.args({'height': MapEditor.minHeight}),
+        );
+        return;
+      }
+      context.read<MapEditorProvider>().setSize(w, h);
+      Fluttertoast.showToast(msg: 'modifySuccess'.lang);
+    } else {
+      Fluttertoast.showToast(msg: 'formatError'.lang);
+    }
   }
 }
 
@@ -472,71 +526,113 @@ class _FooterState extends State<Footer> {
               bottom: false,
               left: true,
               right: true,
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 400,
-                    ),
-                    child: Selector<MapEditorProvider,
-                        Tuple2<int, Iterable<String>>>(
-                      selector: (_, p) => Tuple2(
-                        p.rMap.layers.length,
-                        p.rMap.layers.keys,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                  bottom: 4,
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: 400,
                       ),
-                      builder: (_, __, ___) {
-                        final tabs = context
-                            .read<MapEditorProvider>()
-                            .rMap
-                            .layers
-                            .keys
-                            .toList(growable: false);
-                        return _LayerTab(tabs);
+                      child: Selector<MapEditorProvider,
+                          Tuple2<int, Iterable<String>>>(
+                        selector: (_, p) => Tuple2(
+                          p.rMap.layers.length,
+                          p.rMap.layers.keys,
+                        ),
+                        builder: (_, __, ___) {
+                          final tabs = context
+                              .read<MapEditorProvider>()
+                              .rMap
+                              .layerList
+                              .map((e) => e.key)
+                              .toList(growable: false);
+                          return _LayerTab(tabs);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    TextButton(
+                      onPressed: showAddLayerModal,
+                      child: const Icon(Icons.add),
+                    ),
+                    TextButton(
+                      onPressed: showEditLayerNameModal,
+                      child: const Icon(
+                        Icons.edit,
+                        color: Color(0xffafb1b3),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: showDeleteLayerModal,
+                      child: const Icon(
+                        Icons.delete_forever,
+                        color: Color(0xffc75450),
+                      ),
+                    ),
+                    const VerticalDivider(
+                      color: Color(0xffffffff),
+                      width: 2,
+                    ),
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Selector<MapEditorProvider, Coord?>(
+                            selector: (c, p) => p.currCell,
+                            builder: (context, pos, child) {
+                              if (pos == null) {
+                                return const SizedBox();
+                              }
+                              return Text(
+                                pos.toString(),
+                                style: const TextStyle(
+                                  color: Color(0xffd9b777),
+                                  fontSize: 12,
+                                ),
+                              );
+                            },
+                          ),
+                          Selector<MapEditorProvider, int?>(
+                            selector: (c, p) => p.currTileId,
+                            builder: (context, id, child) {
+                              if (id == null) {
+                                return const SizedBox();
+                              }
+                              return Text(
+                                'ID: $id',
+                                style: const TextStyle(
+                                  color: Color(0xffd9b777),
+                                  fontSize: 12,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    MainButton(
+                      text: 'export',
+                      icon: const Icon(
+                        Icons.save,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                      gap: 2,
+                      onTap: () {
+                        final json = jsonEncode(
+                          context.read<MapEditorProvider>().rMap,
+                        );
+                        Clipboard.setData(ClipboardData(text: json));
                       },
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  TextButton(
-                    onPressed: showAddLayerModal,
-                    child: const Icon(Icons.add),
-                  ),
-                  TextButton(
-                    onPressed: showEditLayerNameModal,
-                    child: const Icon(
-                      Icons.edit,
-                      color: Color(0xffafb1b3),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: showDeleteLayerModal,
-                    child: const Icon(
-                      Icons.delete_forever,
-                      color: Color(0xffc75450),
-                    ),
-                  ),
-                  const VerticalDivider(
-                    color: Color(0xff333841),
-                    width: 1,
-                  ),
-                  const Spacer(),
-                  MainButton(
-                    text: 'export',
-                    icon: const Icon(
-                      Icons.save,
-                      size: 15,
-                      color: Colors.white,
-                    ),
-                    gap: 2,
-                    onTap: () {
-                      final json = jsonEncode(
-                        context.read<MapEditorProvider>().rMap,
-                      );
-                      Clipboard.setData(ClipboardData(text: json));
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                ],
+                    const SizedBox(width: 10),
+                  ],
+                ),
               ),
             ),
             const Divider(
@@ -621,8 +717,9 @@ class _LayerTab extends StatelessWidget {
         tabs: tabs.map((e) => Text(e)).toList(growable: false),
         indicator: const BoxDecoration(color: Color(0xff3d424b)),
         isScrollable: true,
-        labelColor: Colors.blueGrey,
+        labelColor: const Color(0xffeeeeee),
         padding: EdgeInsets.zero,
+        unselectedLabelColor: Colors.blueGrey,
         labelPadding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 4,
@@ -636,10 +733,20 @@ class _LayerTab extends StatelessWidget {
 }
 
 class MapEditorProvider with ChangeNotifier {
-  int currTileId = -1;
+  /// 当前选中 tile
+  int? currTileId;
+
+  /// 地图数据
   late RMap rMap;
+
+  /// 地图宽度
   int get width => rMap.width;
+
+  /// 地图高度
   int get height => rMap.height;
+
+  /// 当前选中地图坐标
+  Coord? currCell;
 
   /// 标记层级版本用于更新
   UniqueKey layersVersion = UniqueKey();
@@ -656,6 +763,7 @@ class MapEditorProvider with ChangeNotifier {
     currLayerName = layerName;
   }
 
+  /// 修改图层名字
   setCurrLayerName(String name) {
     if (currLayerName != name) {
       currLayerName = name;
@@ -667,7 +775,7 @@ class MapEditorProvider with ChangeNotifier {
     if (currTileId != id) {
       currTileId = id;
     } else {
-      currTileId = -1;
+      currTileId = null;
     }
     notifyListeners();
   }
@@ -687,13 +795,8 @@ class MapEditorProvider with ChangeNotifier {
     final sureName = _checkLayerNameNoRepeat(name);
     rMap.layers[sureName] = _createLayer(rMap.layers.length + 1, width, height);
     currLayerName ??= sureName; // 如果没有层就默认选中该层
-    _updateLayer();
-    Fluttertoast.showToast(msg: 'layerAdded'.lang);
-  }
-
-  _updateLayer() {
-    layersVersion = UniqueKey();
     notifyListeners();
+    Fluttertoast.showToast(msg: 'layerAdded'.lang);
   }
 
   void deleteLayer(String name) {
@@ -708,7 +811,7 @@ class MapEditorProvider with ChangeNotifier {
           currLayerName = null;
         }
       }
-      _updateLayer();
+      notifyListeners();
     }
   }
 
@@ -735,7 +838,7 @@ class MapEditorProvider with ChangeNotifier {
       if (currLayerName == oldName) {
         currLayerName = sureName;
       }
-      _updateLayer();
+      notifyListeners();
     }
   }
 
@@ -752,14 +855,44 @@ class MapEditorProvider with ChangeNotifier {
   }
 
   paintCell(int x, int y) {
-    if (currTileId != -1) {
+    int? id = currTileId;
+    final newCoord = Coord(x, y);
+    if (id == null && currCell == newCoord) {
+      id = RMapGlobal.emptyTile;
+    } else {
+      currCell = newCoord;
+    }
+    if (id != null) {
       if (currLayerName != null) {
         if (rMap.layers.containsKey(currLayerName)) {
-          rMap.layers[currLayerName]!.matrix[y][x] = currTileId;
+          rMap.layers[currLayerName]!.matrix[y][x] = id;
           layersVersion = UniqueKey();
-          notifyListeners();
         }
       }
     }
+    notifyListeners();
   }
+}
+
+class Coord {
+  final int x;
+  final int y;
+  const Coord(this.x, this.y);
+
+  @override
+  String toString() {
+    return 'rowColumn'.lang.args({
+      'row': y,
+      'column': x,
+    });
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        ((other is Coord) && other.x == x && other.y == y);
+  }
+
+  @override
+  int get hashCode => Object.hash(this, x, y);
 }

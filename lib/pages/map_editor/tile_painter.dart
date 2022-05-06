@@ -6,7 +6,8 @@ class TilePainter extends CustomPainter {
   final bool selected;
   final Sprite? sprite;
   final Vector2 tileSize;
-  Paint painter = Paint()
+  final double? unitSize;
+  static final Paint painter = Paint()
     ..color = Colors.blue
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2;
@@ -15,14 +16,16 @@ class TilePainter extends CustomPainter {
     required this.selected,
     required this.sprite,
     required this.tileSize,
+    this.unitSize,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (sprite != null) {
+      final _size = unitSize ?? MapEditor.len2;
       sprite!.render(
         canvas,
-        size: Vector2(MapEditor.len2 * tileSize.x, MapEditor.len2 * tileSize.y),
+        size: Vector2(_size * tileSize.x, _size * tileSize.y),
       );
       if (selected) {
         canvas.drawRect(

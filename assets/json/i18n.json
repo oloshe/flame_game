@@ -33,7 +33,8 @@
     "deleteLayerConfirm": "是否删除@layer？",
     "layerDeleted": "已删除",
     "layerAdded": "添加成功",
-    "layerMax": "图层到达上限啦～"
+    "layerMax": "图层到达上限啦～",
+    "rowColumn": "行 @row，列 @column"
   },
   "en_US": {
     "plains": "plains",
@@ -68,6 +69,7 @@
     "deleteLayerConfirm": "Are you sure to delete @layer？",
     "layerDeleted": "Layer Deleted!",
     "layerAdded": "Layer Added",
-    "layerMax": "Too many layers～"
+    "layerMax": "Too many layers～",
+    "rowColumn": "Row @row, Column @column"
   }
 }
