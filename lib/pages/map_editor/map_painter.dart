@@ -79,6 +79,7 @@ class CurrTilePainter extends CustomPainter {
   static const len = MapEditor.len2;
   static final Paint painter2 = Paint()
     ..color = Colors.orange
+    ..strokeWidth = 2
     ..style = PaintingStyle.stroke;
   @override
   void paint(Canvas canvas, Size size) {
@@ -92,7 +93,7 @@ class CurrTilePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 
 }

@@ -107,17 +107,30 @@ typedef LayerForEachFunction = FutureOr<void> Function(RMapLayerData);
 class RMapLayerData {
   // final String name;
   final int index;
-  final int? fill;
+  int? _fill;
   final bool obj;
   final List<List<int>> matrix;
 
   RMapLayerData({
     // required this.name,
     required this.index,
-    required this.fill,
+    required int? fill,
     required this.obj,
     required this.matrix,
-  });
+  }): _fill = fill;
+
+  int? get fill => _fill;
+
+  set fill(int? fill) {
+    _fill = fill;
+    if (fill != null) {
+      for(var i = 0; i < matrix.length; i++) {
+        for(var j = 0; j < matrix[i].length; j++) {
+          matrix[i][j] = fill;
+        }
+      }
+    }
+  }
 
   factory RMapLayerData.fromJson(
       Map<String, dynamic> json, int width, int height) {

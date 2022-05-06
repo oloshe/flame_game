@@ -19,10 +19,11 @@ class Modal {
     FutureOr<T?> Function(VoidCallback markAsFailed)? onConfirm,
     VoidCallback? onCancel,
   }) {
-    return showDialog<T>(
+    return showGeneralDialog<T>(
       context: context ?? MyApp.navKey.currentContext!,
       barrierColor: Colors.black12,
-      builder: (context) {
+      transitionDuration: Duration.zero,
+      pageBuilder: (context, _, __) {
         return Dialog(
           backgroundColor: const Color(0xff21252b),
           elevation: 10,

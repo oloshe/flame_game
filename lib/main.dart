@@ -5,6 +5,7 @@ import 'package:game/common.dart';
 import 'package:game/common/i18n.dart';
 import 'package:game/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
+import 'package:game/widgets/button.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -41,12 +42,30 @@ class MyApp extends StatelessWidget {
           locale: const Locale('zh', 'CN'),
           debugShowCheckedModeBanner: false,
           navigatorKey: navKey,
-          // home: GameWidget(game: MyGame()),
-          home: Consumer<Translations>(
-            builder: (context, tr, child) {
-              return const MapEditor();
+          home: GameWidget(
+            game: MyGame(),
+            overlayBuilderMap: {
+              "backBtn": (context, game) {
+                return Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: NormalButton(
+                      text: '返回',
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                );
+              }
             },
           ),
+          // home: Consumer<Translations>(
+          //   builder: (context, tr, child) {
+          //     return const MapEditor();
+          //   },
+          // ),
         );
       },
     );

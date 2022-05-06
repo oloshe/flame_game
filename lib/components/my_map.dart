@@ -15,16 +15,22 @@ class MyMap extends PositionComponent {
   /// 缩放之后的实际显示向量
   static final base = srcBase * scaleFactor;
 
-  MyMap(this.player);
+  MyMap({
+    required this.player,
+    this.mapData,
+  });
+
+  final RMap? mapData;
 
   Player player;
 
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
-    RMap mapData = await R.mapMgr.loadMap('home');
-    size = mapData.size..multiply(base);
-    await draw(mapData);
+    RMap realMap = mapData ?? await R.mapMgr.loadMap('home');
+    size = realMap.size..multiply(base);
+    print(anchor);
+    await draw(realMap);
     player.position = size / 2;
     player.priority = 100;
     await add(player);
