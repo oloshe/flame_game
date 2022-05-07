@@ -1,4 +1,4 @@
-part of '../common.dart';
+part of '../../common.dart';
 
 typedef AnimationDataMap = Map<String, RAnimationData>;
 

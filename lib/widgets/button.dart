@@ -52,13 +52,38 @@ class MainButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (icon != null)
-            icon!,
-          if (icon != null && gap != null)
-            SizedBox(width: gap),
+          if (icon != null) icon!,
+          if (icon != null && gap != null) SizedBox(width: gap),
           Text(text, style: const TextStyle(color: Colors.white))
         ],
       ),
+    );
+  }
+}
+
+class MyIconButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final IconData icon;
+  final Color? color;
+  final String? tooltip;
+  const MyIconButton({
+    Key? key,
+    this.onTap,
+    required this.icon,
+    this.color,
+    this.tooltip,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onTap,
+      padding: EdgeInsets.zero,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.black,
+      color: color,
+      tooltip: tooltip,
+      icon: Icon(icon),
     );
   }
 }

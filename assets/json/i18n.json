@@ -29,7 +29,7 @@
     "create": "创建",
     "createLayer": "创建图层",
     "modifyLayerName": "修改图层名",
-    "deleteLayer": "删除图层",
+    "deleteLayerTitle": "删除图层",
     "deleteLayerConfirm": "是否删除@layer？",
     "layerDeleted": "已删除",
     "layerAdded": "添加成功",
@@ -39,7 +39,13 @@
     "back": "返回",
     "cancelSelect": "取消选择",
     "preview": "预览",
-    "noLayer": "当前没有图层"
+    "noLayer": "当前没有图层",
+    "fillEmpty": "没有选择对象",
+    "addLayer": "添加图层",
+    "renameLayer": "重命名",
+    "fillLayer": "填充",
+    "deleteLayer": "删除当前图层",
+    "visibleLayer": "显示/隐藏"
   },
   "en_US": {
     "plains": "plains",
@@ -70,7 +76,7 @@
     "create": "Create",
     "createLayer": "Create Layer",
     "modifyLayerName": "Modify Layer's Name",
-    "deleteLayer": "Delete Layer",
+    "deleteLayerTitle": "Delete Layer",
     "deleteLayerConfirm": "Are you sure to delete @layer？",
     "layerDeleted": "Layer Deleted!",
     "layerAdded": "Layer Added",
@@ -80,6 +86,12 @@
     "back": "Back",
     "cancelSelect": "Unselect",
     "preview": "Preview",
-    "noLayer": "no layers"
+    "noLayer": "no layers",
+    "fillEmpty": "no selected tile",
+    "addLayer": "add layer",
+    "renameLayer": "rename",
+    "fillLayer": "fill",
+    "deleteLayer": "delete layer",
+    "visibleLayer": "set visible"
   }
 }

@@ -1,4 +1,4 @@
-part of '../common.dart';
+part of '../../common.dart';
 
 class RMapGlobal {
   static const _prefix = 'json/maps/';
@@ -105,38 +105,44 @@ class RMap {
 typedef LayerForEachFunction = FutureOr<void> Function(RMapLayerData);
 
 class RMapLayerData {
-  // final String name;
+  /// 层级
   final int index;
-  int? _fill;
   final bool obj;
   final List<List<int>> matrix;
+  bool visible;
 
   RMapLayerData({
-    // required this.name,
     required this.index,
-    required int? fill,
     required this.obj,
     required this.matrix,
-  }): _fill = fill;
+  }): visible = true;
 
-  int? get fill => _fill;
 
-  set fill(int? fill) {
-    _fill = fill;
-    if (fill != null) {
+  void _fill(int? fill, [bool emptyWhenNull = false]) {
+    if (fill != null || emptyWhenNull) {
+      final _fill = fill ?? RMapGlobal.emptyTile;
       for(var i = 0; i < matrix.length; i++) {
         for(var j = 0; j < matrix[i].length; j++) {
-          matrix[i][j] = fill;
+          matrix[i][j] = _fill;
         }
       }
     }
   }
 
+  // 填充某一个tile
+  void fill(int fill) {
+    _fill(fill, false);
+  }
+
+  // 清空
+  void clear() {
+    _fill(null, true);
+  }
+
   factory RMapLayerData.fromJson(
       Map<String, dynamic> json, int width, int height) {
-    final fill = json['fill'];
     List<List<int>> matrix = List.generate(
-        height, (_) => List.filled(width, fill ?? RMapGlobal.emptyTile));
+        height, (_) => List.filled(width, RMapGlobal.emptyTile));
 
     List<dynamic> _rows = json['matrix'];
     final _height = _rows.length;
@@ -149,10 +155,8 @@ class RMapLayerData {
     }
 
     return RMapLayerData(
-      // name: json['name'],
       index: json['index'],
       obj: json['obj'] ?? false,
-      fill: fill,
       matrix: matrix,
     );
   }
@@ -163,43 +167,6 @@ class RMapLayerData {
       "obj": obj,
       "matrix": matrix,
     };
-    if (fill != null) {
-      result["fill"] = fill;
-    }
     return result;
   }
 }
-//
-// class RBatchRender {
-//   final Rect source;
-//   final Vector2 offset;
-//   RBatchRender({required this.source, required this.offset});
-//
-//   static Map<String, List<RBatchRender>> createTemp() => {};
-//
-//   @override
-//   String toString() {
-//     return '($source)';
-//   }
-// }
-//
-// extension _RBatchExt on Map<String, List<RBatchRender>> {
-//   void push(int id, int x, int y) {
-//     final tileData = R.getTileById(id)!;
-//     final pic = tileData.pic;
-//     // final imgData = R.getImageData(pic);
-//     if (this[pic] == null) {
-//       this[pic] = [];
-//     }
-//     final left = tileData.pos.x * MyMap.srcBase.x;
-//     final top = tileData.pos.y * MyMap.srcBase.y;
-//     final width = tileData.size.x * MyMap.srcBase.x;
-//     final height = tileData.size.y * MyMap.srcBase.y;
-//     this[pic]!.add(
-//       RBatchRender(
-//         source: Rect.fromLTWH(left, top, width, height),
-//         offset: Vector2(x.toDouble(), y.toDouble())..multiply(MyMap.srcBase),
-//       ),
-//     );
-//   }
-// }

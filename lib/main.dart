@@ -39,9 +39,14 @@ class MyApp extends StatelessWidget {
       ],
       builder: (context, child) {
         return MaterialApp(
-          locale: const Locale('zh', 'CN'),
           debugShowCheckedModeBanner: false,
           navigatorKey: navKey,
+          localeResolutionCallback: (deviceLocale, supportedLocales) {
+            if (deviceLocale?.languageCode == 'zh') {
+              Translations.instance.updateLocale(const Locale('zh', 'CN'));
+            }
+            return null;
+          },
           // home: GameWidget(
           //   game: MyGame(),
           // ),

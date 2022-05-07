@@ -14,7 +14,7 @@ class Translations with ChangeNotifier {
   Translations._internal({
     required this.supportLang,
     required this.keys,
-    this.locale = const Locale('zh', 'CN'),
+    this.locale = const Locale('en', 'US'),
   }) {
     dictionary = keys[locale]!;
   }
@@ -39,13 +39,13 @@ class Translations with ChangeNotifier {
   }
 
   void updateLocale(Locale newLocale) {
-    final key = newLocale.toString();
-    if (keys.containsKey(key)) {
+    if (keys.containsKey(newLocale)) {
       locale = newLocale;
-      dictionary = keys[key]!;
+      dictionary = keys[newLocale]!;
       notifyListeners();
     } else {
       // 提示没有该语言
+      print('no such language');
     }
   }
 

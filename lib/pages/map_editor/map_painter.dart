@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
+import 'package:game/common/coord.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 
 class MapPainter extends CustomPainter {
@@ -21,7 +22,7 @@ class MapPainter extends CustomPainter {
 
   /// 绘制单个图层
   void drawSingleLayer(Canvas canvas, RMapLayerData? layer) {
-    if (layer == null) {
+    if (layer == null || layer.visible == false) {
       return;
     }
     const len = MapEditor.len2;

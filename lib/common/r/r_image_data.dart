@@ -1,4 +1,4 @@
-part of '../common.dart';
+part of '../../common.dart';
 
 typedef ImageDataMap = Map<String, RImageData>;
 

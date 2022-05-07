@@ -10,11 +10,11 @@ import 'package:game/common/i18n.dart';
 import 'package:game/main.dart';
 import 'package:provider/provider.dart';
 
-part 'common/r.dart';
-part 'common/r_animation_data.dart';
-part 'common/r_image_data.dart';
-part 'common/r_tile_data.dart';
-part 'common/r_map.dart';
+part 'common/r/r.dart';
+part 'common/r/r_animation_data.dart';
+part 'common/r/r_image_data.dart';
+part 'common/r/r_tile_data.dart';
+part 'common/r/r_map.dart';
 part 'common/utils.dart';
 part 'common/extensions.dart';
 part 'common/generated/enums.dart';
