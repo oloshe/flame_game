@@ -112,7 +112,6 @@ class MapEditor extends StatelessWidget {
         // child: MapRenderWidget(context.read<MapEditorProvider>()),
         child: GestureDetector(
           onTapUp: (details) {
-            // print(details.localPosition);
             final x = details.localPosition.dx ~/ len;
             final y = details.localPosition.dy ~/ len;
             context.read<MapEditorProvider>().paintCell(x, y);
@@ -124,7 +123,6 @@ class MapEditor extends StatelessWidget {
               return Tuple2(Coord(p.width, p.height), p.rMap.layers.length);
             },
             builder: (context, _, child) {
-              print('build');
               final model = context.read<MapEditorProvider>();
               final rMap = model.rMap;
               final width = rMap.width;
@@ -604,21 +602,21 @@ class _FooterState extends State<Footer> {
                       ),
                     ),
                     NormalButton(
-                      text: '取消选择',
+                      text: 'cancelSelect'.langWatch,
                       onTap: () {
                         context.read<MapEditorProvider>().setTileId(null);
                       },
                     ),
                     const SizedBox(width: 10),
                     NormalButton(
-                      text: '修改大小',
+                      text: 'resize'.langWatch,
                       onTap: () {
                         showModifySize(context);
                       },
                     ),
                     const SizedBox(width: 10),
                     MainButton(
-                      text: '预览',
+                      text: 'preview'.langWatch,
                       icon: const Icon(
                         Icons.save,
                         size: 15,
@@ -637,17 +635,23 @@ class _FooterState extends State<Footer> {
                                 game: MyGame(
                                   mapData: model.rMap,
                                 ),
+                                initialActiveOverlays: const ["backBtn"],
                                 overlayBuilderMap: {
                                   "backBtn": (context, game) {
-                                    return Center(
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: NormalButton(
-                                          text: '返回',
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
+                                    return Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 20,
+                                          top: 20,
+                                        ),
+                                        child: SizedBox(
+                                          child: NormalButton(
+                                            text: 'back'.lang,
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
                                         ),
                                       ),
                                     );
@@ -826,10 +830,10 @@ class MapEditorProvider with ChangeNotifier {
 
   MapEditorProvider() {
     final layerName = 'layer1'.lang;
-    const w = 50;
-    const h = 50;
+    const w = 20;
+    const h = 20;
     rMap = RMap(width: w, height: h, layers: {
-      layerName: _createLayer(1, w, h),
+      layerName: _createLayer(1, w, h, 1),
     });
     currLayerName = layerName;
   }
@@ -848,7 +852,7 @@ class MapEditorProvider with ChangeNotifier {
       layersVersion = UniqueKey();
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: '当前没有图层');
+      Fluttertoast.showToast(msg: 'noLayer'.lang);
     }
   }
 
@@ -923,14 +927,14 @@ class MapEditorProvider with ChangeNotifier {
     }
   }
 
-  RMapLayerData _createLayer(int index, int w, int h) {
+  RMapLayerData _createLayer(int index, int w, int h, [int? fill]) {
     return RMapLayerData(
       index: index,
       fill: null,
       obj: false,
       matrix: List.generate(
         h,
-        (_) => List.generate(w, (_) => RMapGlobal.emptyTile),
+        (_) => List.generate(w, (_) => fill ?? RMapGlobal.emptyTile),
       ),
     );
   }

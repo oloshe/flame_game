@@ -34,7 +34,12 @@
     "layerDeleted": "已删除",
     "layerAdded": "添加成功",
     "layerMax": "图层到达上限啦～",
-    "rowColumn": "行 @row，列 @column"
+    "rowColumn": "行 @row，列 @column",
+    "resize": "修改大小",
+    "back": "返回",
+    "cancelSelect": "取消选择",
+    "preview": "预览",
+    "noLayer": "当前没有图层"
   },
   "en_US": {
     "plains": "plains",
@@ -70,6 +75,11 @@
     "layerDeleted": "Layer Deleted!",
     "layerAdded": "Layer Added",
     "layerMax": "Too many layers～",
-    "rowColumn": "Row @row, Column @column"
+    "rowColumn": "Row @row, Column @column",
+    "resize": "Resize",
+    "back": "Back",
+    "cancelSelect": "Unselect",
+    "preview": "Preview",
+    "noLayer": "no layers"
   }
 }

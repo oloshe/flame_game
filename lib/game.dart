@@ -6,9 +6,10 @@ import 'package:game/components/joystick.dart';
 import 'package:game/components/my_map.dart';
 import 'package:flame/game.dart';
 import 'package:game/components/player.dart';
+import 'dart:math' as math;
 
 class MyGame extends FlameGame
-    with HasDraggables, HasCollisionDetection, TapDetector {
+    with HasDraggables, HasCollisionDetection {
   MyGame({
     this.mapData,
   });
@@ -40,31 +41,16 @@ class MyGame extends FlameGame
     );
     await add(myMap);
 
-    // print(myMap.size.toRect());
+    final rect1 = size.toRect();
+    final rect2 = myMap.size.toRect();
     camera.followComponent(
       player,
-      worldBounds: myMap.size.toRect(),
+      worldBounds: Rect.fromLTWH(
+        0, 0,
+        math.max(rect1.width, rect2.width),
+        math.max(rect1.height, rect2.height),
+      ),
     );
     add(joystick);
-
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
-  @override
-  void onTap() {
-    print(overlays.value);
-    if (overlays.value.contains('backBtn')) {
-      print(true);
-      overlays.add('backBtn');
-    }
   }
 }

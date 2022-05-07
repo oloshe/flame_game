@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,7 +6,7 @@ import 'package:game/common.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/player.dart';
 
-class MyMap extends PositionComponent {
+class MyMap extends PositionComponent with HasGameRef {
   /// 源地图的基本尺寸
   static final srcBase = Vector2(16, 16);
 
@@ -29,11 +30,17 @@ class MyMap extends PositionComponent {
     await super.onLoad();
     RMap realMap = mapData ?? await R.mapMgr.loadMap('home');
     size = realMap.size..multiply(base);
-    print(anchor);
     await draw(realMap);
+    if (size.x < gameRef.size.x) {
+      position.x = (gameRef.size.x - size.x) / 2;
+    }
+    if (size.y < gameRef.size.y) {
+      position.y = (gameRef.size.y - size.y) / 2;
+    }
     player.position = size / 2;
     player.priority = 100;
     await add(player);
+    add(RectangleHitbox());
   }
 
   Future<void> draw(RMap mapData) async {

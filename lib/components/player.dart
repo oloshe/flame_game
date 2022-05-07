@@ -127,7 +127,7 @@ class Player extends PositionComponent
     super.onCollision(intersectionPoints, other);
 
     if (!_hasCollided) {
-      if (other is TileHitbox) {
+      if (other is TileHitbox || other is MyMap) {
         _hasCollided = true;
         _collisionDirection = joystick.direction;
       }
@@ -143,7 +143,7 @@ class Player extends PositionComponent
   @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
-    if (other is TileHitbox) {
+    if (other is TileHitbox || other is MyMap) {
       _hasCollided = false;
       _collisionDirection = JoystickDirection.idle;
     }
