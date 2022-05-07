@@ -44,22 +44,6 @@ class MyApp extends StatelessWidget {
           navigatorKey: navKey,
           // home: GameWidget(
           //   game: MyGame(),
-          //   overlayBuilderMap: {
-          //     "backBtn": (context, game) {
-          //       return Center(
-          //         child: Container(
-          //           width: 100,
-          //           height: 100,
-          //           child: NormalButton(
-          //             text: '返回',
-          //             onTap: () {
-          //               Navigator.pop(context);
-          //             },
-          //           ),
-          //         ),
-          //       );
-          //     }
-          //   },
           // ),
           home: Consumer<Translations>(
             builder: (context, tr, child) {

@@ -222,52 +222,64 @@ class _LayerToolState extends State<_LayerTool> {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: const Color(0xff323844),
-      child: Row(
-        children: [
-          Expanded(
-            child: Selector<MapEditorProvider, Tuple2<int, Iterable<String>>>(
-              selector: (_, p) => Tuple2(
-                p.rMap.layers.length,
-                p.rMap.layers.keys,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          children: [
+            Expanded(
+              child: Selector<MapEditorProvider, Tuple2<int, Iterable<String>>>(
+                selector: (_, p) => Tuple2(
+                  p.rMap.layers.length,
+                  p.rMap.layers.keys,
+                ),
+                builder: (_, __, ___) {
+                  final tabs = context
+                      .read<MapEditorProvider>()
+                      .rMap
+                      .layerList
+                      .map((e) => e.key)
+                      .toList(growable: false);
+                  return _LayerTab(tabs);
+                },
               ),
-              builder: (_, __, ___) {
-                final tabs = context
-                    .read<MapEditorProvider>()
-                    .rMap
-                    .layerList
-                    .map((e) => e.key)
-                    .toList(growable: false);
-                return _LayerTab(tabs);
-              },
             ),
-          ),
-          const SizedBox(width: 4),
-          TextButton(
-            onPressed: showAddLayerModal,
-            child: const Icon(Icons.add),
-          ),
-          TextButton(
-            onPressed: showEditLayerNameModal,
-            child: const Icon(
-              Icons.edit,
-              color: Color(0xffafb1b3),
+            const SizedBox(width: 4),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    TextButton(
+                      onPressed: showAddLayerModal,
+                      child: const Icon(Icons.add),
+                    ),
+                    TextButton(
+                      onPressed: showEditLayerNameModal,
+                      child: const Icon(
+                        Icons.edit,
+                        color: Color(0xffafb1b3),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: showDeleteLayerModal,
+                      child: const Icon(
+                        Icons.delete_forever,
+                        color: Color(0xffc75450),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: fillLayer,
+                      child: const Icon(
+                        Icons.format_color_fill,
+                        color: Color(0xff10a50c),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          TextButton(
-            onPressed: showDeleteLayerModal,
-            child: const Icon(
-              Icons.delete_forever,
-              color: Color(0xffc75450),
-            ),
-          ),
-          TextButton(
-            onPressed: fillLayer,
-            child: const Icon(
-              Icons.format_color_fill,
-              color: Color(0xff10a50c),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
