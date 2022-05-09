@@ -4,7 +4,8 @@
     "srcSize": [48, 48]
   },
   "skeleton": {
-    "path": "characters/skeleton.png"
+    "path": "characters/skeleton.png",
+    "srcSize": [64, 64]
   },
   "slime": {
     "path": "characters/slime.png"

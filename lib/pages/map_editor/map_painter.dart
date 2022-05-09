@@ -1,15 +1,17 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/coord.dart';
+import 'package:game/components/my_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 
 class MapPainter extends CustomPainter {
-
   final RMapLayerData layerData;
 
+  /// 表示整个图层的宽度和高度
   final int width;
   final int height;
 
@@ -25,21 +27,36 @@ class MapPainter extends CustomPainter {
     if (layer == null || layer.visible == false) {
       return;
     }
-    const len = MapEditor.len2;
+    final len = MapEditor.len;
+    Map<String, SpriteBatch> batch = {};
     _eachCell(width, height, (x, y) {
       final id = layer.matrix[y][x];
       if (id != RMapGlobal.emptyTile) {
         final tileData = R.getTileById(id);
-        MapEditor.spriteCached[id]!.render(
-          canvas,
-          size: Vector2(
-            len * (tileData?.size.x ?? 1),
-            len* (tileData?.size.y ?? 1),
-          ),
-          position: Vector2(len * x, len * y),
-        );
+        if (tileData != null) {
+          final pic = tileData.pic;
+          final sp = MapEditor.spriteCached[id]!;
+          if (!batch.containsKey(pic)) {
+            batch[pic] = SpriteBatch(sp.image);
+          }
+          batch[pic]!.add(
+            source: Rect.fromLTWH(
+              sp.srcPosition.x,
+              sp.srcPosition.y,
+              sp.srcSize.x,
+              sp.srcSize.y,
+            ),
+            scale: MyMap.scaleFactor,
+            offset: Vector2(len * x, len * y),
+          );
+        } else {
+          print('error');
+        }
       }
     });
+    for (final item in batch.entries) {
+      item.value.render(canvas);
+    }
   }
 
   @override
@@ -49,7 +66,6 @@ class MapPainter extends CustomPainter {
 }
 
 class MapGridPainter extends CustomPainter {
-
   final int width;
   final int height;
 
@@ -61,7 +77,7 @@ class MapGridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const len = MapEditor.len2;
+    final len = MapEditor.len;
     // 绘制网格
     _eachCell(width, height, (x, y) {
       canvas.drawRect(Rect.fromLTWH(x * len, y * len, len, len), painter);
@@ -77,14 +93,13 @@ class MapGridPainter extends CustomPainter {
 class CurrTilePainter extends CustomPainter {
   CurrTilePainter(this.coord);
   final Coord coord;
-  static const len = MapEditor.len2;
   static final Paint painter2 = Paint()
     ..color = Colors.orange
     ..strokeWidth = 2
     ..style = PaintingStyle.stroke;
   @override
   void paint(Canvas canvas, Size size) {
-    const len = MapEditor.len2;
+    final len = MapEditor.len;
     // 绘制选中
     canvas.drawRect(
       Rect.fromLTWH(coord.x * len, coord.y * len, len, len),
@@ -96,7 +111,6 @@ class CurrTilePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-
 }
 
 void _eachCell(int width, int height, void Function(int x, int y) func) {

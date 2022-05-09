@@ -7,15 +7,28 @@ import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/player.dart';
 import 'package:image/image.dart';
 
+typedef BatchFunction = void Function(
+  String pic,
+  Sprite,
+  Vector2 size,
+  Vector2 pos,
+  int priority,
+);
+
 class MyMap extends PositionComponent with HasGameRef {
   /// 源地图的基本尺寸
   static final srcBase = Vector2(16, 16);
+
+  /// 人物的基本尺寸
+  static final characterSrcSize = Vector2(48, 48);
 
   /// 显示上缩放的倍数
   static const scaleFactor = 30 / 16; // 1.875
 
   /// 缩放之后的实际显示向量
   static final base = srcBase * scaleFactor;
+  /// 缩放之后的实际显示向量
+  static final characterBase = characterSrcSize * scaleFactor;
 
   MyMap({
     required this.player,
@@ -85,9 +98,7 @@ class MyMap extends PositionComponent with HasGameRef {
     required int id,
     required Vector2 pos,
     required RMapLayerData layer,
-    required void Function(
-            String pic, Sprite, Vector2 size, Vector2 pos, int priority)
-        onBatch,
+    required BatchFunction onBatch,
   }) async {
     RTileData tileData = R.getTileById(id)!;
     Vector2 spriteSize = tileData.size.clone()..multiply(base);
@@ -105,8 +116,9 @@ class MyMap extends PositionComponent with HasGameRef {
           relation: tileData.polygon,
         ));
       } else {
+        // return;
         // 单独生成带有碰撞的
-        await add(HitboxSprite(
+        await add(BodySprite(
           sprite,
           size: spriteSize,
           position: spritePosition,

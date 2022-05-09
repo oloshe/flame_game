@@ -14,12 +14,44 @@
       "attack": {
         "row": 2,
         "to": 3,
-        "stepTime": 0.2
+        "stepTime": 0.2,
+        "loop": false
       },
       "die": {
         "row": 4,
         "to": 4,
         "stepTime": 0.2
+      }
+    }
+  },
+  "skeleton": {
+    "pic": "skeleton",
+    "enum": "SkeletonStatus",
+    "animations": {
+      "idle": {
+        "row": 0,
+        "stepTime": 0.2
+      },
+      "running": {
+        "row": 1,
+        "stepTime": 0.1
+      },
+      "attack": {
+        "row": 2,
+        "to": 5,
+        "stepTime": 0.1,
+        "loop": false
+      },
+      "hurt": {
+        "row": 3,
+        "to": 3,
+        "stepTime": 0.2,
+        "loop": false
+      },
+      "die": {
+        "row": 4,
+        "stepTime": 0.2,
+        "loop": false
       }
     }
   }

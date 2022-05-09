@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 void main() async {
-  await generateImgAlias();
+  // await generateImgAlias();
   await generateAnimation();
 }
 

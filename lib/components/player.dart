@@ -34,29 +34,32 @@ class Player extends PositionComponent
   /// 移动速度
   double maxSpeed = 150.0;
 
+  /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
+  /// 是否有碰撞
   bool _hasCollided = false;
 
+  /// 轮盘方向
   JoystickDirection _collisionDirection = JoystickDirection.idle;
 
+  /// 碰撞体
   late final PolygonHitbox hitBox;
 
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
 
-    final _size = Vector2(48, 48) * MyMap.scaleFactor; // MyMap.base,
     statusComp = SpriteAnimationGroupComponent(
       animations:
           await R.createAnimations(PlayerStatus.values, R.animations.player),
       current: PlayerStatus.idle,
       position: Vector2.zero(),
-      size: _size,
+      size: MyMap.characterBase,
       anchor: Anchor.center,
     );
     add(statusComp);
-    size = MyMap.srcBase * MyMap.scaleFactor;
+    size = MyMap.base;
 
     final hitBoxPaint = BasicPalette.white.paint()
       ..style = PaintingStyle.stroke;
@@ -71,24 +74,33 @@ class Player extends PositionComponent
       anchor: Anchor.center,
       position: Vector2(0, size.y),
       parentSize: size,
-    )
-      ..paint = hitBoxPaint
-      ..renderShape = true;
+    );
+    if (MyGame.showHitbox) {
+      hitBox
+        ..paint = hitBoxPaint
+        ..renderShape = true;
+    }
 
     add(hitBox);
   }
 
   final painter = Paint()..color = Colors.black12;
 
+  bool get isAttacking => statusComp.current == PlayerStatus.attack;
+
   @override
   void update(double dt) {
     // 手柄移动了
     if (!joystick.delta.isZero()) {
-      changeStatus(PlayerStatus.running);
-      move(joystick.relativeDelta * maxSpeed * dt);
-      _checkFlip();
+      if (!isAttacking) {
+        changeStatus(PlayerStatus.running);
+        move(joystick.relativeDelta * maxSpeed * dt);
+      }
     } else {
-      changeStatus(PlayerStatus.idle);
+      // 没有移动
+      if (!isAttacking) {
+        changeStatus(PlayerStatus.idle);
+      }
     }
   }
 
@@ -106,12 +118,13 @@ class Player extends PositionComponent
     } else {
       position.add(delta);
     }
+    _checkFlip(delta);
   }
 
   // 如果是左边则翻转
-  void _checkFlip() {
+  void _checkFlip(Vector2 delta) {
     // 朝左边翻转人物
-    final _isLeft = joystick.direction.isLeft;
+    final _isLeft = delta.x.isNegative;
     if (_isLeft != isLeft) {
       isLeft = _isLeft;
       if (_isLeft) {
@@ -130,14 +143,9 @@ class Player extends PositionComponent
       if (other is TileHitbox || other is MyMap) {
         _hasCollided = true;
         _collisionDirection = joystick.direction;
+        print(intersectionPoints);
       }
     }
-  }
-
-  @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollisionStart(intersectionPoints, other);
   }
 
   @override
@@ -149,22 +157,26 @@ class Player extends PositionComponent
     }
   }
 
+  /// 改变状态
   void changeStatus(PlayerStatus status) {
     statusComp.current = status;
+  }
+
+  /// 攻击
+  void attack() {
+    statusComp.current = PlayerStatus.attack;
+    statusComp.animation!.onComplete = onAttackCompleted;
+  }
+
+  /// 攻击完成的回调函数
+  void onAttackCompleted() {
+    statusComp.animation!.reset();
+    statusComp.current = PlayerStatus.idle;
+    statusComp.animation!.onComplete = null;
   }
 }
 
 extension JudgeExt on JoystickDirection {
-  bool get isLeft {
-    switch (this) {
-      case JoystickDirection.left:
-      case JoystickDirection.downLeft:
-      case JoystickDirection.upLeft:
-        return true;
-      default:
-        return false;
-    }
-  }
 
   Vector2 get signVector {
     switch (this) {

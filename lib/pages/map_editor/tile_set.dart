@@ -88,8 +88,8 @@ class _TileSetState extends State<TileSet> {
                   tileSize: e.value.size,
                 ),
                 size: Size(
-                  MapEditor.len2 * e.value.size.x,
-                  MapEditor.len2 * e.value.size.y,
+                  MapEditor.len * e.value.size.x,
+                  MapEditor.len * e.value.size.y,
                 ),
               ),
             );

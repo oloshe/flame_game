@@ -6,3 +6,10 @@ enum PlayerStatus {
   attack,
   die,
 }
+enum SkeletonStatus {
+  idle,
+  running,
+  attack,
+  hurt,
+  die,
+}

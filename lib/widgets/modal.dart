@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/provider_helper.dart';
@@ -46,6 +48,9 @@ class Modal {
                     width: width ?? 300,
                     child: Focus(
                       onFocusChange: (val) {
+                        if (kIsWeb) {
+                          return;
+                        }
                         context.vmSet<bool>(val);
                       },
                       child: SingleChildScrollView(

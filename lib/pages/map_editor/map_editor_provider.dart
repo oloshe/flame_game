@@ -104,12 +104,20 @@ class MapEditorProvider with ChangeNotifier {
 
   void deleteLayer(String name) {
     if (rMap.layers.containsKey(name)) {
+      // 记录旧的下标
+      final oldIndex = rMap.layerList.indexWhere((e) => e.key == name);
       rMap.layers.remove(name);
       Fluttertoast.showToast(msg: 'layerDeleted'.lang);
       if (currLayerName == name) {
+        // 改变当前选择name
+        // 使用oldIndex指向的那个name，如果不存在...
         if (rMap.layers.isNotEmpty) {
-          final newCurrName = rMap.layers.keys.toList(growable: false)[0];
-          currLayerName = newCurrName;
+          if (oldIndex >= rMap.layers.length) {
+            currLayerName = rMap.layerList.last.key;
+          } else {
+            final newCurrName = rMap.layerList[oldIndex].key;
+            currLayerName = newCurrName;
+          }
         } else {
           currLayerName = null;
         }

@@ -26,6 +26,7 @@ class RAnimationData {
   RAnimationItemData? getAnimation(String animationName) =>
       animations[animationName];
 
+  /// 传入动画枚举，返回动画组，配合 [SpriteAnimationGroupComponent] 使用
   Future<Map<T, SpriteAnimation>> getAnimationsMap<T extends Enum>(
     List<T> enumValues,
     String name,

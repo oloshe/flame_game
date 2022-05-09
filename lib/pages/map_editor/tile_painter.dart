@@ -22,7 +22,7 @@ class TilePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (sprite != null) {
-      final _size = unitSize ?? MapEditor.len2;
+      final _size = unitSize ?? MapEditor.len;
       sprite!.render(
         canvas,
         size: Vector2(_size * tileSize.x, _size * tileSize.y),

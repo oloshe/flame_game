@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
+import 'package:game/game.dart';
 
 class TileHitbox extends PositionComponent {
   TileHitbox({
@@ -28,8 +29,10 @@ class TileHitbox extends PositionComponent {
     } else {
       box = RectangleHitbox();
     }
-    box.paint = hitBoxPaint;
-    box.renderShape = true;
+    if (MyGame.showHitbox) {
+      box.paint = hitBoxPaint;
+      box.renderShape = true;
+    }
     add(box);
   }
 }

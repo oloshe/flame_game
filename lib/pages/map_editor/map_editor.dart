@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
 import 'package:game/common/coord.dart';
+import 'package:game/components/my_map.dart';
 import 'package:game/pages/map_editor/editor_footer.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/map_painter.dart';
@@ -13,8 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class MapEditor extends StatelessWidget {
-  static const int len = 48;
-  static const double len2 = 48.0;
+  static final double len = MyMap.base.x;
   static const minWidth = 10;
   static const minHeight = 10;
 
@@ -122,7 +122,13 @@ class MapEditor extends StatelessWidget {
               final rMap = model.rMap;
               final width = rMap.width;
               final height = rMap.height;
-              final size = Size(width * len2, height * len2);
+              final size = Size(width * len, height * len);
+              // if (rMap.layers.isEmpty) {
+              //   return SizedBox.fromSize(
+              //     size: size,
+              //     child: const Center(child: Text('No Layer')),
+              //   );
+              // }
               return SizedBox.fromSize(
                 size: size,
                 child: Stack(
