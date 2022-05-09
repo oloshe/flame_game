@@ -7,6 +7,8 @@ import 'package:flame_forge2d/body_component.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:forge2d/src/dynamics/body.dart';
+import 'package:game/common/geometry/polygon.dart';
+import 'package:game/common/geometry/shape.dart';
 import 'package:game/components/tile_hitbox.dart';
 import 'package:game/game.dart';
 
@@ -14,14 +16,19 @@ class BodySprite extends BodyComponent {
   BodySprite(
     this.sprite, {
     required this.size,
-    this.position,
+    required this.position,
     this.relation,
     int? priority,
-  }) : super(priority: priority);
+  }) : super(
+          paint: Paint()
+            ..color = Color(0xff00ff00)
+            ..style = PaintingStyle.stroke,
+          priority: priority,
+        );
 
   Sprite sprite;
   Vector2 size;
-  Vector2? position;
+  Vector2 position;
 
   List<Vector2>? relation;
 
@@ -33,25 +40,37 @@ class BodySprite extends BodyComponent {
     spriteComp = SpriteComponent(
       sprite: sprite,
       size: size,
-      position: position,
       priority: priority,
     );
     add(spriteComp);
     position = position;
+    if (!MyGame.showHitbox) {
+      renderBody = false;
+    }
     // add(TileHitbox(vectors: relation, size: size));
   }
 
   @override
   Body createBody() {
     final bodyDef = BodyDef(
-      type: BodyType.static,
+      type: BodyType.kinematic,
+      // userData: this,
+      position: position,
+      fixedRotation: true,
     );
     final body = world.createBody(bodyDef);
     // 碰撞体
     if (relation != null) {
       final shape = PolygonShape();
+      final vertices = relation!
+          .map(
+            (e) => e.clone()
+              ..multiply(size / 2) // 大小
+              ..add(size / 2), // 偏移
+          )
+          .toList(growable: false);
 
-      shape.set(relation!);
+      shape.set(vertices);
 
       final fixtureDef = FixtureDef(
         shape,
@@ -66,12 +85,12 @@ class BodySprite extends BodyComponent {
   }
 }
 
-class CoverCollisionSprite extends BodySprite {
-  CoverCollisionSprite(
+class CoverBodySprite extends BodySprite with CollisionCallbacks {
+  CoverBodySprite(
     Sprite sprite, {
     required this.cover,
     required Vector2 size,
-    Vector2? position,
+    required Vector2 position,
     int? priority,
     List<Vector2>? relation,
   }) : super(
@@ -83,28 +102,27 @@ class CoverCollisionSprite extends BodySprite {
         );
 
   List<Vector2> cover;
-  late final PolygonHitbox hitBox;
+  // late final MyShape coverShape;
   bool _isCover = false;
+
+  static final hitBoxPaint = BasicPalette.green.paint()
+    ..style = PaintingStyle.stroke;
 
   int? oldP;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    final hitBoxPaint = BasicPalette.green.paint()
-      ..style = PaintingStyle.stroke;
 
-    hitBox = PolygonHitbox.relative(
-      cover,
-      parentSize: size,
-      anchor: Anchor.center,
-    );
-    if (MyGame.showHitbox) {
-      hitBox
-        ..paint = hitBoxPaint
-        ..renderShape = true;
-    }
-    spriteComp.add(hitBox);
+    // coverShape = MyPolygonShape(
+    //   cover.map((e) => e.clone()..multiply(size / 2)..add(size / 2)).toList(growable: false),
+    // );
+    // if (MyGame.showHitbox) {
+    //   hitBox
+    //     ..paint = hitBoxPaint
+    //     ..renderShape = true;
+    // }
+    // spriteComp.add(hitBox);
   }
 
   @override
@@ -115,19 +133,19 @@ class CoverCollisionSprite extends BodySprite {
 
   void checkCover() {
     /// 是否香蕉或者包含
-    final isIntersectOrContain =
-        hitBox.aabb.containsAabb2((gameRef as MyGame).player.hitBox.aabb) ||
-            hitBox.collidingWith((gameRef as MyGame).player.hitBox);
-    if (_isCover != isIntersectOrContain) {
-      _isCover = isIntersectOrContain;
-      if (isIntersectOrContain) {
-        oldP = priority;
-        spriteComp.setOpacity(0.9);
-        priority = 200;
-      } else {
-        setOpacity(1);
-        priority = oldP!;
-      }
-    }
+    // final isIntersectOrContain = hitBox
+    //     .toAbsoluteRect()
+    //     .overlaps((gameRef as MyGame).player.hitBox.toAbsoluteRect());
+    // if (_isCover != isIntersectOrContain) {
+    //   _isCover = isIntersectOrContain;
+    //   if (isIntersectOrContain) {
+    //     oldP = priority;
+    //     spriteComp.setOpacity(0.9);
+    //     priority = 200;
+    //   } else {
+    //     setOpacity(1);
+    //     priority = oldP!;
+    //   }
+    // }
   }
 }

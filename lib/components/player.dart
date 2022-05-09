@@ -5,7 +5,10 @@ import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
+import 'package:flame_forge2d/body_component.dart';
+import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
+import 'package:forge2d/src/dynamics/body.dart';
 import 'package:game/common.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/my_map.dart';
@@ -19,8 +22,7 @@ enum PlayerStatus {
   die,
 }
 
-class Player extends PositionComponent
-    with HasGameRef<MyGame>, CollisionCallbacks {
+class Player extends PositionComponent with HasGameRef<MyGame> {
   Player({
     required this.joystick,
   });
@@ -37,14 +39,15 @@ class Player extends PositionComponent
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
-  /// 是否有碰撞
-  bool _hasCollided = false;
-
-  /// 轮盘方向
-  JoystickDirection _collisionDirection = JoystickDirection.idle;
-
   /// 碰撞体
   late final PolygonHitbox hitBox;
+
+  static final vertices = [
+    Vector2(0.6, 0),
+    Vector2(0.6, 0.4),
+    Vector2(-0.6, 0.4),
+    Vector2(-0.6, 0),
+  ];
 
   @override
   Future<void>? onLoad() async {
@@ -58,30 +61,27 @@ class Player extends PositionComponent
       size: MyMap.characterBase,
       anchor: Anchor.center,
     );
-    add(statusComp);
+    // add(statusComp);
     size = MyMap.base;
 
     final hitBoxPaint = BasicPalette.white.paint()
       ..style = PaintingStyle.stroke;
 
-    hitBox = PolygonHitbox.relative(
-      [
-        Vector2(0.6, 0),
-        Vector2(0.6, 0.4),
-        Vector2(-0.6, 0.4),
-        Vector2(-0.6, 0),
-      ],
-      anchor: Anchor.center,
-      position: Vector2(0, size.y),
-      parentSize: size,
-    );
-    if (MyGame.showHitbox) {
-      hitBox
-        ..paint = hitBoxPaint
-        ..renderShape = true;
-    }
+    // hitBox = PolygonHitbox.relative(
+    //   vertices,
+    //   anchor: Anchor.center,
+    //   position: Vector2(0, size.y),
+    //   parentSize: size,
+    // );
+    // if (MyGame.showHitbox) {
+    //   hitBox
+    //     ..paint = hitBoxPaint
+    //     ..renderShape = true;
+    // }
+    //
+    // add(hitBox);
+    add(PlayerBody(size: size, position: position));
 
-    add(hitBox);
   }
 
   final painter = Paint()..color = Colors.black12;
@@ -105,19 +105,15 @@ class Player extends PositionComponent
   }
 
   void move(Vector2 delta) {
-    if (_hasCollided) {
-      final sign = _collisionDirection.signVector;
-      var newDelta = delta.clone();
-      if (delta.x.sign == sign.x) {
-        newDelta.x = 0;
-      }
-      if (delta.y.sign == sign.y) {
-        newDelta.y = 0;
-      }
-      position.add(newDelta);
-    } else {
-      position.add(delta);
+    final sign = delta.normalized();
+    var newDelta = delta.clone();
+    if (delta.x.sign == sign.x) {
+      newDelta.x = 0;
     }
+    if (delta.y.sign == sign.y) {
+      newDelta.y = 0;
+    }
+    position.add(newDelta);
     _checkFlip(delta);
   }
 
@@ -132,28 +128,6 @@ class Player extends PositionComponent
       } else {
         statusComp.scale = Vector2(1, 1);
       }
-    }
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollision(intersectionPoints, other);
-
-    if (!_hasCollided) {
-      if (other is TileHitbox || other is MyMap) {
-        _hasCollided = true;
-        _collisionDirection = joystick.direction;
-        print(intersectionPoints);
-      }
-    }
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    super.onCollisionEnd(other);
-    if (other is TileHitbox || other is MyMap) {
-      _hasCollided = false;
-      _collisionDirection = JoystickDirection.idle;
     }
   }
 
@@ -177,7 +151,6 @@ class Player extends PositionComponent
 }
 
 extension JudgeExt on JoystickDirection {
-
   Vector2 get signVector {
     switch (this) {
       case JoystickDirection.idle:
@@ -199,5 +172,39 @@ extension JudgeExt on JoystickDirection {
       case JoystickDirection.downRight:
         return Vector2(1, 1);
     }
+  }
+}
+
+class PlayerBody extends BodyComponent {
+  PlayerBody({
+    required this.size,
+    required this.position,
+  });
+
+  Vector2 size;
+  Vector2 position;
+
+  @override
+  Body createBody() {
+    final bodyDef = BodyDef(
+      type: BodyType.dynamic,
+      fixedRotation: true,
+      position: position,
+    );
+    print(position);
+    final list = Player.vertices
+        .map((e) => e..clone()
+            ..multiply(size / 2),
+            )
+        .toList(growable: false);
+    print(Player.vertices);
+    final textureDef = FixtureDef(
+      PolygonShape()..set(list),
+      userData: this, // To be able to determine object in collision
+      restitution: 0.4,
+      density: 1.0,
+      friction: 0.5,
+    );
+    return world.createBody(bodyDef)..createFixture(textureDef);
   }
 }

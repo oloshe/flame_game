@@ -16,7 +16,7 @@ class MyGame extends Forge2DGame
   MyGame({
     this.mapData,
   }) : super(
-          gravity: Vector2.zero(),
+          gravity: Vector2(0, 0),
           zoom: 1,
         );
 

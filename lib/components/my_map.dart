@@ -107,7 +107,7 @@ class MyMap extends PositionComponent with HasGameRef {
     // 如果有碰撞
     if (tileData.hit) {
       if (tileData.cover != null) {
-        await add(CoverCollisionSprite(
+        await add(CoverBodySprite(
           sprite,
           cover: tileData.cover!,
           size: spriteSize,

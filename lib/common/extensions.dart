@@ -17,3 +17,11 @@ extension TranslationExt on String {
     return result;
   }
 }
+
+// extension OffSetExt on Offset {
+//
+//   Vector2 toVector2() {
+//     return Vector2(dx, dy);
+//   }
+// }
+
