@@ -7,7 +7,7 @@ import 'shape.dart';
 
 class CircleShape extends MyShape {
   final double radius;
-  final RectangleShape rect;
+  final MyRectangleShape rect;
   Vector2 center;
   Offset offsetToDraw;
 
@@ -15,7 +15,7 @@ class CircleShape extends MyShape {
       : center = (position ?? Vector2.zero()) + Vector2.all(radius),
         offsetToDraw = Offset((position ?? Vector2.zero()).x + radius,
             (position ?? Vector2.zero()).y + radius),
-        rect = RectangleShape(
+        rect = MyRectangleShape(
           Vector2(2 * radius, 2 * radius),
           position: position,
         ),

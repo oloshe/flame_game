@@ -6,13 +6,12 @@ import 'package:flame/image_composition.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame_forge2d/body_component.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
-import 'package:forge2d/src/dynamics/body.dart';
 import 'package:game/common.dart';
+import 'package:game/common/geometry/polygon.dart';
+import 'package:game/common/geometry/shape.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/my_map.dart';
-import 'package:game/components/tile_hitbox.dart';
 import 'package:game/game.dart';
 
 enum PlayerStatus {
@@ -40,7 +39,8 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
   bool isLeft = false;
 
   /// 碰撞体
-  late final PolygonHitbox hitBox;
+  // late final MyShape shape;
+  late final PolygonHitbox hitbox;
 
   static final vertices = [
     Vector2(0.6, 0),
@@ -61,27 +61,20 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
       size: MyMap.characterBase,
       anchor: Anchor.center,
     );
-    // add(statusComp);
+    add(statusComp);
     size = MyMap.base;
 
-    final hitBoxPaint = BasicPalette.white.paint()
-      ..style = PaintingStyle.stroke;
-
-    // hitBox = PolygonHitbox.relative(
+    // shape = MyPolygonShape(
     //   vertices,
-    //   anchor: Anchor.center,
-    //   position: Vector2(0, size.y),
-    //   parentSize: size,
     // );
-    // if (MyGame.showHitbox) {
-    //   hitBox
-    //     ..paint = hitBoxPaint
-    //     ..renderShape = true;
-    // }
-    //
-    // add(hitBox);
-    add(PlayerBody(size: size, position: position));
 
+    hitbox = PolygonHitbox.relative(
+      Player.vertices,
+      position: Vector2(0, size.y),
+      parentSize: size,
+    );
+
+    add(hitbox);
   }
 
   final painter = Paint()..color = Colors.black12;
@@ -105,15 +98,15 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
   }
 
   void move(Vector2 delta) {
-    final sign = delta.normalized();
-    var newDelta = delta.clone();
-    if (delta.x.sign == sign.x) {
-      newDelta.x = 0;
-    }
-    if (delta.y.sign == sign.y) {
-      newDelta.y = 0;
-    }
-    position.add(newDelta);
+    // final sign = delta.normalized();
+    // var newDelta = delta.clone();
+    // if (delta.x.sign == sign.x) {
+    //   newDelta.x = 0;
+    // }
+    // if (delta.y.sign == sign.y) {
+    //   newDelta.y = 0;
+    // }
+    position.add(delta);
     _checkFlip(delta);
   }
 
@@ -172,39 +165,5 @@ extension JudgeExt on JoystickDirection {
       case JoystickDirection.downRight:
         return Vector2(1, 1);
     }
-  }
-}
-
-class PlayerBody extends BodyComponent {
-  PlayerBody({
-    required this.size,
-    required this.position,
-  });
-
-  Vector2 size;
-  Vector2 position;
-
-  @override
-  Body createBody() {
-    final bodyDef = BodyDef(
-      type: BodyType.dynamic,
-      fixedRotation: true,
-      position: position,
-    );
-    print(position);
-    final list = Player.vertices
-        .map((e) => e..clone()
-            ..multiply(size / 2),
-            )
-        .toList(growable: false);
-    print(Player.vertices);
-    final textureDef = FixtureDef(
-      PolygonShape()..set(list),
-      userData: this, // To be able to determine object in collision
-      restitution: 0.4,
-      density: 1.0,
-      friction: 0.5,
-    );
-    return world.createBody(bodyDef)..createFixture(textureDef);
   }
 }

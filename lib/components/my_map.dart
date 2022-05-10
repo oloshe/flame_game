@@ -107,7 +107,7 @@ class MyMap extends PositionComponent with HasGameRef {
     // 如果有碰撞
     if (tileData.hit) {
       if (tileData.cover != null) {
-        await add(CoverBodySprite(
+        await add(CoverShapeSprite(
           sprite,
           cover: tileData.cover!,
           size: spriteSize,
@@ -118,7 +118,7 @@ class MyMap extends PositionComponent with HasGameRef {
       } else {
         // return;
         // 单独生成带有碰撞的
-        await add(BodySprite(
+        await add(ShapeSprite(
           sprite,
           size: spriteSize,
           position: spritePosition,

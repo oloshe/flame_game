@@ -11,8 +11,8 @@ import 'shape.dart';
 /// Code based from: https://github.com/hahafather007/collision_check
 class ShapeCollision {
   static bool isCollision(MyShape a, MyShape b) {
-    if (a is RectangleShape) {
-      if (b is RectangleShape) {
+    if (a is MyRectangleShape) {
+      if (b is MyRectangleShape) {
         return rectToRect(a, b);
       } else if (b is CircleShape) {
         return rectToCircle(a, b);
@@ -22,7 +22,7 @@ class ShapeCollision {
         return false;
       }
     } else if (a is CircleShape) {
-      if (b is RectangleShape) {
+      if (b is MyRectangleShape) {
         return rectToCircle(b, a);
       } else if (b is CircleShape) {
         return circleToCircle(a, b);
@@ -32,7 +32,7 @@ class ShapeCollision {
         return false;
       }
     } else {
-      if (b is RectangleShape && a is MyPolygonShape) {
+      if (b is MyRectangleShape && a is MyPolygonShape) {
         return rectToPolygon(b, a);
       } else if (b is CircleShape && a is MyPolygonShape) {
         return circleToPolygon(b, a);
@@ -44,11 +44,11 @@ class ShapeCollision {
     }
   }
 
-  static bool rectToRect(RectangleShape a, RectangleShape b) {
+  static bool rectToRect(MyRectangleShape a, MyRectangleShape b) {
     return a.rect.overlaps(b.rect);
   }
 
-  static bool rectToCircle(RectangleShape a, CircleShape b) {
+  static bool rectToCircle(MyRectangleShape a, CircleShape b) {
     if (!rectToRect(a, b.rect)) return false;
 
     final points = [
@@ -66,7 +66,7 @@ class ShapeCollision {
     return false;
   }
 
-  static bool rectToPolygon(RectangleShape a, MyPolygonShape b) {
+  static bool rectToPolygon(MyRectangleShape a, MyPolygonShape b) {
     if (!rectToRect(a, b.rect)) return false;
     if (!isLinesShadowOver(
         a.leftTop, a.rightBottom, b.rect.leftTop, b.rect.rightBottom))

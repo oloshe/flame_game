@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:flame/extensions.dart';
 import 'package:game/common/geometry/shape.dart';
 
-class RectangleShape extends MyShape {
+class MyRectangleShape extends MyShape {
   Rect _rect;
   late Vector2 leftTop;
   late Vector2 rightTop;
   late Vector2 rightBottom;
   late Vector2 leftBottom;
 
-  RectangleShape(Vector2 size, {Vector2? position})
+  MyRectangleShape(Vector2 size, {Vector2? position})
       : _rect = Rect.fromLTWH(
           position?.x ?? 0,
           position?.y ?? 0,

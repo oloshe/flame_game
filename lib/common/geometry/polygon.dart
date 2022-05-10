@@ -7,7 +7,7 @@ import 'package:game/common/geometry/shape.dart';
 class MyPolygonShape extends MyShape {
   final List<Vector2> relativePoints;
   final List<Vector2> points;
-  final RectangleShape rect;
+  final MyRectangleShape rect;
   MyPolygonShape(this.relativePoints, {Vector2? position})
       : assert(relativePoints.length > 2),
         points = _initPoints(relativePoints, position ?? Vector2.zero()),
@@ -25,7 +25,7 @@ class MyPolygonShape extends MyShape {
     return list;
   }
 
-  static RectangleShape _initRect(
+  static MyRectangleShape _initRect(
     List<Vector2> relativePoints,
     Vector2 position,
   ) {
@@ -40,7 +40,7 @@ class MyPolygonShape extends MyShape {
       }
     }
 
-    return RectangleShape(Vector2(width, height), position: position);
+    return MyRectangleShape(Vector2(width, height), position: position);
   }
 
   @override

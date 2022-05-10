@@ -1,7 +1,6 @@
 import 'package:flame/image_composition.dart';
 import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/components/enemies/skeleton.dart';

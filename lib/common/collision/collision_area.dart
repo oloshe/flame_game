@@ -16,7 +16,7 @@ class CollisionArea {
   CollisionArea.rectangle({
     required Vector2 size,
     Vector2? align,
-  })  : shape = RectangleShape(size),
+  })  : shape = MyRectangleShape(size),
         align = align ?? Vector2.zero();
 
   CollisionArea.circle({
@@ -52,11 +52,11 @@ class CollisionArea {
       shapeAux = CircleShape(
         (shape as CircleShape).radius,
       );
-    } else if (shape is RectangleShape) {
-      shapeAux = RectangleShape(
+    } else if (shape is MyRectangleShape) {
+      shapeAux = MyRectangleShape(
         Vector2(
-          (shape as RectangleShape).rect.width,
-          (shape as RectangleShape).rect.height,
+          (shape as MyRectangleShape).rect.width,
+          (shape as MyRectangleShape).rect.height,
         ),
       );
     } else if (shape is MyPolygonShape) {
@@ -77,8 +77,8 @@ class CollisionArea {
       return (shape as CircleShape).rect.rect;
     }
 
-    if (shape is RectangleShape) {
-      return (shape as RectangleShape).rect;
+    if (shape is MyRectangleShape) {
+      return (shape as MyRectangleShape).rect;
     }
 
     if (shape is MyPolygonShape) {
