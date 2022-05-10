@@ -32,11 +32,11 @@ class CircleShape extends MyShape {
   }
 
   @override
-  void render(Canvas canvas, Paint paint) {
+  void render(Canvas canvas, [Paint? paint]) {
     canvas.drawCircle(
       Offset(position.x + radius, position.y + radius),
       radius,
-      paint,
+      paint ?? MyShape.paint,
     );
   }
 }

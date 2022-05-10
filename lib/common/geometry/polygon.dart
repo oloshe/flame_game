@@ -14,6 +14,29 @@ class MyPolygonShape extends MyShape {
         rect = _initRect(relativePoints, position ?? Vector2.zero()),
         super(position ?? Vector2.zero());
 
+  MyPolygonShape.relative(
+    Iterable<Vector2> relativePoints, {
+    required Vector2 size,
+    Vector2? position,
+  }) : this(
+          // position == null
+          //     ? relativePoints
+          //         .map((e) => e.clone()
+          //           ..multiply(size / 2)
+          //           ..add(size / 2))
+          //         .toList(growable: false)
+          //     : relativePoints
+          //         .map((e) => e.clone()..multiply(size / 2)
+          //         ..add(size / 2))
+          //         .toList(growable: false),
+          relativePoints
+              .map((e) => e.clone()
+                ..multiply(size / 2)
+                ..add(size / 2))
+              .toList(growable: false),
+          position: position,
+        );
+
   static List<Vector2> _initPoints(
     List<Vector2> relativePoints,
     Vector2 position,
@@ -56,16 +79,20 @@ class MyPolygonShape extends MyShape {
   }
 
   @override
-  void render(Canvas canvas, Paint paint) {
+  void render(Canvas canvas, [Paint? paint]) {
     if (points.isNotEmpty) {
-      paint.style = PaintingStyle.fill;
       final path = Path()..moveTo(points.first.x, points.first.y);
       for (var i = 1; i < points.length; i++) {
         path.lineTo(points[i].x, points[i].y);
       }
       path.lineTo(points.first.x, points.first.y);
 
-      canvas.drawPath(path, paint);
+      canvas.drawPath(path, paint ?? MyShape.paint);
     }
+  }
+
+  @override
+  String toString() {
+    return 'Polygon:($rect)';
   }
 }

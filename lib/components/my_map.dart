@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:game/common.dart';
+import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/player.dart';
 import 'package:image/image.dart';
@@ -51,7 +52,7 @@ class MyMap extends PositionComponent with HasGameRef {
     if (size.y < gameRef.size.y) {
       position.y = (gameRef.size.y - size.y) / 2;
     }
-    player.position = size / 2;
+    player.position = size/2;
     player.priority = 100;
     await add(player);
     add(RectangleHitbox());

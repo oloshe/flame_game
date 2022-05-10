@@ -25,3 +25,14 @@ extension TranslationExt on String {
 //   }
 // }
 
+extension MyShapeExt on PolygonComponent {
+  MyShape toShape() {
+    final anchorVec = anchor.toVector2()..multiply(size);
+    final _relativeVertices =
+        vertices.map((e) => e.clone() - anchorVec).toList(growable: false);
+    return MyPolygonShape(
+      _relativeVertices,
+      position: position,
+    );
+  }
+}

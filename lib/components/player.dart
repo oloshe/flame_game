@@ -9,6 +9,7 @@ import 'package:flame_forge2d/body_component.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/geometry/polygon.dart';
+import 'package:game/common/geometry/rectangle.dart';
 import 'package:game/common/geometry/shape.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/my_map.dart';
@@ -24,7 +25,7 @@ enum PlayerStatus {
 class Player extends PositionComponent with HasGameRef<MyGame> {
   Player({
     required this.joystick,
-  });
+  }) : super(size: MyMap.base);
 
   /// 手柄控制
   final JoystickComponent joystick;
@@ -39,15 +40,13 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
   bool isLeft = false;
 
   /// 碰撞体
-  // late final MyShape shape;
+  late final MyRectangleShape shape;
   late final PolygonHitbox hitbox;
 
-  static final vertices = [
-    Vector2(0.6, 0),
-    Vector2(0.6, 0.4),
-    Vector2(-0.6, 0.4),
-    Vector2(-0.6, 0),
-  ];
+  static final cover = RTileCoverData(
+    size: Vector2(0.6, 0.2),
+    offset: Vector2(0, 0),
+  );
 
   @override
   Future<void>? onLoad() async {
@@ -61,20 +60,28 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
       size: MyMap.characterBase,
       anchor: Anchor.center,
     );
-    add(statusComp);
-    size = MyMap.base;
+    await add(statusComp);
 
-    // shape = MyPolygonShape(
-    //   vertices,
-    // );
-
-    hitbox = PolygonHitbox.relative(
-      Player.vertices,
-      position: Vector2(0, size.y),
-      parentSize: size,
+    shape = MyRectangleShape.percentage(
+      cover,
+      size: size,
+      position: position,
+      anchor: Anchor.center,
     );
+    print(cover.offset);
 
-    add(hitbox);
+    ShapeMgr.createShape(shape);
+
+    // hitbox = PolygonHitbox.relative(
+    //   vertices,
+    //   position: Vector2(0, size.y),
+    //   anchor: Anchor.center,
+    //   parentSize: size,
+    // )
+    //   ..paint = MyShape.paint
+    //   ..renderShape = true;
+
+    // add(hitbox);
   }
 
   final painter = Paint()..color = Colors.black12;
@@ -106,8 +113,15 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
     // if (delta.y.sign == sign.y) {
     //   newDelta.y = 0;
     // }
-    position.add(delta);
+    // final newPos = position + delta;
+    // MyRectangleShape()
+    _realMove(delta);
     _checkFlip(delta);
+  }
+
+  void _realMove(Vector2 delta) {
+    position.add(delta);
+    shape.position = position;
   }
 
   // 如果是左边则翻转

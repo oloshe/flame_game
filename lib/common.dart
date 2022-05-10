@@ -6,6 +6,8 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:game/common/geometry/polygon.dart';
+import 'package:game/common/geometry/shape.dart';
 import 'package:game/common/i18n.dart';
 import 'package:game/main.dart';
 import 'package:provider/provider.dart';

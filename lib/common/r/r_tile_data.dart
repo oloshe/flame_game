@@ -27,7 +27,7 @@ class RTileData {
   final List<Vector2>? polygon;
 
   /// 遮挡区域，如果不为null，则碰撞之后会透明
-  final List<Vector2>? cover;
+  final RTileCoverData? cover;
 
   RTileData({
     // required this.id,
@@ -45,7 +45,8 @@ class RTileData {
     int w = json['width'] ?? 1;
     int h = json['height'] ?? 1;
     List<dynamic>? polygon = json['polygon'];
-    List<dynamic>? cover = json['cover'];
+    print(json['cover']);
+    Map<String, dynamic>? cover = json['cover'];
     return RTileData(
       pic: json['pic'],
       pos: utils.vec2FieldDefault(json['pos']),
@@ -54,7 +55,7 @@ class RTileData {
       subType: json['subType'],
       hit: json['hit'] ?? false,
       polygon: utils.polygonField(polygon),
-      cover: utils.polygonField(cover),
+      cover: cover == null ? null : RTileCoverData.fromJson(cover),
     );
   }
 
@@ -74,6 +75,22 @@ class RTileData {
       await imgData.image,
       srcSize: srcSize,
       srcPosition: srcPosition,
+    );
+  }
+}
+
+class RTileCoverData {
+  final Vector2 size;
+  final Vector2 offset;
+  RTileCoverData({
+    required this.size,
+    required this.offset,
+  });
+
+  factory RTileCoverData.fromJson(Map<String, dynamic> json) {
+    return RTileCoverData(
+      size: utils.vec2FieldDefault(json['size']),
+      offset: utils.vec2FieldDefault(json['offset']),
     );
   }
 }

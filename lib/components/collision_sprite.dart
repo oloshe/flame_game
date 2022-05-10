@@ -4,12 +4,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:game/common.dart';
 import 'package:game/common/geometry/polygon.dart';
 import 'package:game/common/geometry/rectangle.dart';
 import 'package:game/common/geometry/shape.dart';
+import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/game.dart';
 
-class ShapeSprite extends SpriteComponent {
+class ShapeSprite extends SpriteComponent with HasMyShape {
   ShapeSprite(
     Sprite sprite, {
     required Vector2 size,
@@ -24,35 +26,22 @@ class ShapeSprite extends SpriteComponent {
         ) {
     if (relation != null) {
       // 是否多边形
-      shape = MyPolygonShape(
-        relation!
-            .map(
-              (e) => e.clone()
-                ..multiply(size / 2)
-                ..add(size / 2),
-            )
-            .toList(growable: false),
-      );
+      _shape =
+          MyPolygonShape.relative(relation!, size: size, position: position);
     } else {
-      shape = MyRectangleShape(size);
+      _shape = MyRectangleShape(size, position: position);
     }
   }
   List<Vector2>? relation;
 
-  late MyShape shape;
+  late MyShape _shape;
 
   @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-
-    shape.render(
-      canvas,
-      Paint()..color = const Color(0x55ffffff),
-    );
-  }
+  MyShape get shape => _shape;
 }
 
-class CoverShapeSprite extends ShapeSprite with HasGameRef<MyGame> {
+class CoverShapeSprite extends ShapeSprite
+    with HasGameRef<MyGame>, MyShapeCoverDelegate {
   CoverShapeSprite(
     Sprite sprite, {
     required this.cover,
@@ -68,48 +57,24 @@ class CoverShapeSprite extends ShapeSprite with HasGameRef<MyGame> {
           relation: relation,
         );
 
-  List<Vector2> cover;
-  late final PolygonHitbox hitBox;
-  bool _isCover = false;
+  RTileCoverData cover;
 
-  int? oldP;
+  late final MyPolygonShape coverPolygonShape;
 
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
-    final hitBoxPaint = BasicPalette.green.paint()
-      ..style = PaintingStyle.stroke;
-    hitBox = PolygonHitbox.relative(
-      cover,
-      parentSize: size,
-      anchor: Anchor.center,
-    )
-      ..paint = hitBoxPaint
-      ..renderShape = true;
-    add(hitBox);
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-    checkCover();
+  MyRectangleShape createShape() {
+    return MyRectangleShape.percentage(
+      cover,
+      size: size,
+      position: position,
+    );
   }
 
-  void checkCover() {
-    final isIntersectOrContain =
-        hitBox.aabb.intersectsWithAabb2(gameRef.player.hitbox.aabb);
-    if (_isCover != isIntersectOrContain) {
-      _isCover = isIntersectOrContain;
-      if (isIntersectOrContain) {
-        oldP = priority;
-        setOpacity(0.9);
-        priority = 200;
-        // print(parent);
-        // parent?.parent?.parent?.priority = 100;
-      } else {
-        setOpacity(1);
-        priority = oldP!;
-      }
-    }
-  }
+  @override
+  MyRectangleShape get targetShape => gameRef.player.shape;
 }
