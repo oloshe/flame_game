@@ -31,7 +31,6 @@ dependencies:
     sdk: flutter
 
   flame: 1.1.1
-  flame_forge2d: 0.11.0
   flame_tiled: 1.4.0
   image: ^3.1.3
   provider: ^6.0.2
@@ -73,3 +72,4 @@ flutter:
     - 'assets/images/tiles/walls/'
     - 'assets/json/'
     - 'assets/json/maps/'
+    - 'assets/tiles/'

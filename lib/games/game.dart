@@ -1,23 +1,20 @@
 import 'package:flame/image_composition.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/geometry/shape.dart';
 import 'package:game/common/mixins/custom_collision.dart';
-import 'package:game/components/joystick.dart';
+import 'package:game/components/game_map.dart';
+import 'package:game/components/joystick/joystick.dart';
 import 'package:game/components/my_map.dart';
 import 'package:flame/game.dart';
-import 'package:game/components/player.dart';
+import 'package:game/components/characters/player.dart';
 import 'dart:math' as math;
 
-class MyGame extends Forge2DGame
+class MyGame extends FlameGame
     with HasDraggables, HasCollisionDetection, HasTappables, FPSCounter {
   MyGame({
     this.mapData,
-  }) : super(
-          gravity: Vector2(0, 0),
-          zoom: 1,
-        );
+  }) : super();
 
   static const showHitbox = true;
 
@@ -57,14 +54,18 @@ class MyGame extends Forge2DGame
       player: player,
       mapData: mapData,
     );
-    await add(myMap);
+    // await add(myMap);
+
+    final gameMap = GameMap();
+    await add(gameMap);
+    await add(player..position = size / 2);
 
     await add(collisionManager);
 
     // add(Skeleton()..position = size / 2);
 
     final rect1 = size.toRect();
-    final rect2 = myMap.size.toRect();
+    final rect2 = gameMap.size.toRect();
     camera.followComponent(
       player,
       worldBounds: Rect.fromLTWH(

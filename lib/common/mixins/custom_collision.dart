@@ -1,12 +1,7 @@
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
-import 'package:flame/game.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:game/common/geometry/rectangle.dart';
 import 'package:game/common/geometry/shape.dart';
-import 'package:game/components/my_map.dart';
-import 'package:game/game.dart';
 
 mixin UseMyShapeMgr on Component {
   @override

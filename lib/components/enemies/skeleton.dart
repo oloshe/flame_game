@@ -2,8 +2,8 @@ import 'package:flame/components.dart';
 import 'package:game/common.dart';
 import 'package:game/components/enemies/enemy.dart';
 import 'package:game/components/my_map.dart';
-import 'package:game/components/player.dart';
-import 'package:game/game.dart';
+import 'package:game/components/characters/player.dart';
+import 'package:game/games/game.dart';
 
 class Skeleton extends PositionComponent with Enemy, HasGameRef<MyGame> {
   /// 动作状态组件
@@ -35,15 +35,14 @@ class Skeleton extends PositionComponent with Enemy, HasGameRef<MyGame> {
         R.getImageData(R.animations.skeleton).srcSize ?? MyMap.srcBase;
 
     statusComp = SpriteAnimationGroupComponent(
-      animations: animations,
-      current: SkeletonStatus.idle,
-      position: Vector2.zero(),
-      size: srcSize * MyMap.scaleFactor,
-      anchor: Anchor.center,
-      removeOnFinish: {
-        SkeletonStatus.die: true,
-      }
-    );
+        animations: animations,
+        current: SkeletonStatus.idle,
+        position: Vector2.zero(),
+        size: srcSize * MyMap.scaleFactor,
+        anchor: Anchor.center,
+        removeOnFinish: {
+          SkeletonStatus.die: true,
+        });
     add(statusComp);
   }
 

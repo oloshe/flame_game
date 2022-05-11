@@ -4,7 +4,7 @@ import 'package:game/common/geometry/polygon.dart';
 import 'package:game/common/geometry/rectangle.dart';
 import 'package:game/common/geometry/shape.dart';
 import 'package:game/common/mixins/custom_collision.dart';
-import 'package:game/game.dart';
+import 'package:game/games/game.dart';
 
 class ShapeSprite extends SpriteComponent with HasMyShape {
   ShapeSprite(

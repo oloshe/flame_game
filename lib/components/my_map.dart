@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:game/common.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/components/collision_sprite.dart';
-import 'package:game/components/player.dart';
+import 'package:game/components/characters/player.dart';
 import 'package:image/image.dart';
 
 typedef BatchFunction = void Function(
@@ -28,6 +28,7 @@ class MyMap extends PositionComponent with HasGameRef {
 
   /// 缩放之后的实际显示向量
   static final base = srcBase * scaleFactor;
+
   /// 缩放之后的实际显示向量
   static final characterBase = characterSrcSize * scaleFactor;
 
@@ -52,7 +53,7 @@ class MyMap extends PositionComponent with HasGameRef {
     if (size.y < gameRef.size.y) {
       position.y = (gameRef.size.y - size.y) / 2;
     }
-    player.position = size/2;
+    player.position = size / 2;
     player.priority = 100;
     await add(player);
     add(RectangleHitbox());

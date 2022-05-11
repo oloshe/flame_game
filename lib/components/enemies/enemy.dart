@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:game/components/player.dart';
+import 'package:game/components/characters/player.dart';
 
 /// 敌人基类
 mixin Enemy on PositionComponent {

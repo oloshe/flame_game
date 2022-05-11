@@ -1,19 +1,11 @@
-import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/image_composition.dart';
-import 'package:flame/palette.dart';
-import 'package:flame/sprite.dart';
-import 'package:flame_forge2d/body_component.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
-import 'package:game/common/geometry/polygon.dart';
 import 'package:game/common/geometry/rectangle.dart';
 import 'package:game/common/geometry/shape.dart';
-import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/my_map.dart';
-import 'package:game/game.dart';
+import 'package:game/games/game.dart';
 
 enum PlayerStatus {
   idle,
@@ -68,7 +60,6 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
       position: position,
       anchor: Anchor.center,
     );
-    print(cover.offset);
 
     ShapeMgr.createShape(shape);
 

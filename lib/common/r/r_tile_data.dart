@@ -45,7 +45,6 @@ class RTileData {
     int w = json['width'] ?? 1;
     int h = json['height'] ?? 1;
     List<dynamic>? polygon = json['polygon'];
-    print(json['cover']);
     Map<String, dynamic>? cover = json['cover'];
     return RTileData(
       pic: json['pic'],

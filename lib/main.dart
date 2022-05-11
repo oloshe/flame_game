@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game/common.dart';
 import 'package:game/common/i18n.dart';
-import 'package:game/game.dart';
+import 'package:game/games/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/widgets/button.dart';
 import 'package:provider/provider.dart';
