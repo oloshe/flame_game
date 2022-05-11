@@ -246,7 +246,7 @@ packages:
     source: hosted
     version: "0.4.8"
   tiled:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: tiled
       url: "https://pub.flutter-io.cn"

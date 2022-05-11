@@ -1,4 +1,4 @@
-part of '../common.dart';
+part of '../../common.dart';
 
 extension TranslationExt on String {
   String get lang {

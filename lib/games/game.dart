@@ -50,15 +50,21 @@ class MyGame extends FlameGame
     player = Player(joystick: joystick);
 
     // 地图
-    myMap = MyMap(
-      player: player,
-      mapData: mapData,
-    );
+    // myMap = MyMap(
+    //   player: player,
+    //   mapData: mapData,
+    // );
     // await add(myMap);
 
-    final gameMap = GameMap();
+    final gameMap = GameMap(
+      objectBuilders: {
+        "SpawnPoint": (obj) {
+          player.position = Vector2(obj.x, obj.y);
+        }
+      }
+    );
     await add(gameMap);
-    await add(player..position = size / 2);
+    await add(player);
 
     await add(collisionManager);
 

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
-import 'package:game/common/provider_helper.dart';
+import 'package:game/common/utils/provider_helper.dart';
 import 'package:game/main.dart';
 import 'package:game/widgets/button.dart';
 import 'package:game/widgets/keyboard_collapse.dart';

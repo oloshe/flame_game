@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
-import 'package:game/common/provider_helper.dart';
+import 'package:game/common/utils/provider_helper.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/tile_painter.dart';
