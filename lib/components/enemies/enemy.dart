@@ -1,5 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:game/components/player.dart';
 
 /// 敌人基类

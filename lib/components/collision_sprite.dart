@@ -1,9 +1,4 @@
-import 'dart:ui';
-
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:game/common.dart';
 import 'package:game/common/geometry/polygon.dart';
 import 'package:game/common/geometry/rectangle.dart';

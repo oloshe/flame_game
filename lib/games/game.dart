@@ -1,11 +1,9 @@
 import 'package:flame/image_composition.dart';
-import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/geometry/shape.dart';
 import 'package:game/common/mixins/custom_collision.dart';
-import 'package:game/components/enemies/skeleton.dart';
 import 'package:game/components/joystick.dart';
 import 'package:game/components/my_map.dart';
 import 'package:flame/game.dart';
@@ -13,11 +11,7 @@ import 'package:game/components/player.dart';
 import 'dart:math' as math;
 
 class MyGame extends Forge2DGame
-    with
-        HasDraggables,
-        HasCollisionDetection,
-        HasTappables,
-        FPSCounter {
+    with HasDraggables, HasCollisionDetection, HasTappables, FPSCounter {
   MyGame({
     this.mapData,
   }) : super(

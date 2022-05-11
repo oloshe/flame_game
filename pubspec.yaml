@@ -32,11 +32,12 @@ dependencies:
 
   flame: 1.1.1
   flame_forge2d: 0.11.0
+  flame_tiled: 1.4.0
   image: ^3.1.3
   provider: ^6.0.2
   fluttertoast: ^8.0.9
   tuple: ^2.0.0
-#    path: /Users/jacob/dev/github/flame2/packages/flame_forge2d
+
 
 dev_dependencies:
   flutter_test:
