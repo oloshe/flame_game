@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
-import 'package:game/components/my_map.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:game/pages/map_editor/editor_footer.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/map_painter.dart';
@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class MapEditor extends StatelessWidget {
-  static final double len = MyMap.base.x;
+  static final double len = RespectMap.base.x;
   static const minWidth = 10;
   static const minHeight = 10;
 

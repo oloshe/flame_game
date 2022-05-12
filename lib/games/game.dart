@@ -1,11 +1,8 @@
 import 'package:flame/image_composition.dart';
-import 'package:flutter/material.dart';
 import 'package:game/common.dart';
-import 'package:game/common/geometry/shape.dart';
-import 'package:game/common/mixins/custom_collision.dart';
-import 'package:game/components/game_map.dart';
+import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/joystick/joystick.dart';
-import 'package:game/components/my_map.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:flame/game.dart';
 import 'package:game/components/characters/player.dart';
 import 'dart:math' as math;
@@ -16,25 +13,16 @@ class MyGame extends FlameGame
     this.mapData,
   }) : super();
 
-  static const showHitbox = true;
-
-  static final fpsTextConfig = TextPaint(
-      style: const TextStyle(
-    color: Colors.white,
-  ));
-
   final RMap? mapData;
 
   /// 地图
-  late final MyMap myMap;
+  late final RespectMap myMap;
 
   /// 玩家
   late final Player player;
 
   /// 相机位置
   Vector2 cameraPosition = Vector2.zero();
-
-  late final SingletonCollision collisionManager;
 
   @override
   Future<void>? onLoad() async {
@@ -43,35 +31,22 @@ class MyGame extends FlameGame
     final joystick = await createJoystick();
     final button = await createButton(onButtonPress);
 
-    collisionManager = SingletonCollision();
-    ShapeMgr.init();
-
     // 玩家
     player = Player(joystick: joystick);
 
     // 地图
-    // myMap = MyMap(
-    //   player: player,
-    //   mapData: mapData,
-    // );
-    // await add(myMap);
-
-    final gameMap = GameMap(
-      objectBuilders: {
-        "SpawnPoint": (obj) {
-          player.position = Vector2(obj.x, obj.y);
-        }
-      }
+    myMap = RespectMap(
+      player: player,
+      mapData: mapData,
     );
-    await add(gameMap);
-    await add(player);
+    await add(myMap);
 
-    await add(collisionManager);
+    // await add(player);
 
     // add(Skeleton()..position = size / 2);
 
     final rect1 = size.toRect();
-    final rect2 = gameMap.size.toRect();
+    final rect2 = myMap.size.toRect();
     camera.followComponent(
       player,
       worldBounds: Rect.fromLTWH(
@@ -93,7 +68,7 @@ class MyGame extends FlameGame
   void render(Canvas canvas) {
     super.render(canvas);
     final fpsCount = fps(120);
-    fpsTextConfig.render(
+    DevTool.fpsTextConfig.render(
       canvas,
       fpsCount.toStringAsFixed(1),
       Vector2(10, 20),

@@ -1,12 +1,9 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/common.dart';
-import 'package:game/common/geometry/polygon.dart';
-import 'package:game/common/geometry/rectangle.dart';
-import 'package:game/common/geometry/shape.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/games/game.dart';
 
-class ShapeSprite extends SpriteComponent with HasMyShape {
+class ShapeSprite extends SpriteComponent with HasHitbox {
   ShapeSprite(
     Sprite sprite, {
     required Vector2 size,
@@ -20,23 +17,18 @@ class ShapeSprite extends SpriteComponent with HasMyShape {
           priority: priority,
         ) {
     if (relation != null) {
-      // 是否多边形
-      _shape =
-          MyPolygonShape.relative(relation!, size: size, position: position);
+      hitbox = PolygonHitbox.relative(relation!, parentSize: size);
     } else {
-      _shape = MyRectangleShape(size, position: position);
+      hitbox = RectangleHitbox(size: size);
     }
   }
   List<Vector2>? relation;
 
-  late MyShape _shape;
-
   @override
-  MyShape get shape => _shape;
+  late ShapeHitbox hitbox;
 }
 
-class CoverShapeSprite extends ShapeSprite
-    with HasGameRef<MyGame>, MyShapeCoverDelegate {
+class CoverShapeSprite extends ShapeSprite with HasGameRef<MyGame>, CoverMixin {
   CoverShapeSprite(
     Sprite sprite, {
     required this.cover,
@@ -52,24 +44,9 @@ class CoverShapeSprite extends ShapeSprite
           relation: relation,
         );
 
-  RTileCoverData cover;
-
-  late final MyPolygonShape coverPolygonShape;
+  @override
+  double cover;
 
   @override
-  Future<void>? onLoad() async {
-    await super.onLoad();
-  }
-
-  @override
-  MyRectangleShape createShape() {
-    return MyRectangleShape.percentage(
-      cover,
-      size: size,
-      position: position,
-    );
-  }
-
-  @override
-  MyRectangleShape get targetShape => gameRef.player.shape;
+  double get target => gameRef.player.position.y;
 }

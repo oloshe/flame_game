@@ -26,8 +26,8 @@ class RTileData {
   /// 如果为null则为默认的矩形碰撞，调用[PolygonComponent.relative]
   final List<Vector2>? polygon;
 
-  /// 遮挡区域，如果不为null，则碰撞之后会透明
-  final RTileCoverData? cover;
+  /// 遮挡Y值，如果不为null，则玩家Y值小于该值会被覆盖
+  final double? cover;
 
   RTileData({
     // required this.id,
@@ -44,17 +44,15 @@ class RTileData {
   factory RTileData.fromJson(Map<String, dynamic> json) {
     int w = json['width'] ?? 1;
     int h = json['height'] ?? 1;
-    List<dynamic>? polygon = json['polygon'];
-    Map<String, dynamic>? cover = json['cover'];
     return RTileData(
       pic: json['pic'],
-      pos: utils.vec2FieldDefault(json['pos']),
+      pos: json.getList('pos').toVector2() ?? Vector2.zero(),
       size: Vector2(w.toDouble(), h.toDouble()),
       type: json['type'],
       subType: json['subType'],
       hit: json['hit'] ?? false,
-      polygon: utils.polygonField(polygon),
-      cover: cover == null ? null : RTileCoverData.fromJson(cover),
+      polygon: json.getList('polygon')?.toVector2List(),
+      cover: json['cover'],
     );
   }
 
@@ -78,18 +76,18 @@ class RTileData {
   }
 }
 
-class RTileCoverData {
-  final Vector2 size;
-  final Vector2 offset;
-  RTileCoverData({
-    required this.size,
-    required this.offset,
-  });
+// class RTileCoverData {
+//   final Vector2 size;
+//   final Vector2 offset;
+//   RTileCoverData({
+//     required this.size,
+//     required this.offset,
+//   });
 
-  factory RTileCoverData.fromJson(Map<String, dynamic> json) {
-    return RTileCoverData(
-      size: utils.vec2FieldDefault(json['size']),
-      offset: utils.vec2FieldDefault(json['offset']),
-    );
-  }
-}
+//   factory RTileCoverData.fromJson(Map<String, dynamic> json) {
+//     return RTileCoverData(
+//       size: utils.vec2FieldDefault(json['size']),
+//       offset: utils.vec2FieldDefault(json['offset']),
+//     );
+//   }
+// }

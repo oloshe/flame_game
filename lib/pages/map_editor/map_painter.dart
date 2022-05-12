@@ -5,7 +5,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
-import 'package:game/components/my_map.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 
 class MapPainter extends CustomPainter {
@@ -46,7 +46,7 @@ class MapPainter extends CustomPainter {
               sp.srcSize.x,
               sp.srcSize.y,
             ),
-            scale: MyMap.scaleFactor,
+            scale: RespectMap.scaleFactor,
             offset: Vector2(len * x, len * y),
           );
         } else {

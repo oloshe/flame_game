@@ -18,6 +18,32 @@ extension TranslationExt on String {
   }
 }
 
+extension JsonExt on Map<String, dynamic> {
+  List<dynamic>? getList(String key) => this[key];
+}
+
+extension SerdeListExt on List<dynamic> {
+  Vector2 toVector2() {
+    return Vector2.array(map((e) {
+      if (e is int) {
+        return e.toDouble();
+      } else {
+        return e as double;
+      }
+    }).toList(growable: false));
+  }
+
+  List<Vector2>? toVector2List() {
+    return length < 3
+        ? null
+        : map((e) => (e as List<dynamic>).toVector2()).toList(growable: false);
+  }
+}
+
+extension SerdeNullListExt on List<dynamic>? {
+  Vector2? toVector2() => this?.toVector2();
+}
+
 // extension OffSetExt on Offset {
 //
 //   Vector2 toVector2() {
@@ -25,14 +51,14 @@ extension TranslationExt on String {
 //   }
 // }
 
-extension MyShapeExt on PolygonComponent {
-  MyShape toShape() {
-    final anchorVec = anchor.toVector2()..multiply(size);
-    final _relativeVertices =
-        vertices.map((e) => e.clone() - anchorVec).toList(growable: false);
-    return MyPolygonShape(
-      _relativeVertices,
-      position: position,
-    );
-  }
-}
+// extension MyShapeExt on PolygonComponent {
+//   MyShape toShape() {
+//     final anchorVec = anchor.toVector2()..multiply(size);
+//     final _relativeVertices =
+//         vertices.map((e) => e.clone() - anchorVec).toList(growable: false);
+//     return MyPolygonShape(
+//       _relativeVertices,
+//       position: position,
+//     );
+//   }
+// }

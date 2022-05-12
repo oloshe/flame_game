@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
-import 'package:game/common/geometry/rectangle.dart';
-import 'package:game/common/geometry/shape.dart';
-import 'package:game/components/my_map.dart';
+import 'package:game/common/mixins/custom_collision.dart';
+import 'package:game/common/utils/dev_tool.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
 
 enum PlayerStatus {
@@ -14,10 +16,14 @@ enum PlayerStatus {
   die,
 }
 
-class Player extends PositionComponent with HasGameRef<MyGame> {
+class Player extends PositionComponent
+    with HasGameRef<MyGame>, HasHitbox, CollisionCallbacks {
   Player({
     required this.joystick,
-  }) : super(size: MyMap.base);
+  }) : super(
+          size: RespectMap.base,
+          anchor: Anchor.center,
+        );
 
   /// 手柄控制
   final JoystickComponent joystick;
@@ -31,51 +37,38 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
-  /// 碰撞体
-  late final MyRectangleShape shape;
-  late final PolygonHitbox hitbox;
+  late Vector2 hitboxinitialPosition = Vector2(0, size.y);
 
-  static final cover = RTileCoverData(
-    size: Vector2(0.6, 0.2),
-    offset: Vector2(0, 0),
-  );
+  /// 碰撞体
+  @override
+  // late final PolygonHitbox hitbox = PolygonHitbox.relative(
+  //   cover,
+  //   position: hitboxinitialPosition.clone(),
+  //   anchor: Anchor.center,
+  //   parentSize: size,
+  // );
+  late final RectangleHitbox hitbox = RectangleHitbox(size: size);
+
+  static final cover = [
+    Vector2(0.6, 0),
+    Vector2(0.6, 0.4),
+    Vector2(-0.6, 0.4),
+    Vector2(-0.6, 0),
+  ];
 
   @override
   Future<void>? onLoad() async {
-    await super.onLoad();
-
     statusComp = SpriteAnimationGroupComponent(
       animations:
           await R.createAnimations(PlayerStatus.values, R.animations.player),
       current: PlayerStatus.idle,
       position: Vector2.zero(),
-      size: MyMap.characterBase,
+      size: RespectMap.characterBase,
       anchor: Anchor.center,
     );
     await add(statusComp);
-
-    shape = MyRectangleShape.percentage(
-      cover,
-      size: size,
-      position: position,
-      anchor: Anchor.center,
-    );
-
-    ShapeMgr.createShape(shape);
-
-    // hitbox = PolygonHitbox.relative(
-    //   vertices,
-    //   position: Vector2(0, size.y),
-    //   anchor: Anchor.center,
-    //   parentSize: size,
-    // )
-    //   ..paint = MyShape.paint
-    //   ..renderShape = true;
-
-    // add(hitbox);
+    await super.onLoad();
   }
-
-  final painter = Paint()..color = Colors.black12;
 
   bool get isAttacking => statusComp.current == PlayerStatus.attack;
 
@@ -112,7 +105,6 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
 
   void _realMove(Vector2 delta) {
     position.add(delta);
-    shape.position = position;
   }
 
   // 如果是左边则翻转
@@ -146,10 +138,92 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
     statusComp.current = PlayerStatus.idle;
     statusComp.animation!.onComplete = null;
   }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    // if (intersectionPoints.length == 2) {
+    //   final p1 = intersectionPoints.first;
+    //   final p2 = intersectionPoints.last;
+    //   final rect = getHitboxRect();
+    //   if (p1.x == p2.x) {
+    //     if (p1.x < rect.left + rect.width / 2) {
+    //       _realMove(Vector2(p1.x - rect.left, 0)); // 向右矫正
+    //     } else {
+    //       _realMove(Vector2(p1.x - rect.right, 0)); // 向左矫正
+    //     }
+    //   } else if (p1.y == p2.y) {
+    //     if (p1.y < rect.top + rect.height / 2) {
+    //       _realMove(Vector2(0, p1.y - rect.top)); // 向上矫正
+    //     } else {
+    //       _realMove(Vector2(0, p1.y - rect.bottom)); // 向下矫正
+    //     }
+    //   } else {
+    //     final center = rect.center;
+    //     Vector2 hitboxCenter = Vector2(center.dx, center.dy);
+    //     final d1 = hitboxCenter.distanceTo(p1);
+    //     final d2 = hitboxCenter.distanceTo(p2);
+    //     if (d1 < d2) {
+    //       _tmp(p1, hitboxCenter, rect);
+    //     } else {
+    //       _tmp(p2, hitboxCenter, rect);
+    //     }
+    //   }
+    // }
+    // final list = intersectionPoints.toList(growable: false);
+    // final lx = list..sort(compare(Axis.horizontal));
+    // final ly = list..sort(compare(Axis.vertical));
+    // Vector2 delta = Vector2.zero();
+    // final rect = getHitboxRect();
+    // final sign = joystick.direction.sign;
+    // if (sign.x < 0) {
+    //   delta.x = lx.first.x - rect.left + 1;
+    // } else if (sign.x > 0) {
+    //   delta.x = rect.right - lx.last.x - 1;
+    // }
+    // if (sign.y < 0) {
+    //   delta.y = ly.first.y - rect.top + 1;
+    // } else if (sign.y > 0) {
+    //   delta.y = rect.bottom - ly.last.y - 1;
+    // }
+    // print('-----');
+    // print(sign);
+    // print('lx = $lx');
+    // print('ly = $ly');
+    // _realMove(delta);
+  }
+
+  int Function(Vector2 a, Vector2 b) compare(Axis axis) {
+    return (a, b) {
+      if (axis == Axis.horizontal) {
+        return a.x.compareTo(b.x);
+      } else {
+        return a.y.compareTo(b.y);
+      }
+    };
+  }
+
+  void _tmp(Vector2 p, Vector2 center, Rect rect) {
+    final dx = (p.x - center.x).abs();
+    final dy = (p.y - center.y).abs();
+    if (dx < dy) {
+      if (p.x < center.x) {
+        _realMove(Vector2(p.x - rect.left, 0)); // 向右矫正
+      } else {
+        _realMove(Vector2(p.x - rect.right, 0)); // 向左矫正
+      }
+    } else {
+      if (p.y < center.y) {
+        _realMove(Vector2(0, p.y - rect.top)); // 向上矫正
+      } else {
+        _realMove(Vector2(0, p.y - rect.bottom)); // 向下矫正
+      }
+    }
+  }
 }
 
 extension JudgeExt on JoystickDirection {
-  Vector2 get signVector {
+  Vector2 get sign {
     switch (this) {
       case JoystickDirection.idle:
         return Vector2.zero();

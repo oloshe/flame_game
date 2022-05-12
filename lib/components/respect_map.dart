@@ -16,7 +16,7 @@ typedef BatchFunction = void Function(
   int priority,
 );
 
-class MyMap extends PositionComponent with HasGameRef {
+class RespectMap extends PositionComponent with HasGameRef {
   /// 源地图的基本尺寸
   static final srcBase = Vector2(16, 16);
 
@@ -32,7 +32,7 @@ class MyMap extends PositionComponent with HasGameRef {
   /// 缩放之后的实际显示向量
   static final characterBase = characterSrcSize * scaleFactor;
 
-  MyMap({
+  RespectMap({
     required this.player,
     this.mapData,
   });
@@ -53,7 +53,8 @@ class MyMap extends PositionComponent with HasGameRef {
     if (size.y < gameRef.size.y) {
       position.y = (gameRef.size.y - size.y) / 2;
     }
-    player.position = size / 2;
+    player.position = size / 2
+      ..add(Vector2(0, 20));
     player.priority = 100;
     await add(player);
     add(RectangleHitbox());
@@ -80,7 +81,7 @@ class MyMap extends PositionComponent with HasGameRef {
                     sp.srcSize.x,
                     sp.srcSize.y,
                   ),
-                  scale: MyMap.scaleFactor,
+                  scale: RespectMap.scaleFactor,
                   offset: pos,
                 );
               },
