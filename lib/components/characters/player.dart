@@ -21,7 +21,6 @@ class Player extends PositionComponent
   Player({
     required this.joystick,
   }) : super(
-          size: RespectMap.base,
           anchor: Anchor.center,
         );
 
@@ -41,20 +40,12 @@ class Player extends PositionComponent
 
   /// 碰撞体
   @override
-  // late final PolygonHitbox hitbox = PolygonHitbox.relative(
-  //   cover,
-  //   position: hitboxinitialPosition.clone(),
-  //   anchor: Anchor.center,
-  //   parentSize: size,
-  // );
-  late final RectangleHitbox hitbox = RectangleHitbox(size: size);
-
-  static final cover = [
-    Vector2(0.6, 0),
-    Vector2(0.6, 0.4),
-    Vector2(-0.6, 0.4),
-    Vector2(-0.6, 0),
-  ];
+  late final ShapeHitbox hitbox = CircleHitbox.relative(
+    0.15,
+    parentSize: RespectMap.characterBase,
+    anchor: Anchor.topCenter,
+    position: Vector2(0, 20),
+  );
 
   @override
   Future<void>? onLoad() async {
@@ -62,12 +53,16 @@ class Player extends PositionComponent
       animations:
           await R.createAnimations(PlayerStatus.values, R.animations.player),
       current: PlayerStatus.idle,
-      position: Vector2.zero(),
+      // position: Vector2(RespectMap.characterBase.x / 2, 0),
       size: RespectMap.characterBase,
       anchor: Anchor.center,
     );
     await add(statusComp);
     await super.onLoad();
+    if (DevTool.debugMode) {
+      statusComp.debugMode = true;
+      hitbox.debugMode = true;
+    }
   }
 
   bool get isAttacking => statusComp.current == PlayerStatus.attack;

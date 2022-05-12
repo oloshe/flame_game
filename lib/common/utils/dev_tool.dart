@@ -25,5 +25,7 @@ class DevTool {
     ..color = const Color(0x55ffffff)
     ..style = PaintingStyle.fill;
 
-  static final showCoverBaseline = true;
+  static const showCoverBaseline = true;
+
+  static const debugMode = true;
 }
