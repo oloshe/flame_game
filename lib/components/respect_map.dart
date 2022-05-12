@@ -10,7 +10,7 @@ import 'package:image/image.dart';
 
 typedef BatchFunction = void Function(
   String pic,
-  Sprite,
+  Sprite sp,
   Vector2 size,
   Vector2 pos,
   int priority,
@@ -63,6 +63,28 @@ class RespectMap extends PositionComponent with HasGameRef {
   Future<void> draw(RMap mapData) async {
     await mapData.forEachLayer((layer) async {
       Map<String, SpriteBatch> batch = {};
+      void onBatch(
+        String pic,
+        Sprite sp,
+        Vector2 size,
+        Vector2 pos,
+        int priority,
+      ) {
+        if (!batch.containsKey(pic)) {
+          batch[pic] = SpriteBatch(sp.image);
+        }
+        batch[pic]!.add(
+          source: Rect.fromLTWH(
+            sp.srcPosition.x,
+            sp.srcPosition.y,
+            sp.srcSize.x,
+            sp.srcSize.y,
+          ),
+          scale: RespectMap.scaleFactor,
+          offset: pos,
+        );
+      }
+
       for (var y = 0; y < mapData.height; y++) {
         for (var x = 0; x < mapData.width; x++) {
           if (layer.matrix[y][x] != RMapGlobal.emptyTile) {
@@ -70,21 +92,7 @@ class RespectMap extends PositionComponent with HasGameRef {
               id: layer.matrix[y][x],
               pos: Vector2(x.toDouble(), y.toDouble()),
               layer: layer,
-              onBatch: (pic, sp, size, pos, index) {
-                if (!batch.containsKey(pic)) {
-                  batch[pic] = SpriteBatch(sp.image);
-                }
-                batch[pic]!.add(
-                  source: Rect.fromLTWH(
-                    sp.srcPosition.x,
-                    sp.srcPosition.y,
-                    sp.srcSize.x,
-                    sp.srcSize.y,
-                  ),
-                  scale: RespectMap.scaleFactor,
-                  offset: pos,
-                );
-              },
+              onBatch: onBatch,
             );
           }
         }
@@ -107,6 +115,9 @@ class RespectMap extends PositionComponent with HasGameRef {
     Vector2 spriteSize = tileData.size.clone()..multiply(base);
     Vector2 spritePosition = pos..multiply(base);
     final sprite = await tileData.getSprite();
+    if (id == 1000) {
+      print(tileData.name);
+    }
     // 如果有碰撞
     if (tileData.hit) {
       if (tileData.cover != null) {
@@ -119,8 +130,6 @@ class RespectMap extends PositionComponent with HasGameRef {
           relation: tileData.polygon,
         ));
       } else {
-        // return;
-        // 单独生成带有碰撞的
         await add(ShapeSprite(
           sprite,
           size: spriteSize,
@@ -129,15 +138,17 @@ class RespectMap extends PositionComponent with HasGameRef {
           relation: tileData.polygon,
         ));
       }
+    } else if (tileData.object == true) {
+      final compBuilder = R.getTileObjectBuilder(tileData.name);
+      if (compBuilder != null) {
+        final comp = await compBuilder.call(tileData, spritePosition);
+        if (comp != null) {
+          add(comp);
+        }
+      }
     } else {
-      /// 如果是纯图片sprite，则添加到batch里面，到最后一次性
+      /// 如果是纯图片sprite，则添加到batch里面，到最后一次性画出来
       onBatch(tileData.pic, sprite, spriteSize, spritePosition, layer.index);
-      // await add(SpriteComponent(
-      //   sprite: sprite,
-      //   size: spriteSize,
-      //   position: spritePosition,
-      //   priority: layer.index,
-      // ));
     }
   }
 }

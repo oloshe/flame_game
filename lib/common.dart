@@ -7,6 +7,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:game/common/utils/i18n.dart';
+import 'package:game/components/enemies/skeleton.dart';
 import 'package:game/main.dart';
 import 'package:provider/provider.dart';
 

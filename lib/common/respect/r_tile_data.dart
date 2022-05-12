@@ -19,6 +19,9 @@ class RTileData {
   /// 子分类
   final String? subType;
 
+  final bool? object;
+  final String name;
+
   /// 是否是碰撞体，默认为false
   final bool hit;
 
@@ -39,6 +42,8 @@ class RTileData {
     required this.hit,
     required this.polygon,
     required this.cover,
+    required this.object,
+    required this.name,
   });
 
   factory RTileData.fromJson(Map<String, dynamic> json) {
@@ -53,6 +58,8 @@ class RTileData {
       hit: json['hit'] ?? false,
       polygon: json.getList('polygon')?.toVector2List(),
       cover: json['cover'],
+      object: json['object'],
+      name: json['name'] ?? '',
     );
   }
 

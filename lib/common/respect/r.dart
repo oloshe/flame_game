@@ -15,6 +15,8 @@ class R {
 
   static late TileDataIdMap _tileDataIdMap;
 
+  static late TileObjectMap _tileObjectMap;
+
   static RMapGlobal get mapMgr => _map;
 
   // 初始化资源
@@ -39,6 +41,12 @@ class R {
 
     // 所有的动画名字
     animations = _RAnimationName();
+
+    _tileObjectMap = {
+      "skeleton": (tileData, position) async {
+        return Skeleton()..position = position;
+      }
+    };
   }
 
   /// 通过别名加载图片
@@ -80,6 +88,10 @@ class R {
   static List<MapEntry<int, RTileData>> getAllTiles() {
     return _tileDataIdMap.entries.toList(growable: false);
   }
+
+  static RTileObjectMapFunction? getTileObjectBuilder(String objectName) {
+    return _tileObjectMap[objectName];
+  }
 }
 
 Future<Map<String, T>> _initWith<T>(String filePath,
@@ -97,3 +109,10 @@ Future<Map<int, T>> _initWithIntKey<T>(String filePath,
     (key, value) => MapEntry(int.parse(key), constructor(value)),
   );
 }
+
+
+typedef RTileObjectMapValue = FutureOr<PositionComponent?>;
+
+typedef RTileObjectMapFunction = RTileObjectMapValue Function(RTileData tileData,Vector2 position);
+
+typedef TileObjectMap = Map<String, RTileObjectMapFunction>;

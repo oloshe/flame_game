@@ -1141,5 +1141,12 @@
     "type": "trees",
     "pos": [8, 9],
     "hit": true
+  },
+  "1000": {
+    "pic": "skeleton",
+    "type": "characters",
+    "pos": [0, 0],
+    "object": true,
+    "name": "skeleton"
   }
 }
