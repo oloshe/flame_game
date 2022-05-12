@@ -36,15 +36,15 @@ class Player extends PositionComponent
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
-  late Vector2 hitboxinitialPosition = Vector2(0, size.y);
+  late Vector2 hitboxInitialPosition = Vector2(0, size.y);
 
   /// 碰撞体
   @override
   late final ShapeHitbox hitbox = CircleHitbox.relative(
-    0.15,
+    0.18,
     parentSize: RespectMap.characterBase,
     anchor: Anchor.topCenter,
-    position: Vector2(0, 20),
+    position: Vector2(0, 17),
   );
 
   @override
@@ -59,7 +59,7 @@ class Player extends PositionComponent
     );
     await add(statusComp);
     await super.onLoad();
-    if (DevTool.debugMode) {
+    if (DevTool.showPlayerDebug.isDebug) {
       statusComp.debugMode = true;
       hitbox.debugMode = true;
     }
@@ -137,6 +137,14 @@ class Player extends PositionComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
+    if (intersectionPoints.length == 2) {
+      // 交点中间点
+      final mid = (intersectionPoints.first + intersectionPoints.last) / 2;
+      final collisionNormal = hitbox.absoluteCenter - mid;
+      final separationDistance = (hitbox.size.x / 2) - collisionNormal.length;
+      position += collisionNormal.normalized() * separationDistance;
+    }
+
     // if (intersectionPoints.length == 2) {
     //   final p1 = intersectionPoints.first;
     //   final p2 = intersectionPoints.last;

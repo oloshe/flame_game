@@ -48,5 +48,5 @@ class CoverShapeSprite extends ShapeSprite with HasGameRef<MyGame>, CoverMixin {
   double cover;
 
   @override
-  double get target => gameRef.player.position.y;
+  PositionComponent get target => gameRef.player.hitbox;
 }

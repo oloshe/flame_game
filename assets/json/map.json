@@ -1,5 +1,6 @@
 {
   "map": {
-    "home": "map_home.json"
+    "home": "map_home.json",
+    "tree": "map_tree.json"
   }
 }

@@ -44,7 +44,7 @@ class RespectMap extends PositionComponent with HasGameRef {
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
-    RMap realMap = mapData ?? await R.mapMgr.loadMap('home');
+    RMap realMap = mapData ?? await R.mapMgr.loadMap('tree');
     size = realMap.size..multiply(base);
     await draw(realMap);
     if (size.x < gameRef.size.x) {

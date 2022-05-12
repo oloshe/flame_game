@@ -9,7 +9,11 @@ mixin HasHitbox on PositionComponent {
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
-    DevTool.showHitbox(hitbox);
+    if (DevTool.showHitbox.isDebug) {
+      hitbox
+        ..paint = DevTool.hitBoxPaint
+        ..renderShape = true;
+    }
     add(hitbox);
   }
 
@@ -31,7 +35,7 @@ mixin CoverMixin on SpriteComponent implements HasPaint {
   static double coverOpacity = 0.8;
 
   double get cover;
-  double get target;
+  PositionComponent get target;
 
   late double coverY;
 
@@ -39,6 +43,7 @@ mixin CoverMixin on SpriteComponent implements HasPaint {
   Future<void>? onLoad() async {
     await super.onLoad();
     coverY = position.y + size.y * cover;
+    // add(RectangleHitbox());
   }
 
   @override
@@ -51,15 +56,15 @@ mixin CoverMixin on SpriteComponent implements HasPaint {
   int? _oldPriority;
 
   void checkCover() {
-    final needCover = coverY > target;
+    final needCover = coverY > target.absoluteCenter.y;
     if (_isCover != needCover) {
       _isCover = needCover;
       if (needCover) {
         _oldPriority = priority;
-        setOpacity(coverOpacity);
+        // setOpacity(coverOpacity);
         priority = 200;
       } else {
-        setOpacity(1);
+        // setOpacity(1);
         priority = _oldPriority!;
       }
     }
@@ -68,12 +73,12 @@ mixin CoverMixin on SpriteComponent implements HasPaint {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    if (DevTool.showCoverBaseline) {
+    if (DevTool.showCoverBaseline.isDebug) {
       final y = cover * size.y;
       canvas.drawLine(
         Offset(0, y),
         Offset(size.x, y),
-        utils.painter,
+        DevTool.coverPaint,
       );
     }
   }
