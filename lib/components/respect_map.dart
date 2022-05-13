@@ -143,6 +143,7 @@ class RespectMap extends PositionComponent with HasGameRef {
       if (compBuilder != null) {
         final comp = await compBuilder.call(tileData, spritePosition);
         if (comp != null) {
+          comp.priority = 100;
           add(comp);
         }
       }

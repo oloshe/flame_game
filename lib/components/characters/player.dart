@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:game/common.dart';
+import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/respect_map.dart';
@@ -16,12 +14,17 @@ enum PlayerStatus {
   die,
 }
 
-class Player extends PositionComponent
-    with HasGameRef<MyGame>, HasHitbox, CollisionCallbacks {
+class Player extends MoveableHitboxComponent
+    with HasGameRef<MyGame>, HasHitbox {
   Player({
     required this.joystick,
   }) : super(
-          anchor: Anchor.center,
+          CircleHitbox.relative(
+            0.18,
+            parentSize: RespectMap.characterBase,
+            anchor: Anchor.center,
+            position: Vector2.zero(),
+          ),
         );
 
   /// 手柄控制
@@ -36,17 +39,6 @@ class Player extends PositionComponent
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
-  late Vector2 hitboxInitialPosition = Vector2(0, size.y);
-
-  /// 碰撞体
-  @override
-  late final ShapeHitbox hitbox = CircleHitbox.relative(
-    0.18,
-    parentSize: RespectMap.characterBase,
-    anchor: Anchor.topCenter,
-    position: Vector2(0, 17),
-  );
-
   @override
   Future<void>? onLoad() async {
     statusComp = SpriteAnimationGroupComponent(
@@ -55,13 +47,12 @@ class Player extends PositionComponent
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
       size: RespectMap.characterBase,
-      anchor: Anchor.center,
+      anchor: const Anchor(0.5, 0.8),
     );
     await add(statusComp);
     await super.onLoad();
     if (DevTool.showPlayerDebug.isDebug) {
       statusComp.debugMode = true;
-      hitbox.debugMode = true;
     }
   }
 
@@ -132,96 +123,6 @@ class Player extends PositionComponent
     statusComp.animation!.reset();
     statusComp.current = PlayerStatus.idle;
     statusComp.animation!.onComplete = null;
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    super.onCollision(intersectionPoints, other);
-    if (intersectionPoints.length == 2) {
-      // 交点中间点
-      final mid = (intersectionPoints.first + intersectionPoints.last) / 2;
-      final collisionNormal = hitbox.absoluteCenter - mid;
-      final separationDistance = (hitbox.size.x / 2) - collisionNormal.length;
-      position += collisionNormal.normalized() * separationDistance;
-    }
-
-    // if (intersectionPoints.length == 2) {
-    //   final p1 = intersectionPoints.first;
-    //   final p2 = intersectionPoints.last;
-    //   final rect = getHitboxRect();
-    //   if (p1.x == p2.x) {
-    //     if (p1.x < rect.left + rect.width / 2) {
-    //       _realMove(Vector2(p1.x - rect.left, 0)); // 向右矫正
-    //     } else {
-    //       _realMove(Vector2(p1.x - rect.right, 0)); // 向左矫正
-    //     }
-    //   } else if (p1.y == p2.y) {
-    //     if (p1.y < rect.top + rect.height / 2) {
-    //       _realMove(Vector2(0, p1.y - rect.top)); // 向上矫正
-    //     } else {
-    //       _realMove(Vector2(0, p1.y - rect.bottom)); // 向下矫正
-    //     }
-    //   } else {
-    //     final center = rect.center;
-    //     Vector2 hitboxCenter = Vector2(center.dx, center.dy);
-    //     final d1 = hitboxCenter.distanceTo(p1);
-    //     final d2 = hitboxCenter.distanceTo(p2);
-    //     if (d1 < d2) {
-    //       _tmp(p1, hitboxCenter, rect);
-    //     } else {
-    //       _tmp(p2, hitboxCenter, rect);
-    //     }
-    //   }
-    // }
-    // final list = intersectionPoints.toList(growable: false);
-    // final lx = list..sort(compare(Axis.horizontal));
-    // final ly = list..sort(compare(Axis.vertical));
-    // Vector2 delta = Vector2.zero();
-    // final rect = getHitboxRect();
-    // final sign = joystick.direction.sign;
-    // if (sign.x < 0) {
-    //   delta.x = lx.first.x - rect.left + 1;
-    // } else if (sign.x > 0) {
-    //   delta.x = rect.right - lx.last.x - 1;
-    // }
-    // if (sign.y < 0) {
-    //   delta.y = ly.first.y - rect.top + 1;
-    // } else if (sign.y > 0) {
-    //   delta.y = rect.bottom - ly.last.y - 1;
-    // }
-    // print('-----');
-    // print(sign);
-    // print('lx = $lx');
-    // print('ly = $ly');
-    // _realMove(delta);
-  }
-
-  int Function(Vector2 a, Vector2 b) compare(Axis axis) {
-    return (a, b) {
-      if (axis == Axis.horizontal) {
-        return a.x.compareTo(b.x);
-      } else {
-        return a.y.compareTo(b.y);
-      }
-    };
-  }
-
-  void _tmp(Vector2 p, Vector2 center, Rect rect) {
-    final dx = (p.x - center.x).abs();
-    final dy = (p.y - center.y).abs();
-    if (dx < dy) {
-      if (p.x < center.x) {
-        _realMove(Vector2(p.x - rect.left, 0)); // 向右矫正
-      } else {
-        _realMove(Vector2(p.x - rect.right, 0)); // 向左矫正
-      }
-    } else {
-      if (p.y < center.y) {
-        _realMove(Vector2(0, p.y - rect.top)); // 向上矫正
-      } else {
-        _realMove(Vector2(0, p.y - rect.bottom)); // 向下矫正
-      }
-    }
   }
 }
 

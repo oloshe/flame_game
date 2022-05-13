@@ -1,30 +1,39 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game/common.dart';
+import 'package:game/common/base/moveable_hitbox.dart';
+import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/components/enemies/enemy.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/components/characters/player.dart';
 import 'package:game/games/game.dart';
 
-class Skeleton extends PositionComponent with Enemy, HasGameRef<MyGame> {
+class Skeleton extends MoveableHitboxComponent
+    with Enemy, HasGameRef<MyGame>, HasHitbox {
+  Skeleton()
+      : super(
+          CircleHitbox.relative(
+            0.18,
+            parentSize: RespectMap.characterBase,
+            anchor: Anchor.center,
+            position: Vector2.zero(),
+          ),
+        );
+
+  @override
+  PositionComponent get target => gameRef.player;
+
   /// 动作状态组件
   late SpriteAnimationGroupComponent<SkeletonStatus> statusComp;
 
   @override
-  Player get target => gameRef.player;
-
-  @override
-  double get sensingDistance => 200;
-
-  @override
   double get speed => statusComp.current == SkeletonStatus.attack ? 0 : 80;
 
-  @override
-  double get attackDistance => 30;
+  // @override
+  // double get sensingDistance => 0;
 
   @override
   Future<void>? onLoad() async {
-    await super.onLoad();
-
     final animations = await R.createAnimations(
       SkeletonStatus.values,
       R.animations.skeleton,
@@ -35,15 +44,18 @@ class Skeleton extends PositionComponent with Enemy, HasGameRef<MyGame> {
         R.getImageData(R.animations.skeleton).srcSize ?? RespectMap.srcBase;
 
     statusComp = SpriteAnimationGroupComponent(
-        animations: animations,
-        current: SkeletonStatus.idle,
-        position: Vector2.zero(),
-        size: srcSize * RespectMap.scaleFactor,
-        anchor: Anchor.center,
-        removeOnFinish: {
-          SkeletonStatus.die: true,
-        });
-    add(statusComp);
+      animations: animations,
+      current: SkeletonStatus.idle,
+      position: Vector2.zero(),
+      size: srcSize * RespectMap.scaleFactor,
+      anchor: const Anchor(0.5, 0.83),
+      removeOnFinish: {
+        SkeletonStatus.die: true,
+      },
+    );
+    await add(statusComp);
+
+    await super.onLoad();
   }
 
   @override

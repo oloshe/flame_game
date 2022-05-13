@@ -1,7 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:game/common.dart';
 import 'package:game/common/utils/dev_tool.dart';
 
 mixin HasHitbox on PositionComponent {
@@ -32,7 +31,7 @@ mixin HasHitbox on PositionComponent {
 }
 
 mixin CoverMixin on SpriteComponent implements HasPaint {
-  static double coverOpacity = 0.8;
+  static double coverOpacity = 1;
 
   double get cover;
   PositionComponent get target;
@@ -56,15 +55,18 @@ mixin CoverMixin on SpriteComponent implements HasPaint {
   int? _oldPriority;
 
   void checkCover() {
-    final needCover = coverY > target.absoluteCenter.y;
+    final needCover = coverY > target.y &&
+        target.x > x &&
+        target.x < x + size.x &&
+        target.y > y;
     if (_isCover != needCover) {
       _isCover = needCover;
       if (needCover) {
         _oldPriority = priority;
-        // setOpacity(coverOpacity);
+        setOpacity(coverOpacity);
         priority = 200;
       } else {
-        // setOpacity(1);
+        setOpacity(1);
         priority = _oldPriority!;
       }
     }

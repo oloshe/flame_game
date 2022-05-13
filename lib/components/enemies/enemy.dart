@@ -1,21 +1,29 @@
 import 'package:flame/components.dart';
-import 'package:game/components/characters/player.dart';
+import 'package:game/common/utils/dev_tool.dart';
 
 /// 敌人基类
 mixin Enemy on PositionComponent {
   /// 感应敌人的距离
-  double sensingDistance = 0;
+  double sensingDistance = 500;
 
   /// 可以攻击到[target]的距离
-  double attackDistance = 0;
+  double attackDistance = 30;
 
   /// 移动速度
-  double speed = 0;
+  double speed = 10;
 
   /// 目标
-  Player? target;
+  PositionComponent? target;
 
   bool _isFlipHorizontal = false;
+
+  @override
+  Future<void>? onLoad() async {
+    await super.onLoad();
+    if (DevTool.showEnemyDebug.isDebug) {
+      debugMode = true;
+    }
+  }
 
   Vector2? checkEnmity() {
     if (target == null) {

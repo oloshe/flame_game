@@ -1,13 +1,13 @@
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 class DevTool {
-
   static const debugMode = true;
-  static const showCoverBaseline = true;
+  static const showCoverBaseline = false;
   static const showHitbox = false;
+  static const showMovableDebug = true;
   static const showPlayerDebug = false;
+  static const showEnemyDebug = false;
 
   static bool whenDebug(bool value) {
     return debugMode && value;

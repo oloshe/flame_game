@@ -36,11 +36,11 @@ Future<HudButtonComponent> createButton(void Function() onButtonPress) async {
   const double size = 80;
   return HudButtonComponent(
     button: SpriteComponent(
-      sprite: sheet.getSpriteById(4),
+      sprite: sheet.getSpriteById(2),
       size: Vector2.all(size),
     ),
     buttonDown: SpriteComponent(
-      sprite: sheet.getSpriteById(5),
+      sprite: sheet.getSpriteById(4),
       size: Vector2.all(size),
     ),
     margin: const EdgeInsets.only(right: 40, bottom: 60),
