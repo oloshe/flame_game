@@ -26,13 +26,19 @@ class MapEditorProvider with ChangeNotifier {
   String? currLayerName;
 
   MapEditorProvider() {
-    final layerName = 'layer1'.lang;
+    final layer1 = 'layer'.lang.args({
+      "layer": 1
+    });
+    final layer2 = 'layer'.lang.args({
+      "layer": 2
+    });
     const w = 20;
     const h = 20;
     rMap = RMap(width: w, height: h, layers: {
-      layerName: _createLayer(1, w, h, 1),
+      layer1: _createLayer(1, w, h, 1),
+      layer2: _createLayer(2, w, h, 0),
     });
-    currLayerName = layerName;
+    currLayerName = layer1;
   }
 
   /// 修改图层名字

@@ -14,7 +14,7 @@ enum PlayerStatus {
   die,
 }
 
-class Player extends MoveableHitboxComponent
+class Player extends MovableHitboxComponent
     with HasGameRef<MyGame>, HasHitbox {
   Player({
     required this.joystick,
@@ -54,6 +54,8 @@ class Player extends MoveableHitboxComponent
     if (DevTool.showPlayerDebug.isDebug) {
       statusComp.debugMode = true;
     }
+    priority = 10000;
+
   }
 
   bool get isAttacking => statusComp.current == PlayerStatus.attack;
@@ -75,22 +77,8 @@ class Player extends MoveableHitboxComponent
   }
 
   void move(Vector2 delta) {
-    // final sign = delta.normalized();
-    // var newDelta = delta.clone();
-    // if (delta.x.sign == sign.x) {
-    //   newDelta.x = 0;
-    // }
-    // if (delta.y.sign == sign.y) {
-    //   newDelta.y = 0;
-    // }
-    // final newPos = position + delta;
-    // MyRectangleShape()
-    _realMove(delta);
-    _checkFlip(delta);
-  }
-
-  void _realMove(Vector2 delta) {
     position.add(delta);
+    _checkFlip(delta);
   }
 
   // 如果是左边则翻转

@@ -38,6 +38,10 @@ extension SerdeListExt on List<dynamic> {
         ? null
         : map((e) => (e as List<dynamic>).toVector2()).toList(growable: false);
   }
+
+  Anchor toAnchor() {
+    return Anchor(this[0], this[1]);
+  }
 }
 
 extension SerdeNullListExt on List<dynamic>? {

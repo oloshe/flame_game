@@ -5,9 +5,10 @@ class DevTool {
   static const debugMode = true;
   static const showCoverBaseline = false;
   static const showHitbox = false;
-  static const showMovableDebug = true;
+  static const showMovableDebug = false;
   static const showPlayerDebug = false;
   static const showEnemyDebug = false;
+  static const showShapeSpriteDebug = true;
 
   static bool whenDebug(bool value) {
     return debugMode && value;

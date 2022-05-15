@@ -1,5 +1,6 @@
 import 'package:flame/image_composition.dart';
 import 'package:game/common.dart';
+import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/joystick/joystick.dart';
 import 'package:game/components/respect_map.dart';
@@ -8,7 +9,12 @@ import 'package:game/components/characters/player.dart';
 import 'dart:math' as math;
 
 class MyGame extends FlameGame
-    with HasDraggables, HasCollisionDetection, HasTappables, FPSCounter {
+    with
+        HasDraggables,
+        HasCollisionDetection,
+        HasTappables,
+        AllMovable,
+        FPSCounter {
   MyGame({
     this.mapData,
   }) : super();

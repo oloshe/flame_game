@@ -34,6 +34,28 @@ class MapPainter extends CustomPainter {
       if (id != RMapGlobal.emptyTile) {
         final tileData = R.getTileById(id);
         if (tileData != null) {
+          if (tileData.isCombine) {
+            final tileList =
+                tileData.getCombinedTiles().toList(growable: false).reversed;
+            for (final tile in tileList) {
+              final pic = tile.pic;
+              final sp = MapEditor.spriteCached[tile.id]!;
+              if (!batch.containsKey(pic)) {
+                batch[pic] = SpriteBatch(sp.image);
+              }
+              batch[pic]!.add(
+                source: Rect.fromLTWH(
+                  sp.srcPosition.x,
+                  sp.srcPosition.y,
+                  sp.srcSize.x,
+                  sp.srcSize.y,
+                ),
+                scale: RespectMap.scaleFactor,
+                offset: Vector2(len * x, len * y),
+                anchor: tile.anchor?.toVector2(),
+              );
+            }
+          }
           final pic = tileData.pic;
           final sp = MapEditor.spriteCached[id]!;
           if (!batch.containsKey(pic)) {
@@ -48,6 +70,7 @@ class MapPainter extends CustomPainter {
             ),
             scale: RespectMap.scaleFactor,
             offset: Vector2(len * x, len * y),
+            anchor: tileData.anchor?.toVector2(),
           );
         } else {
           print('error');

@@ -103,16 +103,17 @@ Future<Map<String, T>> _initWith<T>(String filePath,
 }
 
 Future<Map<int, T>> _initWithIntKey<T>(String filePath,
-    T Function(Map<String, dynamic> contructor) constructor) async {
+    T Function(int id, Map<String, dynamic> contructor) constructor) async {
   final jsonData = await Flame.assets.readJson(filePath);
-  return jsonData.map(
-    (key, value) => MapEntry(int.parse(key), constructor(value)),
-  );
+  return jsonData.map((key, value) {
+    final _key = int.parse(key);
+    return MapEntry(_key, constructor(_key, value));
+  });
 }
-
 
 typedef RTileObjectMapValue = FutureOr<PositionComponent?>;
 
-typedef RTileObjectMapFunction = RTileObjectMapValue Function(RTileData tileData,Vector2 position);
+typedef RTileObjectMapFunction = RTileObjectMapValue Function(
+    RTileData tileData, Vector2 position);
 
 typedef TileObjectMap = Map<String, RTileObjectMapFunction>;

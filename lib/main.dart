@@ -47,14 +47,14 @@ class MyApp extends StatelessWidget {
             }
             return null;
           },
-          home: GameWidget(
-            game: MyGame(),
-          ),
-          // home: Consumer<Translations>(
-          //   builder: (context, tr, child) {
-          //     return const MapEditor();
-          //   },
+          // home: GameWidget(
+          //   game: MyGame(),
           // ),
+          home: Consumer<Translations>(
+            builder: (context, tr, child) {
+              return const MapEditor();
+            },
+          ),
         );
       },
     );

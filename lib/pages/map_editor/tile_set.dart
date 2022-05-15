@@ -71,25 +71,24 @@ class _TileSetState extends State<TileSet> {
     );
   }
 
-  Widget _buildItem(MapEntry<int, RTileData> e) {
+  Widget _buildItem(MapEntry<int, RTileData> tileItem) {
     return Builder(builder: (context) {
       return InkWell(
         onTap: () {
-          context.editor.setTileId(e.key);
+          context.editor.setTileId(tileItem.key);
         },
         child: Selector<MapEditorProvider, bool>(
-          selector: (_, p) => p.currTileId == e.key,
+          selector: (_, p) => p.currTileId == tileItem.key,
           builder: (context, isSelected, child) {
             return RepaintBoundary(
               child: CustomPaint(
                 painter: TilePainter(
                   selected: isSelected,
-                  sprite: MapEditor.spriteCached[e.key],
-                  tileSize: e.value.size,
+                  tile: tileItem.value,
                 ),
                 size: Size(
-                  MapEditor.len * e.value.size.x,
-                  MapEditor.len * e.value.size.y,
+                  MapEditor.len * tileItem.value.size.x,
+                  MapEditor.len * tileItem.value.size.y,
                 ),
               ),
             );

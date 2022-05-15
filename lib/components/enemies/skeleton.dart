@@ -8,7 +8,7 @@ import 'package:game/components/respect_map.dart';
 import 'package:game/components/characters/player.dart';
 import 'package:game/games/game.dart';
 
-class Skeleton extends MoveableHitboxComponent
+class Skeleton extends MovableHitboxComponent
     with Enemy, HasGameRef<MyGame>, HasHitbox {
   Skeleton()
       : super(

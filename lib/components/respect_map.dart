@@ -8,14 +8,6 @@ import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/characters/player.dart';
 import 'package:image/image.dart';
 
-typedef BatchFunction = void Function(
-  String pic,
-  Sprite sp,
-  Vector2 size,
-  Vector2 pos,
-  int priority,
-);
-
 class RespectMap extends PositionComponent with HasGameRef {
   /// 源地图的基本尺寸
   static final srcBase = Vector2(16, 16);
@@ -55,7 +47,6 @@ class RespectMap extends PositionComponent with HasGameRef {
     }
     player.position = size / 2
       ..add(Vector2(0, 20));
-    player.priority = 100;
     await add(player);
     add(RectangleHitbox());
   }
@@ -63,27 +54,6 @@ class RespectMap extends PositionComponent with HasGameRef {
   Future<void> draw(RMap mapData) async {
     await mapData.forEachLayer((layer) async {
       Map<String, SpriteBatch> batch = {};
-      void onBatch(
-        String pic,
-        Sprite sp,
-        Vector2 size,
-        Vector2 pos,
-        int priority,
-      ) {
-        if (!batch.containsKey(pic)) {
-          batch[pic] = SpriteBatch(sp.image);
-        }
-        batch[pic]!.add(
-          source: Rect.fromLTWH(
-            sp.srcPosition.x,
-            sp.srcPosition.y,
-            sp.srcSize.x,
-            sp.srcSize.y,
-          ),
-          scale: RespectMap.scaleFactor,
-          offset: pos,
-        );
-      }
 
       for (var y = 0; y < mapData.height; y++) {
         for (var x = 0; x < mapData.width; x++) {
@@ -92,7 +62,7 @@ class RespectMap extends PositionComponent with HasGameRef {
               id: layer.matrix[y][x],
               pos: Vector2(x.toDouble(), y.toDouble()),
               layer: layer,
-              onBatch: onBatch,
+              batch: batch,
             );
           }
         }
@@ -109,35 +79,20 @@ class RespectMap extends PositionComponent with HasGameRef {
     required int id,
     required Vector2 pos,
     required RMapLayerData layer,
-    required BatchFunction onBatch,
+    required Map<String, SpriteBatch> batch,
   }) async {
     RTileData tileData = R.getTileById(id)!;
-    Vector2 spriteSize = tileData.size.clone()..multiply(base);
+    Vector2 spriteSize = tileData.spriteSize;
     Vector2 spritePosition = pos..multiply(base);
     final sprite = await tileData.getSprite();
-    if (id == 1000) {
-      print(tileData.name);
-    }
     // 如果有碰撞
     if (tileData.hit) {
-      if (tileData.cover != null) {
-        await add(CoverShapeSprite(
-          sprite,
-          cover: tileData.cover!,
-          size: spriteSize,
-          position: spritePosition,
-          priority: layer.index,
-          relation: tileData.polygon,
-        ));
-      } else {
-        await add(ShapeSprite(
-          sprite,
-          size: spriteSize,
-          position: spritePosition,
-          priority: layer.index,
-          relation: tileData.polygon,
-        ));
-      }
+      await add(ShapeSprite.factory(
+        sprite: sprite,
+        size: spriteSize,
+        position: spritePosition,
+        tileData: tileData,
+      ));
     } else if (tileData.object == true) {
       final compBuilder = R.getTileObjectBuilder(tileData.name);
       if (compBuilder != null) {
@@ -149,7 +104,51 @@ class RespectMap extends PositionComponent with HasGameRef {
       }
     } else {
       /// 如果是纯图片sprite，则添加到batch里面，到最后一次性画出来
-      onBatch(tileData.pic, sprite, spriteSize, spritePosition, layer.index);
+      if (tileData.isCombine) {
+        final tileList =
+            tileData.getCombinedTiles().toList(growable: false).reversed;
+        for (var t in tileList) {
+          _onBatch(
+            t.pic,
+            await t.getSprite(),
+            spriteSize,
+            spritePosition,
+            layer.index,
+            batch,
+          );
+        }
+      }
+      _onBatch(
+        tileData.pic,
+        sprite,
+        spriteSize,
+        spritePosition,
+        layer.index,
+        batch,
+      );
     }
+  }
+
+  void _onBatch(
+    String pic,
+    Sprite sp,
+    Vector2 size,
+    Vector2 pos,
+    int priority,
+    Map<String, SpriteBatch> batch,
+  ) {
+    if (!batch.containsKey(pic)) {
+      batch[pic] = SpriteBatch(sp.image);
+    }
+    batch[pic]!.add(
+      source: Rect.fromLTWH(
+        sp.srcPosition.x,
+        sp.srcPosition.y,
+        sp.srcSize.x,
+        sp.srcSize.y,
+      ),
+      scale: RespectMap.scaleFactor,
+      offset: pos,
+    );
   }
 }
