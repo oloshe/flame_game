@@ -1,0 +1,157 @@
+{
+  "137": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 0]
+  },
+  "138": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 0]
+  },
+  "139": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [2, 0]
+  },
+  "140": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 0]
+  },
+  "141": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [4, 0]
+  },
+  "142": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [5, 0]
+  },
+  "145": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 1]
+  },
+  "146": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 1]
+  },
+  "148": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 1]
+  },
+  "149": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [4, 1]
+  },
+  "150": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [5, 1]
+  },
+  "153": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 2]
+  },
+  "154": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 2]
+  },
+  "155": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [2, 2]
+  },
+  "156": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 2]
+  },
+  "161": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 3]
+  },
+  "162": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 3]
+  },
+  "163": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [2, 3]
+  },
+  "164": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 3]
+  },
+  "169": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 4]
+  },
+  "170": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 4]
+  },
+  "171": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [2, 4]
+  },
+  "172": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 4]
+  },
+  "173": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [4, 4]
+  },
+  "174": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [5, 4]
+  },
+  "177": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [0, 5]
+  },
+  "178": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [1, 5]
+  },
+  "179": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [2, 5]
+  },
+  "180": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [3, 5]
+  },
+  "181": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [4, 5]
+  },
+  "182": {
+    "pic": "walls",
+    "type": "walls",
+    "pos": [5, 5]
+  }
+}

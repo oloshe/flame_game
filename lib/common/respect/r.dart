@@ -3,6 +3,8 @@ part of '../../common.dart';
 class R {
   R._();
 
+  static const jsonPath = "json/";
+
   static late _RImage images;
 
   static late _RAnimationName animations;
@@ -31,7 +33,7 @@ class R {
 
     // 加载tile
     _tileDataIdMap =
-        await _initWithIntKey('json/tile.json', RTileData.fromJson);
+        await RTileData.load();
 
     // 加载地图数据
     _map = await RMapGlobal.fromFile();
@@ -81,15 +83,15 @@ class R {
     return _tileDataIdMap[id];
   }
 
-  static Future<Image> getTileImage(int id) async {
-    return getImageByAlias(getTileById(id)!.pic);
-  }
+  // static Future<Image> getTileImage(int id) async {
+  //   return getImageByAlias(getTileById(id)!.pic!);
+  // }
 
   static List<MapEntry<int, RTileData>> getAllTiles() {
     return _tileDataIdMap.entries.toList(growable: false);
   }
 
-  static RTileObjectMapFunction? getTileObjectBuilder(String objectName) {
+  static RTileObjectMapFunction? getTileObjectBuilder(String? objectName) {
     return _tileObjectMap[objectName];
   }
 }
@@ -100,15 +102,6 @@ Future<Map<String, T>> _initWith<T>(String filePath,
   return jsonData.map(
     (key, value) => MapEntry(key, constructor(value)),
   );
-}
-
-Future<Map<int, T>> _initWithIntKey<T>(String filePath,
-    T Function(int id, Map<String, dynamic> contructor) constructor) async {
-  final jsonData = await Flame.assets.readJson(filePath);
-  return jsonData.map((key, value) {
-    final _key = int.parse(key);
-    return MapEntry(_key, constructor(_key, value));
-  });
 }
 
 typedef RTileObjectMapValue = FutureOr<PositionComponent?>;

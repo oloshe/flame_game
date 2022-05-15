@@ -23,8 +23,9 @@ class RTileData {
 
   /// 是否为对象 如果是则根据 [name] 用 [R.getTileObjectBuilder] 获取创建方法
   final bool? object;
+
   /// tile 名
-  final String name;
+  final String? name;
 
   /// 是否是碰撞体，默认为false
   final bool hit;
@@ -40,7 +41,9 @@ class RTileData {
   final Anchor? anchor;
 
   // 将连个tile结合，该图层会在最上层
-  final int? combine;
+  final List<int>? combines;
+  // 没有实际数据，全是combines
+  final bool ghost;
 
   RTileData({
     required this.id,
@@ -55,26 +58,52 @@ class RTileData {
     required this.object,
     required this.name,
     required this.anchor,
-    required this.combine,
+    required this.combines,
+    required this.ghost,
   });
 
-  factory RTileData.fromJson(int id, Map<String, dynamic> json) {
+  static Future<TileDataIdMap> load() async {
+    final jsonData = await Flame.assets.readJson("${R.jsonPath}tile.json");
+    TileDataIdMap result = {};
+    Future<void> _loadJson(Map<String, dynamic> json,
+        [RTileTerrainData? terrainData]) async {
+      for (final item in json.entries) {
+        final _key = int.tryParse(item.key);
+        if (_key != null) {
+          result[_key] = RTileData.fromJson(_key, item.value, terrainData);
+        } else {
+          final terrainData = RTileTerrainData.fromJson(item.value);
+          final subJson = await Flame.assets.readJson(
+            "${R.jsonPath}${terrainData.source}",
+          );
+          await _loadJson(subJson, terrainData);
+        }
+      }
+    }
+
+    await _loadJson(jsonData);
+    return result;
+  }
+
+  factory RTileData.fromJson(int id, Map<String, dynamic> json,
+      [RTileTerrainData? terrainData]) {
     int w = json['width'] ?? 1;
     int h = json['height'] ?? 1;
     return RTileData(
       id: id,
-      pic: json['pic'],
-      pos: json.getList('pos').toVector2() ?? Vector2.zero(),
+      pic: json['pic'] ?? terrainData?.pic,
+      pos: json.getList('pos').toVector2() ?? Vector2(0, 0),
       size: Vector2(w.toDouble(), h.toDouble()),
-      type: json['type'],
+      type: json['type'] ?? terrainData?.type,
       subType: json['subType'],
       hit: json['hit'] ?? false,
       polygon: json.getList('polygon')?.toVector2List(),
       // cover: json['cover'],
       object: json['object'],
-      name: json['name'] ?? '',
+      name: json['name'],
       anchor: json.getList('anchor')?.toAnchor(),
-      combine: json['combine'],
+      combines: json.getList('combines')?.cast<int>(),
+      ghost: json['combines'] != null || json['pos'] == null,
     );
   }
 
@@ -95,37 +124,99 @@ class RTileData {
 
   Vector2 get spriteSize => size.clone()..multiply(RespectMap.base);
 
-  bool get isCombine => combine != null;
-
-  RTileData? get combineTile => combine != null ? R.getTileById(combine!) : null;
+  bool get isCombine => combines != null && combines!.isNotEmpty;
 
   /// 迭代获取嵌套的引用tile
   Iterable<RTileData> getCombinedTiles() sync* {
-    RTileData curr = this;
-    while(curr.isCombine) {
-      final tile = curr.combineTile;
-      if (tile != null) {
-        curr = tile;
-        yield curr;
-      } else {
-        break;
+    if (isCombine) {
+      for (var id in combines!) {
+        final tmp = R.getTileById(id);
+        if (tmp != null) {
+          yield tmp;
+        }
       }
+    }
+    if (!ghost) {
+      yield this;
+    }
+  }
+
+  Future<void> batchRender(
+    Map<String, SpriteBatch> batch,
+    Vector2 spritePosition,
+  ) async {
+    final iter = getCombinedTiles();
+    for (final tile in iter) {
+      final sp = await tile.getSprite();
+      final pic = tile.pic;
+      if (!batch.containsKey(pic)) {
+        batch[pic] = SpriteBatch(sp.image);
+      }
+      batch[pic]!.add(
+        source: Rect.fromLTWH(
+          sp.srcPosition.x,
+          sp.srcPosition.y,
+          sp.srcSize.x,
+          sp.srcSize.y,
+        ),
+        scale: RespectMap.scaleFactor,
+        offset: spritePosition,
+      );
+    }
+  }
+
+  void batchRenderSync(
+    Map<String, SpriteBatch> batch,
+    Vector2 spritePosition,
+    Map<int, Sprite> cache,
+  ) {
+    final iter = getCombinedTiles();
+    for (final tile in iter) {
+      final sp = cache[tile.id]!;
+      final pic = tile.pic;
+      if (!batch.containsKey(pic)) {
+        batch[pic] = SpriteBatch(sp.image);
+      }
+      batch[pic]!.add(
+        source: Rect.fromLTWH(
+          sp.srcPosition.x,
+          sp.srcPosition.y,
+          sp.srcSize.x,
+          sp.srcSize.y,
+        ),
+        scale: RespectMap.scaleFactor,
+        offset: spritePosition,
+      );
     }
   }
 }
 
-// class RTileCoverData {
-//   final Vector2 size;
-//   final Vector2 offset;
-//   RTileCoverData({
-//     required this.size,
-//     required this.offset,
-//   });
+class RTileTerrainData {
+  final String pic;
+  final String type;
+  final String source;
+  final String terrain;
+  RTileTerrainData({
+    required this.pic,
+    required this.type,
+    required this.source,
+    required this.terrain,
+  });
 
-//   factory RTileCoverData.fromJson(Map<String, dynamic> json) {
-//     return RTileCoverData(
-//       size: utils.vec2FieldDefault(json['size']),
-//       offset: utils.vec2FieldDefault(json['offset']),
-//     );
+  factory RTileTerrainData.fromJson(Map<String, dynamic> json) {
+    return RTileTerrainData(
+      pic: json["pic"],
+      type: json["type"],
+      source: json["source"],
+      terrain: json["terrain"],
+    );
+  }
+}
+//
+// class RCombineData {
+//   final List<int> combines;
+//   RCombineData(this.combines);
+//   factory RCombineData.fromJson(Map<String, dynamic> json) {
+//     return RCombineData(json["combines"]);
 //   }
 // }

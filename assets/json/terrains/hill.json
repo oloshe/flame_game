@@ -1,0 +1,113 @@
+{
+  "26": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [0, 4]
+  },
+  "27": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [1, 4]
+  },
+  "28": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [2, 4]
+  },
+  "29": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [3, 4]
+  },
+  "30": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [4, 4]
+  },
+  "31": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [5, 4]
+  },
+  "32": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [0, 5]
+  },
+  "33": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [1, 5]
+  },
+  "34": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [2, 5]
+  },
+  "35": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [3, 5]
+  },
+  "36": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [4, 5]
+  },
+  "37": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [5, 5]
+  },
+  "38": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [0, 6]
+  },
+  "39": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [1, 6]
+  },
+  "40": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [2, 6]
+  },
+  "41": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [3, 6]
+  },
+  "42": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [4, 6]
+  },
+  "43": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [5, 6]
+  },
+  "44": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [0, 7],
+    "combine": 34
+  },
+  "45": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [1, 7]
+  },
+  "46": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [2, 7]
+  },
+  "47": {
+    "pic": "plains",
+    "type": "plains",
+    "pos": [3, 7]
+  }
+}

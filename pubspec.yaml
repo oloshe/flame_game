@@ -74,4 +74,5 @@ flutter:
     - 'assets/images/tiles/walls/'
     - 'assets/json/'
     - 'assets/json/maps/'
+    - 'assets/json/terrains/'
     - 'assets/tiles/'

@@ -1,0 +1,82 @@
+{
+  "72": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [0, 0]
+  },
+  "73": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [1, 0]
+  },
+  "74": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [2, 0]
+  },
+  "75": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [3, 0]
+  },
+  "76": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [0, 1]
+  },
+  "77": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [1, 1]
+  },
+  "78": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [2, 1]
+  },
+  "79": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [3, 1]
+  },
+  "80": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [0, 2]
+  },
+  "81": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [1, 2]
+  },
+  "82": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [2, 2]
+  },
+  "83": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [3, 2]
+  },
+  "84": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [0, 3]
+  },
+  "85": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [1, 3]
+  },
+  "86": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [2, 3]
+  },
+  "87": {
+    "pic": "fences",
+    "type": "fences",
+    "pos": [3, 3]
+  }
+}

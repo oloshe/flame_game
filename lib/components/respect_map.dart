@@ -103,52 +103,8 @@ class RespectMap extends PositionComponent with HasGameRef {
         }
       }
     } else {
-      /// 如果是纯图片sprite，则添加到batch里面，到最后一次性画出来
-      if (tileData.isCombine) {
-        final tileList =
-            tileData.getCombinedTiles().toList(growable: false).reversed;
-        for (var t in tileList) {
-          _onBatch(
-            t.pic,
-            await t.getSprite(),
-            spriteSize,
-            spritePosition,
-            layer.index,
-            batch,
-          );
-        }
-      }
-      _onBatch(
-        tileData.pic,
-        sprite,
-        spriteSize,
-        spritePosition,
-        layer.index,
-        batch,
-      );
+      tileData.batchRender(batch, spritePosition);
     }
   }
 
-  void _onBatch(
-    String pic,
-    Sprite sp,
-    Vector2 size,
-    Vector2 pos,
-    int priority,
-    Map<String, SpriteBatch> batch,
-  ) {
-    if (!batch.containsKey(pic)) {
-      batch[pic] = SpriteBatch(sp.image);
-    }
-    batch[pic]!.add(
-      source: Rect.fromLTWH(
-        sp.srcPosition.x,
-        sp.srcPosition.y,
-        sp.srcSize.x,
-        sp.srcSize.y,
-      ),
-      scale: RespectMap.scaleFactor,
-      offset: pos,
-    );
-  }
 }
