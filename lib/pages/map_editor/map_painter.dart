@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
-import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
-import 'package:game/components/respect_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
+import 'package:game/respect/index.dart';
 
 class MapPainter extends CustomPainter {
   final RMapLayerData layerData;

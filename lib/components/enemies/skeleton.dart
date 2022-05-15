@@ -5,8 +5,8 @@ import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/components/enemies/enemy.dart';
 import 'package:game/components/respect_map.dart';
-import 'package:game/components/characters/player.dart';
 import 'package:game/games/game.dart';
+import 'package:game/respect/index.dart';
 
 class Skeleton extends MovableHitboxComponent
     with Enemy, HasGameRef<MyGame>, HasHitbox {
@@ -36,12 +36,12 @@ class Skeleton extends MovableHitboxComponent
   Future<void>? onLoad() async {
     final animations = await R.createAnimations(
       SkeletonStatus.values,
-      R.animations.skeleton,
+      'skeleton',
     );
 
     // XXX
     final srcSize =
-        R.getImageData(R.animations.skeleton).srcSize ?? RespectMap.srcBase;
+        R.getImageData('skeleton').srcSize ?? RespectMap.srcBase;
 
     statusComp = SpriteAnimationGroupComponent(
       animations: animations,

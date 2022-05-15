@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:game/common.dart';
+import 'package:game/respect/index.dart';
 import 'package:tiled/tiled.dart';
 
 class Tree extends SpriteComponent {

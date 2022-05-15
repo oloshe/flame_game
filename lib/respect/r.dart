@@ -1,13 +1,9 @@
-part of '../../common.dart';
+part of 'index.dart';
 
 class R {
   R._();
 
   static const jsonPath = "json/";
-
-  static late _RImage images;
-
-  static late _RAnimationName animations;
 
   static late RMapGlobal _map;
 
@@ -38,22 +34,11 @@ class R {
     // 加载地图数据
     _map = await RMapGlobal.fromFile();
 
-    // 加载所有图片资源
-    images = _RImage();
-
-    // 所有的动画名字
-    animations = _RAnimationName();
-
     _tileObjectMap = {
       "skeleton": (tileData, position) async {
         return Skeleton()..position = position;
       }
     };
-  }
-
-  /// 通过别名加载图片
-  static Future<Image> _loadByAlias(String alias) async {
-    return await Flame.images.load(_imagePathAliasMap[alias]!.path);
   }
 
   /// 根据别名获取图片的配置数据

@@ -1,5 +1,4 @@
 import 'package:flame/image_composition.dart';
-import 'package:game/common.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/joystick/joystick.dart';
@@ -7,6 +6,8 @@ import 'package:game/components/respect_map.dart';
 import 'package:flame/game.dart';
 import 'package:game/components/characters/player.dart';
 import 'dart:math' as math;
+
+import 'package:game/respect/index.dart';
 
 class MyGame extends FlameGame
     with

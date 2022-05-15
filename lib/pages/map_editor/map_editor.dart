@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
 import 'package:game/components/respect_map.dart';
@@ -9,7 +8,7 @@ import 'package:game/pages/map_editor/editor_footer.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/map_painter.dart';
 import 'package:game/pages/map_editor/tile_set.dart';
-import 'package:game/widgets/modal.dart';
+import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 

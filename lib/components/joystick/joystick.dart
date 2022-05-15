@@ -1,11 +1,10 @@
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flame/sprite.dart';
-import 'package:game/common.dart';
+import 'package:game/respect/index.dart';
 
-final Future<SpriteSheet> joystickSheet = R.images.joystick.then((img) {
+final Future<SpriteSheet> joystickSheet = R.getImageByAlias('joystick').then((img) {
   return SpriteSheet.fromColumnsAndRows(
     image: img,
     columns: 6,

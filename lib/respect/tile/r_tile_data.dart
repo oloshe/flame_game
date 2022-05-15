@@ -1,4 +1,4 @@
-part of '../../common.dart';
+part of '../index.dart';
 
 typedef TileDataIdMap = Map<int, RTileData>;
 
@@ -24,7 +24,7 @@ class RTileData {
   /// 是否为对象 如果是则根据 [name] 用 [R.getTileObjectBuilder] 获取创建方法
   final bool? object;
 
-  /// tile 名
+  /// tile 名 主要用于对象创建时的区分
   final String? name;
 
   /// 是否是碰撞体，默认为false
@@ -37,12 +37,12 @@ class RTileData {
   // /// 是否开启阻挡
   // final bool? cover;
 
-  // 锚地，位置会自动矫正，所以不会影响位置。主要用于做层级的划分，例如树
+  /// 锚地，位置会自动矫正，所以不会影响位置。主要用于做层级的划分，例如树，普通的就没必要设了
   final Anchor? anchor;
 
-  // 将连个tile结合，该图层会在最上层
+  /// 将连个tile结合，该图层会在最上层
   final List<int>? combines;
-  // 没有实际数据，全是combines
+  /// 没有实际数据，全是combines
   final bool ghost;
 
   RTileData({
@@ -66,13 +66,13 @@ class RTileData {
     final jsonData = await Flame.assets.readJson("${R.jsonPath}tile.json");
     TileDataIdMap result = {};
     Future<void> _loadJson(Map<String, dynamic> json,
-        [RTileTerrainData? terrainData]) async {
+        [RTilePartialData? terrainData]) async {
       for (final item in json.entries) {
         final _key = int.tryParse(item.key);
         if (_key != null) {
           result[_key] = RTileData.fromJson(_key, item.value, terrainData);
         } else {
-          final terrainData = RTileTerrainData.fromJson(item.value);
+          final terrainData = RTilePartialData.fromJson(item.value);
           final subJson = await Flame.assets.readJson(
             "${R.jsonPath}${terrainData.source}",
           );
@@ -86,7 +86,7 @@ class RTileData {
   }
 
   factory RTileData.fromJson(int id, Map<String, dynamic> json,
-      [RTileTerrainData? terrainData]) {
+      [RTilePartialData? terrainData]) {
     int w = json['width'] ?? 1;
     int h = json['height'] ?? 1;
     return RTileData(
@@ -191,32 +191,37 @@ class RTileData {
   }
 }
 
-class RTileTerrainData {
+class RTilePartialData {
+  /// 指定图片名，减少数据冗余
   final String pic;
+
+  /// 类型
   final String type;
-  final String source;
+
+  /// 子类型
+  final String? subType;
+
+  /// 路径
   final String terrain;
-  RTileTerrainData({
+
+  /// 文件路径
+  final String source;
+
+  RTilePartialData({
     required this.pic,
     required this.type,
     required this.source,
     required this.terrain,
+    required this.subType,
   });
 
-  factory RTileTerrainData.fromJson(Map<String, dynamic> json) {
-    return RTileTerrainData(
+  factory RTilePartialData.fromJson(Map<String, dynamic> json) {
+    return RTilePartialData(
       pic: json["pic"],
       type: json["type"],
       source: json["source"],
       terrain: json["terrain"],
+      subType: json["subType"],
     );
   }
 }
-//
-// class RCombineData {
-//   final List<int> combines;
-//   RCombineData(this.combines);
-//   factory RCombineData.fromJson(Map<String, dynamic> json) {
-//     return RCombineData(json["combines"]);
-//   }
-// }

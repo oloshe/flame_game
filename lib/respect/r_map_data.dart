@@ -1,4 +1,4 @@
-part of '../../common.dart';
+part of 'index.dart';
 
 class RMapGlobal {
   static const _prefix = 'json/maps/';

@@ -1,12 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/common/utils/dev_tool.dart';
-import 'package:game/games/game.dart';
 import 'package:game/common/base/dynamic_priority.dart';
 
-import 'package:game/common.dart';
+import 'package:game/respect/index.dart';
 
 class ShapeSprite extends SpriteComponent with HasHitbox, DynamicPriorityComponent {
   ShapeSprite(

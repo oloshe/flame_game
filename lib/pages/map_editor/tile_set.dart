@@ -5,6 +5,7 @@ import 'package:game/common/utils/provider_helper.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/tile_painter.dart';
+import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 
 class TileSet extends StatefulWidget {

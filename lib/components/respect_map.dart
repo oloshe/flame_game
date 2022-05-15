@@ -1,12 +1,9 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:game/common.dart';
-import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/characters/player.dart';
-import 'package:image/image.dart';
+import 'package:game/respect/index.dart';
 
 class RespectMap extends PositionComponent with HasGameRef {
   /// 源地图的基本尺寸

@@ -1,11 +1,8 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:game/common.dart';
 import 'package:game/common/utils/i18n.dart';
-import 'package:game/games/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
-import 'package:game/widgets/button.dart';
+import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

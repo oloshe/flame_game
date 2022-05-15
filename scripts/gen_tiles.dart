@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 void main() {
   var startId = 137;
   var amountPerRow = 8;

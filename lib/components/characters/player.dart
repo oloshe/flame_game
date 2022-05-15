@@ -1,11 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/common.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/mixins/custom_collision.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
+import 'package:game/respect/index.dart';
 
 enum PlayerStatus {
   idle,
@@ -43,7 +43,7 @@ class Player extends MovableHitboxComponent
   Future<void>? onLoad() async {
     statusComp = SpriteAnimationGroupComponent(
       animations:
-          await R.createAnimations(PlayerStatus.values, R.animations.player),
+          await R.createAnimations(PlayerStatus.values, 'player'),
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
       size: RespectMap.characterBase,
