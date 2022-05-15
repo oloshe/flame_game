@@ -129,7 +129,7 @@ class RTileData {
   /// 迭代获取嵌套的引用tile
   Iterable<RTileData> getCombinedTiles() sync* {
     if (isCombine) {
-      for (var id in combines!) {
+      for (final id in combines!) {
         final tmp = R.getTileById(id);
         if (tmp != null) {
           yield tmp;
