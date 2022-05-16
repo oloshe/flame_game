@@ -15,6 +15,7 @@ part 'r_image_data.dart';
 part 'r_map_data.dart';
 part 'tile/r_tile_data.dart';
 part 'tile/r_tile_object.dart';
-part 'tile/r_tile_path.dart';
+part 'tile/r_tile_ghost.dart';
 part 'tile/r_tile_base.dart';
 part 'tile/r_tile_hit.dart';
+part 'tile/r_tile_pic.dart';
