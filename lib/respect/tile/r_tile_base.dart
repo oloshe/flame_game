@@ -1,14 +1,10 @@
 part of '../index.dart';
 
+typedef TileIdMap = Map<int, RTileBase>;
+
 class RTileBase {
   /// tileId
   final int id;
-
-  /// 位置 默认为0
-  final Vector2 pos;
-
-  /// 尺寸 不是像素尺寸，是占用的格子
-  final Vector2 size;
 
   /// 分类
   final String type;
@@ -18,9 +14,34 @@ class RTileBase {
 
   RTileBase({
     required this.id,
-    required this.pos,
-    required this.size,
     required this.type,
     required this.subType,
   });
+  //
+  // static Future<TileIdMap> load() async {
+  //   final jsonData = await Flame.assets.readJson("${R.jsonPath}tile.json");
+  //   TileIdMap result = {};
+  //   Future<void> _loadJson(Map<String, dynamic> json,
+  //       [RTilePartialData? terrainData]) async {
+  //     for (final item in json.entries) {
+  //       final _key = int.tryParse(item.key);
+  //       if (_key != null) {
+  //         result[_key] = RTileBase.fromJson(_key, item.value, terrainData);
+  //       } else {
+  //         final terrainData = RTilePartialData.fromJson(item.value);
+  //         final subJson = await Flame.assets.readJson(
+  //           "${R.jsonPath}${terrainData.source}",
+  //         );
+  //         await _loadJson(subJson, terrainData);
+  //       }
+  //     }
+  //   }
+  //
+  //   await _loadJson(jsonData);
+  //   return result;
+  // }
+
+  // factory RTileBase.fromJson(int id, Map<String, dynamic> json) {
+  //
+  // }
 }

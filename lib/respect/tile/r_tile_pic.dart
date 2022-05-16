@@ -2,19 +2,25 @@ part of '../index.dart';
 
 class RTilePic extends RTileBase {
   final String pic;
-  final List<int> combines;
+
+  /// 位置 默认为0
+  final int x;
+  final int y;
+
+  final int w;
+  final int h;
+
   RTilePic({
     required this.pic,
-    required this.combines,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
     required int id,
-    required Vector2 pos,
-    required Vector2 size,
     required String type,
     required String? subType,
   }) : super(
           id: id,
-          pos: pos,
-          size: size,
           type: type,
           subType: subType,
         );
