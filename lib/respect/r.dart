@@ -11,34 +11,40 @@ class R {
 
   static late ImageDataMap _imagePathAliasMap;
 
-  static late TileDataIdMap _tileDataIdMap;
-
-  static late TileObjectMap _tileObjectMap;
+  static late TileIdMap _tileDataIdMap;
 
   static RMapGlobal get mapMgr => _map;
 
+  static late Future<void> assetLoaded;
+  static final Completer<void> _assetCompleter = Completer();
+
   // 初始化资源
   static Future<void> init() async {
+    assetLoaded = _assetCompleter.future;
     // 加载图片别名配置
     _imagePathAliasMap =
         await _initWith('json/image_alias.json', RImageData.fromJson);
+    _preloadAllImage();
 
     // 加载动画
     _animationDataMap =
         await _initWith('json/animation.json', RAnimationData.fromJson);
 
     // 加载tile
-    _tileDataIdMap =
-        await RTileData.load();
+    _tileDataIdMap = await RTileBase.load();
 
     // 加载地图数据
     _map = await RMapGlobal.fromFile();
 
-    _tileObjectMap = {
-      "skeleton": (tileData, position) async {
-        return Skeleton()..position = position;
-      }
-    };
+    RTileObject.initObjectBuilder();
+  }
+
+  /// 预加载所有图片
+  static void _preloadAllImage() async {
+    for (final item in _imagePathAliasMap.entries) {
+      await Flame.images.load(item.value.path);
+    }
+    _assetCompleter.complete();
   }
 
   /// 根据别名获取图片的配置数据
@@ -64,7 +70,7 @@ class R {
     return animationData.getAnimationsMap(enumValues, name);
   }
 
-  static RTileData? getTileById(int id) {
+  static RTileBase? getTileById(int id) {
     return _tileDataIdMap[id];
   }
 
@@ -72,13 +78,13 @@ class R {
   //   return getImageByAlias(getTileById(id)!.pic!);
   // }
 
-  static List<MapEntry<int, RTileData>> getAllTiles() {
+  static List<MapEntry<int, RTileBase>> getAllTiles() {
     return _tileDataIdMap.entries.toList(growable: false);
   }
 
-  static RTileObjectMapFunction? getTileObjectBuilder(String? objectName) {
-    return _tileObjectMap[objectName];
-  }
+  // static RTileObjectMapFunction? getTileObjectBuilder(String? objectName) {
+  //   return RTileObject._tileObjectMap[objectName];
+  // }
 }
 
 Future<Map<String, T>> _initWith<T>(String filePath,
@@ -89,9 +95,3 @@ Future<Map<String, T>> _initWith<T>(String filePath,
   );
 }
 
-typedef RTileObjectMapValue = FutureOr<PositionComponent?>;
-
-typedef RTileObjectMapFunction = RTileObjectMapValue Function(
-    RTileData tileData, Vector2 position);
-
-typedef TileObjectMap = Map<String, RTileObjectMapFunction>;

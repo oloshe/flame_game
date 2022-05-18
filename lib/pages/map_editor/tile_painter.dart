@@ -5,7 +5,7 @@ import 'package:game/respect/index.dart';
 
 class TilePainter extends CustomPainter {
   final bool selected;
-  final RTileData tile;
+  final RCombine tile;
   final double? unitSize;
   static final Paint painter = Paint()
     ..color = Colors.blue
@@ -22,10 +22,14 @@ class TilePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final _size = unitSize ?? MapEditor.len;
 
-    final tileList = tile.getCombinedTiles();
+
+    final tileList = tile.getPicTiles();
+    if (tileList.isEmpty) {
+      print('${tile.id} ${tile.combineData} ${tile.runtimeType}');
+    }
     for(final _tile in tileList) {
-      final sprite = MapEditor.spriteCached[_tile.id];
-      sprite!.render(
+      final sprite = _tile.getSprite();
+      sprite.render(
         canvas,
         size: Vector2(_size * _tile.size.x, _size * _tile.size.y),
       );

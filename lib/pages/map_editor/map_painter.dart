@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common/base/coord.dart';
+import 'package:game/common/base/sprite_batch_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 
@@ -25,25 +25,19 @@ class MapPainter extends CustomPainter {
       return;
     }
     final len = MapEditor.len;
-    Map<String, SpriteBatch> batch = {};
+    SpriteBatchMap batch = SpriteBatchMap();
     _eachCell(width, height, (x, y) {
       final id = layer.matrix[y][x];
       if (id != RMapGlobal.emptyTile) {
         final tileData = R.getTileById(id);
         if (tileData != null) {
-          tileData.batchRenderSync(
-            batch,
-            Vector2(len * x, len * y),
-            MapEditor.spriteCached,
-          );
+          batch.addTile(tileData, Vector2(len * x, len * y));
         } else {
           print('error');
         }
       }
     });
-    for (final item in batch.entries) {
-      item.value.render(canvas);
-    }
+    batch.render(canvas);
   }
 
   @override

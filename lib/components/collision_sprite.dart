@@ -34,7 +34,7 @@ class ShapeSprite extends SpriteComponent with HasHitbox, DynamicPriorityCompone
 
   factory ShapeSprite.factory({
     required Sprite sprite,
-    required RTileData tileData,
+    required RTileHit tileData,
     required Vector2 size,
     required Vector2 position,
   }) {

@@ -32,7 +32,7 @@ class RAnimationData {
     String name,
   ) async {
     final imageData = R.getImageData(pic);
-    final img = await imageData.image;
+    final img = imageData.image;
     final sheet = SpriteSheet(
       image: img,
       // 优先获取动画的尺寸，如果没有则拿图片自带的，都没有就报错。

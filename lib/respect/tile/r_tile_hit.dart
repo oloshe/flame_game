@@ -2,7 +2,6 @@ part of '../index.dart';
 
 /// 可碰撞的瓦片
 class RTileHit extends RTilePic {
-
   /// 碰撞多边形绘制，如果[hit]为true生效
   /// 如果为null则为默认的矩形碰撞，调用[PolygonComponent.relative]
   final List<Vector2>? polygon;
@@ -21,6 +20,7 @@ class RTileHit extends RTilePic {
     required int h,
     required String type,
     required String? subType,
+    required List<int>? combines,
   }) : super(
           id: id,
           pic: pic,
@@ -30,5 +30,6 @@ class RTileHit extends RTilePic {
           h: h,
           type: type,
           subType: subType,
+          combines: combines,
         );
 }

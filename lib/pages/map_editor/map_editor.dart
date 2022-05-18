@@ -17,10 +17,6 @@ class MapEditor extends StatelessWidget {
   static const minWidth = 10;
   static const minHeight = 10;
 
-  /// 编辑器的精灵缓存
-  /// TODO：退出编辑器n秒后清理缓存
-  static final Map<int, Sprite> spriteCached = {};
-
   const MapEditor({Key? key}) : super(key: key);
 
   @override
@@ -35,7 +31,7 @@ class MapEditor extends StatelessWidget {
           body: ColoredBox(
             color: const Color(0xff282c34),
             child: FutureBuilder<void>(
-              future: loadAllSprite(),
+              future: R.assetLoaded,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
@@ -199,14 +195,6 @@ class MapEditor extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> loadAllSprite() async {
-    final list = R.getAllTiles();
-    for (var item in list) {
-      final sprite = await item.value.getSprite();
-      spriteCached[item.key] = sprite;
-    }
   }
 }
 

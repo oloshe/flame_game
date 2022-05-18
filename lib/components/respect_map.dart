@@ -1,6 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/sprite.dart';
+import 'package:game/common/base/sprite_batch_map.dart';
 import 'package:game/components/collision_sprite.dart';
 import 'package:game/components/characters/player.dart';
 import 'package:game/respect/index.dart';
@@ -50,7 +50,7 @@ class RespectMap extends PositionComponent with HasGameRef {
 
   Future<void> draw(RMap mapData) async {
     await mapData.forEachLayer((layer) async {
-      Map<String, SpriteBatch> batch = {};
+      SpriteBatchMap batch = SpriteBatchMap();
 
       for (var y = 0; y < mapData.height; y++) {
         for (var x = 0; x < mapData.width; x++) {
@@ -64,11 +64,7 @@ class RespectMap extends PositionComponent with HasGameRef {
           }
         }
       }
-      for (final item in batch.entries) {
-        await add(SpriteBatchComponent(
-          spriteBatch: item.value,
-        ));
-      }
+      await addAll(batch.intoIter());
     });
   }
 
@@ -76,32 +72,25 @@ class RespectMap extends PositionComponent with HasGameRef {
     required int id,
     required Vector2 pos,
     required RMapLayerData layer,
-    required Map<String, SpriteBatch> batch,
+    required SpriteBatchMap batch,
   }) async {
-    RTileData tileData = R.getTileById(id)!;
+    RTileBase tileData = R.getTileById(id)!;
     Vector2 spriteSize = tileData.spriteSize;
     Vector2 spritePosition = pos..multiply(base);
-    final sprite = await tileData.getSprite();
-    // 如果有碰撞
-    if (tileData.hit) {
+    if (tileData is RTileHit) {
+      if (tileData is RTileObject) {
+        final object = await tileData.buildObject(spritePosition);
+        if (object != null) {
+          await add(object);
+        }
+      }
       await add(ShapeSprite.factory(
-        sprite: sprite,
+        sprite: tileData.getSprite(),
         size: spriteSize,
         position: spritePosition,
         tileData: tileData,
       ));
-    } else if (tileData.object == true) {
-      final compBuilder = R.getTileObjectBuilder(tileData.name);
-      if (compBuilder != null) {
-        final comp = await compBuilder.call(tileData, spritePosition);
-        if (comp != null) {
-          comp.priority = 100;
-          add(comp);
-        }
-      }
-    } else {
-      tileData.batchRender(batch, spritePosition);
     }
+    batch.addTile(tileData, position);
   }
-
 }

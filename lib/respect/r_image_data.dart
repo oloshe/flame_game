@@ -17,5 +17,6 @@ class RImageData {
     );
   }
 
-  Future<Image> get image async => await Flame.images.load(path);
+  Image get image => Flame.images.fromCache(path);
+
 }

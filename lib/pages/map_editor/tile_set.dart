@@ -16,7 +16,7 @@ class TileSet extends StatefulWidget {
 }
 
 class _TileSetState extends State<TileSet> {
-  final Map<String, List<MapEntry<int, RTileData>>> typedListMap = {};
+  final Map<String, List<MapEntry<int, RTileBase>>> typedListMap = {};
   late String currTab;
   @override
   void initState() {
@@ -72,7 +72,7 @@ class _TileSetState extends State<TileSet> {
     );
   }
 
-  Widget _buildItem(MapEntry<int, RTileData> tileItem) {
+  Widget _buildItem(MapEntry<int, RTileBase> tileItem) {
     return Builder(builder: (context) {
       return InkWell(
         onTap: () {
@@ -85,7 +85,7 @@ class _TileSetState extends State<TileSet> {
               child: CustomPaint(
                 painter: TilePainter(
                   selected: isSelected,
-                  tile: tileItem.value,
+                  tile: tileItem.value as RCombine,
                 ),
                 size: Size(
                   MapEditor.len * tileItem.value.size.x,

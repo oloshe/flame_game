@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:game/common/utils/dev_tool.dart';
 
 mixin HasHitbox on PositionComponent {
@@ -17,15 +16,15 @@ mixin HasHitbox on PositionComponent {
   }
 
   /// 获取 [hitbox] 的绝对坐标
-  Rect getHitboxRect() {
-    final _a = position - (size.clone()..multiply(anchor.toVector2()));
-    final _b = hitbox.position -
-        (hitbox.size.clone()..multiply(hitbox.anchor.toVector2()));
-    return Rect.fromLTWH(
-      _a.x + _b.x,
-      _a.y + _b.y,
-      hitbox.size.x,
-      hitbox.size.y,
-    );
-  }
+  // Rect getHitboxRect() {
+  //   final _a = position - (size.clone()..multiply(anchor.toVector2()));
+  //   final _b = hitbox.position -
+  //       (hitbox.size.clone()..multiply(hitbox.anchor.toVector2()));
+  //   return Rect.fromLTWH(
+  //     _a.x + _b.x,
+  //     _a.y + _b.y,
+  //     hitbox.size.x,
+  //     hitbox.size.y,
+  //   );
+  // }
 }

@@ -13,7 +13,6 @@ part 'r.dart';
 part 'r_animation_data.dart';
 part 'r_image_data.dart';
 part 'r_map_data.dart';
-part 'tile/r_tile_data.dart';
 part 'tile/r_tile_object.dart';
 part 'tile/r_tile_combine.dart';
 part 'tile/r_tile_base.dart';
