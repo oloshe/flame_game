@@ -115,14 +115,57 @@ class RMapLayerData {
     required this.index,
     required this.obj,
     required this.matrix,
-  }): visible = true;
+  }) : visible = true;
 
+  static const List<Tuple2<int, int>> dir = [
+    Tuple2(-1, -1),
+    Tuple2(0, -1),
+    Tuple2(1, -1),
+    Tuple2(-1, 0),
+    Tuple2(1, 0),
+    Tuple2(-1, 1),
+    Tuple2(0, 1),
+    Tuple2(1, 1),
+  ];
+
+  void setMatix(int x, int y, int id, [bool changed = true]) {
+    // print('x = $x y = $y id = $id changed=$changed');
+    final terrain = R.getTileById(id)?.terrain;
+    if (terrain != null) {
+      final list8 = _getSurrounding(x, y);
+      final result = R.terrainCorrect(terrain, list8, id);
+      // print(result);
+      if (result != null && result.changed) {
+        matrix[y][x] = result.newId!;
+        if (changed) {
+          // print(result.changedCoord);
+          for (final item in result.changedCoord) {
+            final dx = item.item1 + x;
+            final dy = item.item2 + y;
+            setMatix(dx, dy, result.nextId, false);
+          }
+        }
+      } else {
+        matrix[y][x] = id;
+      }
+    } else {
+      matrix[y][x] = id;
+    }
+  }
+
+  List<int> _getSurrounding(int x, int y) {
+    return List.generate(8, (index) {
+      final dx = dir[index].item1 + x;
+      final dy = dir[index].item2 + y;
+      return matrix.at(dy)?.at(dx) ?? 0;
+    });
+  }
 
   void _fill(int? fill, [bool emptyWhenNull = false]) {
     if (fill != null || emptyWhenNull) {
       final _fill = fill ?? RMapGlobal.emptyTile;
-      for(var i = 0; i < matrix.length; i++) {
-        for(var j = 0; j < matrix[i].length; j++) {
+      for (var i = 0; i < matrix.length; i++) {
+        for (var j = 0; j < matrix[i].length; j++) {
           matrix[i][j] = _fill;
         }
       }
@@ -141,8 +184,8 @@ class RMapLayerData {
 
   factory RMapLayerData.fromJson(
       Map<String, dynamic> json, int width, int height) {
-    List<List<int>> matrix = List.generate(
-        height, (_) => List.filled(width, RMapGlobal.emptyTile));
+    List<List<int>> matrix =
+        List.generate(height, (_) => List.filled(width, RMapGlobal.emptyTile));
 
     List<dynamic> _rows = json['matrix'];
     final _height = _rows.length;

@@ -27,12 +27,8 @@ class MapEditorProvider with ChangeNotifier {
   String? currLayerName;
 
   MapEditorProvider() {
-    final layer1 = 'layer'.lang.args({
-      "layer": 1
-    });
-    final layer2 = 'layer'.lang.args({
-      "layer": 2
-    });
+    final layer1 = 'layer'.lang.args({"layer": 1});
+    final layer2 = 'layer'.lang.args({"layer": 2});
     const w = 20;
     const h = 20;
     rMap = RMap(width: w, height: h, layers: {
@@ -182,7 +178,7 @@ class MapEditorProvider with ChangeNotifier {
     if (id != null) {
       if (currLayerName != null) {
         if (rMap.layers.containsKey(currLayerName)) {
-          rMap.layers[currLayerName]!.matrix[y][x] = id;
+          rMap.layers[currLayerName]!.setMatix(x, y, id);
           layersVersion = UniqueKey();
         }
       }

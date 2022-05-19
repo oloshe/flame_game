@@ -12,10 +12,13 @@ abstract class RTileBase {
   /// 子分类
   final String? subType;
 
+  final String? terrain;
+
   RTileBase({
     required this.id,
     required this.type,
     required this.subType,
+    required this.terrain,
   });
 
   static Future<TileIdMap> load() async {
@@ -26,13 +29,24 @@ abstract class RTileBase {
       for (final item in json.entries) {
         final _key = int.tryParse(item.key);
         if (_key != null) {
-          result[_key] = RTileBase.fromJson(
-            _key,
-            item.value,
-            fallbackData: partialData,
+          if (partialData != null) {
+            /// 补全信息
+            partialData.supplementJson(item.value);
+          }
+          final tileBase = RTileBase.fromJson(
+            id: _key,
+            json: item.value,
+            terrain: partialData?.terrain,
           );
+          if (tileBase.terrain != null) {
+            R.addTerrain(tileBase.terrain!, tileBase, item.value);
+          }
+          result[_key] = tileBase;
         } else {
           final partialData = RTilePartialData.fromJson(item.value);
+          if (partialData.terrain != null) {
+            R.addTerrainSet(partialData.terrain!);
+          }
           final subJson = await Flame.assets.readJson(
             "${R.jsonPath}${partialData.source}",
           );
@@ -45,49 +59,40 @@ abstract class RTileBase {
     return result;
   }
 
-  factory RTileBase.fromJson(
-    int id,
-    Map<String, dynamic> json, {
-    RTilePartialData? fallbackData,
+  factory RTileBase.fromJson({
+    required int id,
+    required Map<String, dynamic> json,
+    required String? terrain,
   }) {
-    String? pic = json['pic'] ?? fallbackData?.pic;
+    String? pic = json['pic'];
     List<int>? combines = json.getList('combines')?.cast<int>();
-    String type = json['type'] ?? fallbackData?.type;
-    String? subType = json['subType'] ?? fallbackData?.subType;
-    if (pic == null) {
+    String type = json['type'];
+    String? subType = json['subType'];
+    List<dynamic>? pos = json['pos'];
+    if (pic == null || pos == null) {
       if (combines != null) {
         return RTileCombine(
-            combines: combines, id: id, type: type, subType: subType);
+          combines: combines,
+          id: id,
+          type: type,
+          subType: subType,
+          terrain: terrain,
+        );
       } else {
         print(json);
         throw UnimplementedError();
       }
     }
-    int x = json['pos']?[0] ?? 1;
-    int y = json['pos']?[1] ?? 1;
+    int x = pos[0];
+    int y = pos[1];
     int w = json['size']?[0] ?? 1;
     int h = json['size']?[1] ?? 1;
     if (json['hit'] == true) {
       String? name = json['name'];
       final polygon = json.getList('polygon')?.toVector2List();
       final anchor = json.getList('anchor')?.toAnchor();
-      if (name != null) {
-        return RTileObject(
-          name: name,
-          polygon: polygon,
-          anchor: anchor,
-          pic: pic,
-          id: id,
-          x: x,
-          y: y,
-          w: w,
-          h: h,
-          type: type,
-          subType: subType,
-          combines: combines,
-        );
-      }
-      return RTileHit(
+      return RTileHit.create(
+        name: name,
         pic: pic,
         polygon: polygon,
         anchor: anchor,
@@ -99,6 +104,7 @@ abstract class RTileBase {
         type: type,
         subType: subType,
         combines: combines,
+        terrain: terrain,
       );
     }
     return RTilePic(
@@ -111,6 +117,7 @@ abstract class RTileBase {
       type: type,
       subType: subType,
       combines: combines,
+      terrain: terrain,
     );
   }
 
@@ -147,10 +154,10 @@ class RTilePartialData {
   /// 指定图片名，减少数据冗余
   final String pic;
 
-  /// 类型
+  /// 类型 减少数据冗余
   final String type;
 
-  /// 子类型
+  /// 子类型 减少数据冗余
   final String? subType;
 
   /// 路径
@@ -175,5 +182,18 @@ class RTilePartialData {
       terrain: json["terrain"],
       subType: json["subType"],
     );
+  }
+
+  /// 补充省略的json字段
+  void supplementJson(Map<String, dynamic> json) {
+    if (json["pic"] == null) {
+      json["pic"] = pic;
+    }
+    if (json["type"] == null) {
+      json["type"] = type;
+    }
+    if (json["subType"] == null) {
+      json["subType"] = subType;
+    }
   }
 }

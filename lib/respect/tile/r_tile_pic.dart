@@ -20,10 +20,12 @@ class RTilePic extends RTileBase with RCombine {
     required String type,
     required String? subType,
     required List<int>? combines,
+    required String? terrain,
   }) : super(
           id: id,
           type: type,
           subType: subType,
+          terrain: terrain,
         ) {
     combineData = combines;
   }
@@ -49,30 +51,4 @@ class RTilePic extends RTileBase with RCombine {
       srcPosition: srcPosition,
     );
   }
-}
-
-class RTileTerrain extends RTilePic {
-  final String test;
-  RTileTerrain({
-    required this.test,
-    required String pic,
-    required int x,
-    required int y,
-    required int w,
-    required int h,
-    required int id,
-    required String type,
-    required String? subType,
-    required List<int>? combines,
-  }) : super(
-          pic: pic,
-          x: x,
-          y: y,
-          w: w,
-          h: h,
-          id: id,
-          type: type,
-          subType: subType,
-          combines: combines,
-        );
 }

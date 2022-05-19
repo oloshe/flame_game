@@ -22,12 +22,11 @@ class TilePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final _size = unitSize ?? MapEditor.len;
 
-
     final tileList = tile.getPicTiles();
-    if (tileList.isEmpty) {
-      print('${tile.id} ${tile.combineData} ${tile.runtimeType}');
+    if (tile.id == 50) {
+      print(tileList.map((e) => e.id));
     }
-    for(final _tile in tileList) {
+    for (final _tile in tileList) {
       final sprite = _tile.getSprite();
       sprite.render(
         canvas,

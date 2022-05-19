@@ -21,6 +21,7 @@ class RTileHit extends RTilePic {
     required String type,
     required String? subType,
     required List<int>? combines,
+    required String? terrain,
   }) : super(
           id: id,
           pic: pic,
@@ -31,5 +32,55 @@ class RTileHit extends RTilePic {
           type: type,
           subType: subType,
           combines: combines,
+          terrain: terrain,
         );
+
+  factory RTileHit.create({
+    required String? name,
+    required String pic,
+    required List<Vector2>? polygon,
+    required Anchor? anchor,
+    required int id,
+    required int x,
+    required int y,
+    required int w,
+    required int h,
+    required String type,
+    required String? subType,
+    required List<int>? combines,
+    required String? terrain,
+  }) {
+    if (name == null) {
+      return RTileHit(
+        pic: pic,
+        polygon: polygon,
+        anchor: anchor,
+        id: id,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        type: type,
+        subType: subType,
+        combines: combines,
+        terrain: terrain,
+      );
+    } else {
+      return RTileObject(
+        name: name,
+        polygon: polygon,
+        anchor: anchor,
+        pic: pic,
+        id: id,
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+        type: type,
+        subType: subType,
+        combines: combines,
+        terrain: terrain,
+      );
+    }
+  }
 }

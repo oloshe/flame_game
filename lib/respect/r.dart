@@ -5,16 +5,23 @@ class R {
 
   static const jsonPath = "json/";
 
+  /// 所有地图
   static late RMapGlobal _map;
 
+  /// 动画数据
   static late AnimationDataMap _animationDataMap;
 
+  /// 图片信息表
   static late ImageDataMap _imagePathAliasMap;
 
+  /// tile表
   static late TileIdMap _tileDataIdMap;
 
   static RMapGlobal get mapMgr => _map;
 
+  static final Map<String, RTileTerrainSet> _terrainSetMap = {};
+
+  /// 图片资源是否加载完毕
   static late Future<void> assetLoaded;
   static final Completer<void> _assetCompleter = Completer();
 
@@ -85,6 +92,27 @@ class R {
   // static RTileObjectMapFunction? getTileObjectBuilder(String? objectName) {
   //   return RTileObject._tileObjectMap[objectName];
   // }
+
+  static void addTerrainSet(String terrainName) {
+    _terrainSetMap[terrainName] = RTileTerrainSet(terrainName);
+  }
+
+  static void addTerrain(
+    String terrainName,
+    RTileBase tileBase,
+    Map<String, dynamic> json,
+  ) {
+    _terrainSetMap[terrainName]?.addTerrain(tileBase, json);
+  }
+
+  /// 路径矫正
+  static TerrainCorrectResult? terrainCorrect(
+    String terrainName,
+    List<int> list8,
+    int id,
+  ) {
+    return _terrainSetMap[terrainName]?.terrainCorrect(list8, id);
+  }
 }
 
 Future<Map<String, T>> _initWith<T>(String filePath,
@@ -94,4 +122,3 @@ Future<Map<String, T>> _initWith<T>(String filePath,
     (key, value) => MapEntry(key, constructor(value)),
   );
 }
-

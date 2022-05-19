@@ -48,6 +48,16 @@ extension SerdeNullListExt on List<dynamic>? {
   Vector2? toVector2() => this?.toVector2();
 }
 
+extension ListExt<T> on List<T> {
+  T? at(int index) {
+    if (index < 0 || index > length - 1) {
+      return null;
+    } else {
+      return this[index];
+    }
+  }
+}
+
 // extension OffSetExt on Offset {
 //
 //   Vector2 toVector2() {
