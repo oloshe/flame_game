@@ -21,12 +21,13 @@ class _TileSetState extends State<TileSet> {
   @override
   void initState() {
     super.initState();
-    final list = R.getAllTiles();
-    for (final item in list) {
+    final allTiles = R.getAllTiles();
+    for (final item in allTiles) {
       if (!typedListMap.containsKey(item.value.type)) {
         typedListMap[item.value.type] = [];
       }
-      typedListMap[item.value.type]!.add(item);
+      final list = typedListMap[item.value.type]!;
+      list.add(item);
     }
     currTab = typedListMap.keys.first;
   }

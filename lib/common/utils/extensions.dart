@@ -58,6 +58,10 @@ extension ListExt<T> on List<T> {
   }
 }
 
+extension AsyncSnapshotExt<T> on AsyncSnapshot<T> {
+  bool get isDone => connectionState == ConnectionState.done;
+}
+
 // extension OffSetExt on Offset {
 //
 //   Vector2 toVector2() {

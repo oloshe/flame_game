@@ -18,6 +18,11 @@ class RTileCombine extends RTileBase with RCombine {
 
   @override
   Vector2 get spriteSize => size..multiply(RespectMap.base);
+
+  @override
+  String toString() {
+    return 'Combine($combineData)->${super.toString()}';
+  }
 }
 
 mixin RCombine on RTileBase {

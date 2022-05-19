@@ -7,8 +7,12 @@ class RTileTerrainSet {
   final Map<String, int> sets;
   int get a => sets["a"]!;
   int get b => sets["b"]!;
-  RTileTerrainSet(this.terrainName)
-      : sets = {},
+
+  RTilePartialData partialData;
+
+  RTileTerrainSet(this.partialData)
+      : terrainName = partialData.terrain!,
+        sets = {},
         tileIdTest = {};
 
   addTerrain(

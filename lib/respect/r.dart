@@ -93,8 +93,12 @@ class R {
   //   return RTileObject._tileObjectMap[objectName];
   // }
 
-  static void addTerrainSet(String terrainName) {
-    _terrainSetMap[terrainName] = RTileTerrainSet(terrainName);
+  static RTileTerrainSet? getTerrainSet(String terrainName) {
+    return _terrainSetMap[terrainName];
+  }
+
+  static void addTerrainSet(RTilePartialData partialData) {
+    _terrainSetMap[partialData.terrain!] = RTileTerrainSet(partialData);
   }
 
   static void addTerrain(

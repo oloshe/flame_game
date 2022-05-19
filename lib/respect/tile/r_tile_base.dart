@@ -45,7 +45,7 @@ abstract class RTileBase {
         } else {
           final partialData = RTilePartialData.fromJson(item.value);
           if (partialData.terrain != null) {
-            R.addTerrainSet(partialData.terrain!);
+            R.addTerrainSet(partialData);
           }
           final subJson = await Flame.assets.readJson(
             "${R.jsonPath}${partialData.source}",
@@ -171,21 +171,34 @@ class RTilePartialData {
   /// 文件路径
   final String source;
 
+  final Rect? picA;
+  final Rect? picB;
+
   RTilePartialData({
     required this.pic,
     required this.type,
     required this.source,
     required this.terrain,
     required this.subType,
+    required this.picA,
+    required this.picB,
   });
 
   factory RTilePartialData.fromJson(Map<String, dynamic> json) {
+    List<double>? picA = json.getList('picA')?.cast<double>();
+    List<double>? picB = json.getList('picA')?.cast<double>();
     return RTilePartialData(
       pic: json["pic"],
       type: json["type"],
       source: json["source"],
       terrain: json["terrain"],
       subType: json["subType"],
+      picA: picA != null
+          ? Rect.fromLTWH(picA[0], picA[1], picA[2], picA[3])
+          : null,
+      picB: picB != null
+          ? Rect.fromLTWH(picB[0], picB[1], picB[2], picB[3])
+          : null,
     );
   }
 

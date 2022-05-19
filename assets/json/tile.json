@@ -1,9 +1,12 @@
 {
   "road": {
+    "partial": "terrain",
     "pic": "plains",
     "type": "plains",
     "source": "terrains/road.json",
-    "terrain": "grass-road"
+    "terrain": "grass-road",
+    "picA": [1, 0, 3, 3],
+    "picB": [0, 0, 1, 1]
   },
   "88": {
     "pic": "decor_16",

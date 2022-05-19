@@ -80,6 +80,11 @@ class MapEditor extends StatelessWidget {
             final y = details.localPosition.dy ~/ len;
             context.editor.paintCell(x, y);
           },
+          // onPanUpdate: (details) {
+          //   final x = details.localPosition.dx ~/ len;
+          //   final y = details.localPosition.dy ~/ len;
+          //   context.editor.paintCell(x, y);
+          // },
           onDoubleTapDown: (details) {},
           child: Selector<MapEditorProvider, Tuple2<Coord, int>>(
             selector: (_, p) {

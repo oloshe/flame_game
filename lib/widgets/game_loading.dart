@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/common.dart';
 
 class GameLoading extends StatelessWidget {
   const GameLoading({Key? key}) : super(key: key);

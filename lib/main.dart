@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:game/common.dart';
 import 'package:game/common/utils/i18n.dart';
 import 'package:game/games/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
@@ -38,33 +39,36 @@ class MyApp extends StatelessWidget {
         ),
       ],
       builder: (context, child) {
-        return FutureBuilder(
-          future: R.assetLoaded,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                navigatorKey: navKey,
-                localeResolutionCallback: (deviceLocale, supportedLocales) {
-                  if (deviceLocale?.languageCode == 'zh') {
-                    Translations.instance
-                        .updateLocale(const Locale('zh', 'CN'));
-                  }
-                  return null;
-                },
-                home: GameWidget(
-                  game: MyGame(),
-                ),
-                // home: Consumer<Translations>(
-                //   builder: (context, tr, child) {
-                //     return const MapEditor();
-                //   },
-                // ),
-              );
-            } else {
-              return const GameLoading();
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navKey,
+          localeResolutionCallback: (deviceLocale, supportedLocales) {
+            if (deviceLocale?.languageCode == 'zh') {
+              Translations.instance
+                  .updateLocale(const Locale('zh', 'CN'));
             }
+            return null;
           },
+          builder: (context, child) {
+            return FutureBuilder(
+              future: R.assetLoaded,
+              builder: (context, snapshot) {
+                if (snapshot.isDone) {
+                  return child!;
+                } else {
+                  return const GameLoading();
+                }
+              },
+            );
+          },
+          // home: GameWidget(
+          //   game: MyGame(),
+          // ),
+          home: Consumer<Translations>(
+            builder: (context, tr, child) {
+              return const MapEditor();
+            },
+          ),
         );
       },
     );
