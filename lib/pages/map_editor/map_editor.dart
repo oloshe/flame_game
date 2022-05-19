@@ -29,55 +29,30 @@ class MapEditor extends StatelessWidget {
           resizeToAvoidBottomInset: false,
           body: ColoredBox(
             color: const Color(0xff282c34),
-            child: FutureBuilder<void>(
-              future: R.assetLoaded,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: SafeArea(
-                          right: true,
-                          left: false,
-                          bottom: false,
-                          child: Row(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SafeArea(
+                    right: true,
+                    left: false,
+                    bottom: false,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    _buildGrid(context),
-                                    const _LayerTool(),
-                                  ],
-                                ),
-                              ),
-                              const SidePanel(),
+                              _buildGrid(context),
+                              const _LayerTool(),
                             ],
                           ),
                         ),
-                      ),
-                      const EditorFooter(),
-                    ],
-                  );
-                } else {
-                  return SizedBox.expand(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const CircularProgressIndicator(
-                            color: Color(0xff6797bb),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'editorLoading'.lang,
-                            style: const TextStyle(color: Color(0xff6797bb)),
-                          ),
-                        ],
-                      ),
+                        const SidePanel(),
+                      ],
                     ),
-                  );
-                }
-              },
+                  ),
+                ),
+                const EditorFooter(),
+              ],
             ),
           ),
         );

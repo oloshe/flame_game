@@ -45,6 +45,11 @@ class RTileObject extends RTileHit {
   RTileObjectMapValue buildObject(Vector2 position) {
     return RTileObject._tileObjectMap[name]?.call(this, position);
   }
+
+  @override
+  String toString() {
+    return 'TileObject($name)->${super.toString()}';
+  }
 }
 
 typedef RTileObjectMapValue = FutureOr<PositionComponent?>;

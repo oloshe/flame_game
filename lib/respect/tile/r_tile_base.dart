@@ -125,6 +125,11 @@ abstract class RTileBase {
 
   Vector2 get spriteSize;
 
+  @override
+  String toString() {
+    return 'Tile($id)';
+  }
+
   void batchConfiguration(
     Map<String, SpriteBatch> batch,
     Vector2 position,

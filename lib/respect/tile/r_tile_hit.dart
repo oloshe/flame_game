@@ -50,6 +50,7 @@ class RTileHit extends RTilePic {
     required List<int>? combines,
     required String? terrain,
   }) {
+    print('name');
     if (name == null) {
       return RTileHit(
         pic: pic,

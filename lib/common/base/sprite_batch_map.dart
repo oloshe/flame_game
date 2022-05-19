@@ -11,14 +11,18 @@ class SpriteBatchMap {
   }
 
   Iterable<SpriteBatchComponent> intoIter() {
-    return _inner.entries.map((e) => SpriteBatchComponent(
-      spriteBatch: e.value
-    ));
+    return _inner.entries
+        .map((e) => SpriteBatchComponent(spriteBatch: e.value));
   }
 
   void render(Canvas canvas) {
     intoIter().forEach((comp) {
       comp.render(canvas);
     });
+  }
+
+  @override
+  String toString() {
+    return 'SpriteBatchMap($_inner)';
   }
 }

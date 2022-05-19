@@ -51,4 +51,9 @@ class RTilePic extends RTileBase with RCombine {
       srcPosition: srcPosition,
     );
   }
+
+  @override
+  String toString() {
+    return 'Pic[$pic($x,$y)($w-$h)]->${super.toString()}';
+  }
 }

@@ -51,14 +51,12 @@ class RespectMap extends PositionComponent with HasGameRef {
   Future<void> draw(RMap mapData) async {
     await mapData.forEachLayer((layer) async {
       SpriteBatchMap batch = SpriteBatchMap();
-
       for (var y = 0; y < mapData.height; y++) {
         for (var x = 0; x < mapData.width; x++) {
           if (layer.matrix[y][x] != RMapGlobal.emptyTile) {
             await drawTile(
               id: layer.matrix[y][x],
               pos: Vector2(x.toDouble(), y.toDouble()),
-              layer: layer,
               batch: batch,
             );
           }
@@ -71,18 +69,21 @@ class RespectMap extends PositionComponent with HasGameRef {
   Future<void> drawTile({
     required int id,
     required Vector2 pos,
-    required RMapLayerData layer,
     required SpriteBatchMap batch,
   }) async {
     RTileBase tileData = R.getTileById(id)!;
     Vector2 spriteSize = tileData.spriteSize;
     Vector2 spritePosition = pos..multiply(base);
+    if (tileData.id == 1000) {
+      print(tileData);
+    }
     if (tileData is RTileHit) {
       if (tileData is RTileObject) {
         final object = await tileData.buildObject(spritePosition);
         if (object != null) {
           await add(object);
         }
+        return;
       }
       await add(ShapeSprite.factory(
         sprite: tileData.getSprite(),
@@ -90,7 +91,8 @@ class RespectMap extends PositionComponent with HasGameRef {
         position: spritePosition,
         tileData: tileData,
       ));
+      return;
     }
-    batch.addTile(tileData, position);
+    batch.addTile(tileData, pos);
   }
 }

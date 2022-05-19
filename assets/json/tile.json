@@ -481,7 +481,7 @@
     "pic": "skeleton",
     "type": "characters",
     "pos": [0, 0],
-    "object": true,
+    "hit": true,
     "name": "skeleton"
   }
 }
