@@ -36,6 +36,9 @@ class RTileObject extends RTileHit {
     _tileObjectMap = {
       "skeleton": (tileData, position) async {
         return Skeleton()..position = position;
+      },
+      "player": (tileData, position) async {
+        return Player()..position = position;
       }
     };
   }

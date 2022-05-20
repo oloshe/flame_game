@@ -492,6 +492,13 @@
     "hit": true
   },
   "1000": {
+    "pic": "player",
+    "type": "characters",
+    "pos": [0, 0],
+    "hit": true,
+    "name": "player"
+  },
+  "1001": {
     "pic": "skeleton",
     "type": "characters",
     "pos": [0, 0],

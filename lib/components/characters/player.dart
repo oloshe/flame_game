@@ -15,9 +15,8 @@ enum PlayerStatus {
 }
 
 class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
-  Player({
-    required this.joystick,
-  }) : super(
+  Player()
+      : super(
           CircleHitbox.relative(
             0.18,
             parentSize: RespectMap.characterBase,
@@ -27,7 +26,7 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
         );
 
   /// 手柄控制
-  final JoystickComponent joystick;
+  late final JoystickComponent joystick;
 
   /// 玩家的动作状态组件
   late SpriteAnimationGroupComponent<PlayerStatus> statusComp;
@@ -40,6 +39,7 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
 
   @override
   Future<void>? onLoad() async {
+    joystick = gameRef.joystick;
     statusComp = SpriteAnimationGroupComponent(
       animations: await R.createAnimations(PlayerStatus.values, 'player'),
       current: PlayerStatus.idle,

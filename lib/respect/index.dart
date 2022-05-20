@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:game/common.dart';
+import 'package:game/components/characters/player.dart';
 import 'package:game/components/enemies/skeleton.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/respect/partial/r_partial.dart';

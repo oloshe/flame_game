@@ -22,13 +22,14 @@ class RespectMap extends PositionComponent with HasGameRef {
   static final characterBase = characterSrcSize * scaleFactor;
 
   RespectMap({
-    required this.player,
     this.mapData,
   });
 
-  final RMap? mapData;
+  Player? _player;
 
-  Player player;
+  Player get player => _player!;
+
+  final RMap? mapData;
 
   @override
   Future<void>? onLoad() async {
@@ -42,10 +43,14 @@ class RespectMap extends PositionComponent with HasGameRef {
     if (size.y < gameRef.size.y) {
       position.y = (gameRef.size.y - size.y) / 2;
     }
-    player.position = size / 2
-      ..add(Vector2(0, 20));
-    await add(player);
-    add(RectangleHitbox());
+    // 如果地图里没有玩家，则创建一个默认玩家
+    if (_player == null) {
+      _player = Player();
+      player.position = size / 2
+        ..add(Vector2(0, 20));
+      await add(player);
+    }
+    await add(RectangleHitbox());
   }
 
   Future<void> draw(RMap mapData) async {
@@ -75,10 +80,13 @@ class RespectMap extends PositionComponent with HasGameRef {
     Vector2 spriteSize = tileData.spriteSize;
     Vector2 spritePosition = pos..multiply(base);
     if (tileData is RTileHit) {
-      print(tileData);
       if (tileData is RTileObject) {
         final object = await tileData.buildObject(spritePosition);
+        print(object);
         if (object != null) {
+          if (object is Player) {
+            _player = object;
+          }
           await add(object);
         }
         return;

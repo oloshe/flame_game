@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
@@ -28,6 +29,8 @@ class MyGame extends FlameGame
   /// 玩家
   late final Player player;
 
+  late final JoystickComponent joystick;
+
   /// 相机位置
   Vector2 cameraPosition = Vector2.zero();
 
@@ -35,22 +38,17 @@ class MyGame extends FlameGame
   Future<void>? onLoad() async {
     await super.onLoad();
     // 轮盘
-    final joystick = await createJoystick();
+    joystick = await createJoystick();
     final button = await createButton(onButtonPress);
-
-    // 玩家
-    player = Player(joystick: joystick);
 
     // 地图
     myMap = RespectMap(
-      player: player,
       mapData: mapData,
     );
     await add(myMap);
 
-    // await add(player);
-
-    // add(Skeleton()..position = size / 2);
+    await myMap.loaded;
+    player = myMap.player;
 
     final rect1 = size.toRect();
     final rect2 = myMap.size.toRect();
