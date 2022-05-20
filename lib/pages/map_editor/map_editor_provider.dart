@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
+import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +19,8 @@ class MapEditorProvider with ChangeNotifier {
   /// 地图高度
   int get height => rMap.height;
 
-  /// 当前选中地图坐标
-  Coord? currCell;
+  /// 当前选中区域 根据tile大小不同
+  Rect? currRect;
 
   /// 标记层级版本用于更新
   UniqueKey layersVersion = UniqueKey();
@@ -168,12 +169,24 @@ class MapEditorProvider with ChangeNotifier {
 
   paintCell(int x, int y) {
     int? id = currTileId;
-    final newCoord = Coord(x, y);
-    if (id == null && currCell == newCoord) {
-      id = RMapGlobal.emptyTile;
+    Rect? newRect;
+    final len = MapEditor.len;
+    final selectId = id ?? rMap.getMatix(currLayerName, x, y);
+    if (selectId != null) {
+      final tile = R.getTileById(selectId);
+      final w = tile?.size.x ?? 1;
+      final h = tile?.size.y ?? 1;
+      newRect = Rect.fromLTWH(x * len, y * len, w * len, h * len);
     } else {
-      currCell = newCoord;
+      newRect = Rect.fromLTWH(x * len, y * len, len, len);
     }
+
+    // if (id == null && currCell == newCoord) {
+    //   id = RMapGlobal.emptyTile;
+    // } else {
+    //   currCell = newCoord;
+    // }
+    currRect = newRect;
     if (id != null) {
       if (currLayerName != null) {
         rMap.setMatix(currLayerName!, x, y, id);

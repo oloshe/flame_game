@@ -128,6 +128,10 @@ class RMap {
     }
   }
 
+  int? getMatix(String? name, int x, int y) {
+    return layers[name]?.matrix.at(y)?.at(x);
+  }
+
   /// 边界检查
   bool contains(int x, int y) {
     return x >= 0 && y >= 0 && x < width && y < height;

@@ -14,8 +14,7 @@ enum PlayerStatus {
   die,
 }
 
-class Player extends MovableHitboxComponent
-    with HasGameRef<MyGame>, HasHitbox {
+class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
   Player({
     required this.joystick,
   }) : super(
@@ -42,8 +41,7 @@ class Player extends MovableHitboxComponent
   @override
   Future<void>? onLoad() async {
     statusComp = SpriteAnimationGroupComponent(
-      animations:
-          await R.createAnimations(PlayerStatus.values, 'player'),
+      animations: await R.createAnimations(PlayerStatus.values, 'player'),
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
       size: RespectMap.characterBase,
@@ -55,7 +53,6 @@ class Player extends MovableHitboxComponent
       statusComp.debugMode = true;
     }
     priority = 10000;
-
   }
 
   bool get isAttacking => statusComp.current == PlayerStatus.attack;

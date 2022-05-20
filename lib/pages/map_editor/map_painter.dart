@@ -72,20 +72,29 @@ class MapGridPainter extends CustomPainter {
 }
 
 class CurrTilePainter extends CustomPainter {
-  CurrTilePainter(this.coord);
-  final Coord coord;
-  static final Paint painter2 = Paint()
+  CurrTilePainter(this.rect);
+  final Rect rect;
+  static final Paint borderPainter = Paint()
     ..color = Colors.orange
     ..strokeWidth = 2
     ..style = PaintingStyle.stroke;
+  static final Paint borderPainterOrigin = Paint()
+    ..color = Colors.blue
+    ..strokeWidth = 1
+    ..style = PaintingStyle.stroke;
   @override
   void paint(Canvas canvas, Size size) {
-    final len = MapEditor.len;
     // 绘制选中
     canvas.drawRect(
-      Rect.fromLTWH(coord.x * len, coord.y * len, len, len),
-      painter2,
+      rect,
+      borderPainter,
     );
+    if (rect.width > MapEditor.len || rect.height > MapEditor.len) {
+      canvas.drawRect(
+        Rect.fromLTWH(rect.left, rect.top, MapEditor.len, MapEditor.len),
+        borderPainterOrigin,
+      );
+    }
   }
 
   @override

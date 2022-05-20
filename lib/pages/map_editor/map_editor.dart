@@ -151,15 +151,15 @@ class MapEditor extends StatelessWidget {
                         ),
                       ),
                     // 选中框
-                    Selector<MapEditorProvider, Coord?>(
-                      selector: (_, p) => p.currCell,
-                      builder: (_, coord, __) {
-                        if (coord == null) {
+                    Selector<MapEditorProvider, Rect?>(
+                      selector: (_, p) => p.currRect,
+                      builder: (_, rect, __) {
+                        if (rect == null) {
                           return const SizedBox();
                         }
                         return RepaintBoundary(
                           child: CustomPaint(
-                            painter: CurrTilePainter(coord),
+                            painter: CurrTilePainter(rect),
                           ),
                         );
                       },
