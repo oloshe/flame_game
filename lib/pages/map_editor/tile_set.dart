@@ -52,16 +52,15 @@ class _TileSetState extends State<TileSet> {
           child: SizedBox(
             height: 30,
             child: TabBar(
-              tabs: typedListMap.entries
-                  .map((e) => Text(e.key.langWatch))
+              tabs: typedListMap.keys
+                  .map((key) => Text(key.langWatch))
                   .toList(growable: false),
               indicatorSize: TabBarIndicatorSize.label,
               indicatorWeight: 3,
               isScrollable: true,
               onTap: (tab) {
                 setState(() {
-                  currTab =
-                      typedListMap.entries.toList(growable: false)[tab].key;
+                  currTab = typedListMap.keys.toList(growable: false)[tab];
                 });
               },
             ),

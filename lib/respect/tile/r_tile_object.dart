@@ -46,7 +46,7 @@ class RTileObject extends RTileHit {
 
   @override
   String toString() {
-    return 'TileObject($name)->${super.toString()}';
+    return 'TileObject<$name>: ${super.toString()}';
   }
 }
 

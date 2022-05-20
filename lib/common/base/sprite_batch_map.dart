@@ -11,8 +11,7 @@ class SpriteBatchMap {
   }
 
   Iterable<SpriteBatchComponent> intoIter() {
-    return _inner.entries
-        .map((e) => SpriteBatchComponent(spriteBatch: e.value));
+    return _inner.values.map((e) => SpriteBatchComponent(spriteBatch: e));
   }
 
   void render(Canvas canvas) {

@@ -45,7 +45,8 @@
     "renameLayer": "重命名",
     "fillLayer": "填充",
     "deleteLayer": "删除当前图层",
-    "visibleLayer": "显示/隐藏"
+    "visibleLayer": "显示/隐藏",
+    "autoTerrain": "自动路径"
   },
   "en_US": {
     "plains": "plains",
@@ -92,6 +93,7 @@
     "renameLayer": "rename",
     "fillLayer": "fill",
     "deleteLayer": "delete layer",
-    "visibleLayer": "set visible"
+    "visibleLayer": "set visible",
+    "autoTerrain": "auto terrains"
   }
 }

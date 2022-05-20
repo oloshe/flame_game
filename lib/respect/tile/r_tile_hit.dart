@@ -81,6 +81,6 @@ class RTileHit extends RTilePic {
 
   @override
   String toString() {
-    return 'Hit(${polygon ?? ''} $anchor})->${super.toString()}';
+    return 'Hit(${polygon ?? 'fill'};${anchor ?? Anchor.topLeft}})->${super.toString()}';
   }
 }

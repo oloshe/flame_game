@@ -75,6 +75,7 @@ class RespectMap extends PositionComponent with HasGameRef {
     Vector2 spriteSize = tileData.spriteSize;
     Vector2 spritePosition = pos..multiply(base);
     if (tileData is RTileHit) {
+      print(tileData);
       if (tileData is RTileObject) {
         final object = await tileData.buildObject(spritePosition);
         if (object != null) {

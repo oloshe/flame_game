@@ -100,6 +100,38 @@ class RMap {
       }
     });
   }
+
+  void setMatix(String name, int x, int y, int id, [bool spread = true]) {
+    final layer = layers[name];
+    if (layer == null) {
+      return;
+    }
+    if (!contains(x, y)) {
+      return;
+    }
+    // 周围8个
+    final list8 = layer._getSurrounding(x, y);
+    final terrain = RPartialTerrain.getTerrainById(id);
+    if (terrain != null) {
+      layer.matrix[y][x] = terrain.correct(list8, id);
+    } else {
+      layer.matrix[y][x] = id;
+    }
+    if (spread) {
+      final dir = RMapLayerData.dir;
+      final len = dir.length;
+      for (var index = 0; index < len; index++) {
+        final dx = dir[index].item1 + x;
+        final dy = dir[index].item2 + y;
+        setMatix(name, dx, dy, list8[index], false);
+      }
+    }
+  }
+
+  /// 边界检查
+  bool contains(int x, int y) {
+    return x >= 0 && y >= 0 && x < width && y < height;
+  }
 }
 
 typedef LayerForEachFunction = FutureOr<void> Function(RMapLayerData);
@@ -107,17 +139,15 @@ typedef LayerForEachFunction = FutureOr<void> Function(RMapLayerData);
 class RMapLayerData {
   /// 层级
   final int index;
-  final bool obj;
   final List<List<int>> matrix;
   bool visible;
 
   RMapLayerData({
     required this.index,
-    required this.obj,
     required this.matrix,
   }) : visible = true;
 
-  static const List<Tuple2<int, int>> dir = [
+  static final List<Tuple2<int, int>> dir = List.unmodifiable(const [
     Tuple2(-1, -1),
     Tuple2(0, -1),
     Tuple2(1, -1),
@@ -126,36 +156,13 @@ class RMapLayerData {
     Tuple2(-1, 1),
     Tuple2(0, 1),
     Tuple2(1, 1),
-  ];
-
-  void setMatix(int x, int y, int id, [bool changed = true]) {
-    final terrain = RPartialTerrain.getTerrainById(id);
-    if (terrain != null) {
-      final list8 = _getSurrounding(x, y);
-      final result = terrain.terrainCorrect(list8, id);
-      if (result.changed) {
-        matrix[y][x] = result.newId!;
-        if (changed) {
-          // print(result.changedCoord);
-          for (final item in result.changedCoord) {
-            final dx = item.item1 + x;
-            final dy = item.item2 + y;
-            setMatix(dx, dy, result.nextId, false);
-          }
-        }
-      } else {
-        matrix[y][x] = id;
-      }
-    } else {
-      matrix[y][x] = id;
-    }
-  }
+  ]);
 
   List<int> _getSurrounding(int x, int y) {
     return List.generate(8, (index) {
       final dx = dir[index].item1 + x;
       final dy = dir[index].item2 + y;
-      return matrix.at(dy)?.at(dx) ?? 0;
+      return matrix.at(dy)?.at(dx) ?? -1; // 不在矩阵范围内的负值为-1
     });
   }
 
@@ -197,7 +204,6 @@ class RMapLayerData {
 
     return RMapLayerData(
       index: json['index'],
-      obj: json['obj'] ?? false,
       matrix: matrix,
     );
   }
@@ -205,7 +211,6 @@ class RMapLayerData {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> result = {
       "index": index,
-      "obj": obj,
       "matrix": matrix,
     };
     return result;

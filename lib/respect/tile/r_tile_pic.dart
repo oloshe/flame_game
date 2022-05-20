@@ -52,6 +52,6 @@ class RTilePic extends RTileBase with RCombine {
 
   @override
   String toString() {
-    return 'Pic[$pic($x,$y)($w-$h)]->${super.toString()}';
+    return 'Pic[$pic;($x,$y);${w}x$h]->${super.toString()}';
   }
 }

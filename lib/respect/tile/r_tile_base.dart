@@ -75,8 +75,8 @@ abstract class RTileBase {
     }
     int x = pos[0];
     int y = pos[1];
-    int w = json['size']?[0] ?? 1;
-    int h = json['size']?[1] ?? 1;
+    int w = json['width'] ?? 1;
+    int h = json['height'] ?? 1;
     if (json['hit'] == true) {
       String? name = json['name'];
       final polygon = json.getList('polygon')?.toVector2List();

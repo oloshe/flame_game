@@ -159,7 +159,6 @@ class MapEditorProvider with ChangeNotifier {
   RMapLayerData _createLayer(int index, int w, int h, [int? fill]) {
     return RMapLayerData(
       index: index,
-      obj: false,
       matrix: List.generate(
         h,
         (_) => List.generate(w, (_) => fill ?? RMapGlobal.emptyTile),
@@ -177,10 +176,8 @@ class MapEditorProvider with ChangeNotifier {
     }
     if (id != null) {
       if (currLayerName != null) {
-        if (rMap.layers.containsKey(currLayerName)) {
-          rMap.layers[currLayerName]!.setMatix(x, y, id);
-          layersVersion = UniqueKey();
-        }
+        rMap.setMatix(currLayerName!, x, y, id);
+        layersVersion = UniqueKey();
       }
     }
     notifyListeners();
