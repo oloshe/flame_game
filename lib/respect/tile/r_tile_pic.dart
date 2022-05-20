@@ -20,12 +20,10 @@ class RTilePic extends RTileBase with RCombine {
     required String type,
     required String? subType,
     required List<int>? combines,
-    required String? terrain,
   }) : super(
           id: id,
           type: type,
           subType: subType,
-          terrain: terrain,
         ) {
     combineData = combines;
   }

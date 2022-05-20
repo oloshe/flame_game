@@ -18,7 +18,6 @@ class RTileObject extends RTileHit {
     required String type,
     required String? subType,
     required List<int>? combines,
-    required String? terrain,
   }) : super(
           polygon: polygon,
           anchor: anchor,
@@ -31,7 +30,6 @@ class RTileObject extends RTileHit {
           h: h,
           pic: pic,
           combines: combines,
-          terrain: terrain,
         );
 
   static initObjectBuilder() {

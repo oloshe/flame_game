@@ -1,12 +1,23 @@
 {
   "road": {
-    "partial": "terrain",
-    "pic": "plains",
-    "type": "plains",
+    "type": "terrain",
     "source": "terrains/road.json",
-    "terrain": "grass-road",
-    "picA": [1, 0, 3, 3],
-    "picB": [0, 0, 1, 1]
+    "data": {
+      "pic": "plains",
+      "type": "plains",
+      "terrain": "grass-road",
+      "cover": 8
+    }
+  },
+  "fence": {
+    "type": "terrain",
+    "source": "terrains/fence.json",
+    "data": {
+      "pic": "fences",
+      "type": "fences",
+      "terrain": "fence",
+      "cover": 72
+    }
   },
   "88": {
     "pic": "decor_16",

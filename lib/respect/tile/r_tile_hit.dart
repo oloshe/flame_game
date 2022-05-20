@@ -21,7 +21,6 @@ class RTileHit extends RTilePic {
     required String type,
     required String? subType,
     required List<int>? combines,
-    required String? terrain,
   }) : super(
           id: id,
           pic: pic,
@@ -32,7 +31,6 @@ class RTileHit extends RTilePic {
           type: type,
           subType: subType,
           combines: combines,
-          terrain: terrain,
         );
 
   factory RTileHit.create({
@@ -48,9 +46,7 @@ class RTileHit extends RTilePic {
     required String type,
     required String? subType,
     required List<int>? combines,
-    required String? terrain,
   }) {
-    print('name');
     if (name == null) {
       return RTileHit(
         pic: pic,
@@ -64,7 +60,6 @@ class RTileHit extends RTilePic {
         type: type,
         subType: subType,
         combines: combines,
-        terrain: terrain,
       );
     } else {
       return RTileObject(
@@ -80,7 +75,6 @@ class RTileHit extends RTilePic {
         type: type,
         subType: subType,
         combines: combines,
-        terrain: terrain,
       );
     }
   }

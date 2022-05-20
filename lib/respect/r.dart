@@ -19,7 +19,7 @@ class R {
 
   static RMapGlobal get mapMgr => _map;
 
-  static final Map<String, RTileTerrainSet> _terrainSetMap = {};
+  // static final Map<String, TerrainSet> _terrainSetMap = {};
 
   /// 图片资源是否加载完毕
   static late Future<void> assetLoaded;
@@ -85,38 +85,38 @@ class R {
   //   return getImageByAlias(getTileById(id)!.pic!);
   // }
 
-  static List<MapEntry<int, RTileBase>> getAllTiles() {
-    return _tileDataIdMap.entries.toList(growable: false);
+  static List<RTileBase> getAllTiles() {
+    return _tileDataIdMap.entries.map((e) => e.value).toList(growable: false);
   }
 
   // static RTileObjectMapFunction? getTileObjectBuilder(String? objectName) {
   //   return RTileObject._tileObjectMap[objectName];
   // }
 
-  static RTileTerrainSet? getTerrainSet(String terrainName) {
-    return _terrainSetMap[terrainName];
-  }
+  // static TerrainSet? getTerrainSet(String terrainName) {
+  //   return _terrainSetMap[terrainName];
+  // }
 
-  static void addTerrainSet(RTilePartialData partialData) {
-    _terrainSetMap[partialData.terrain!] = RTileTerrainSet(partialData);
-  }
+  // static void addTerrainSet(RPartialTerrain terrainData) {
+  //   _terrainSetMap[terrainData.terrain] = TerrainSet(terrainData);
+  // }
 
-  static void addTerrain(
-    String terrainName,
-    RTileBase tileBase,
-    Map<String, dynamic> json,
-  ) {
-    _terrainSetMap[terrainName]?.addTerrain(tileBase, json);
-  }
+  // static void addTerrain(
+  //   String terrainName,
+  //   RTileBase tileBase,
+  //   Map<String, dynamic> json,
+  // ) {
+  //   _terrainSetMap[terrainName]?.addTerrain(tileBase, json);
+  // }
 
-  /// 路径矫正
-  static TerrainCorrectResult? terrainCorrect(
-    String terrainName,
-    List<int> list8,
-    int id,
-  ) {
-    return _terrainSetMap[terrainName]?.terrainCorrect(list8, id);
-  }
+  // /// 路径矫正
+  // static TerrainCorrectResult? terrainCorrect(
+  //   String terrainName,
+  //   List<int> list8,
+  //   int id,
+  // ) {
+  //   return _terrainSetMap[terrainName]?.terrainCorrect(list8, id);
+  // }
 }
 
 Future<Map<String, T>> _initWith<T>(String filePath,
@@ -125,4 +125,8 @@ Future<Map<String, T>> _initWith<T>(String filePath,
   return jsonData.map(
     (key, value) => MapEntry(key, constructor(value)),
   );
+}
+
+extension RTileBaseExt on RTileBase {
+  RPartialTerrain? get terrain => RPartialTerrain.getTerrainById(id);
 }

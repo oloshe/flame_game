@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/utils/provider_helper.dart';
@@ -6,6 +5,7 @@ import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/tile_painter.dart';
 import 'package:game/respect/index.dart';
+import 'package:game/respect/partial/r_partial_terrain.dart';
 import 'package:provider/provider.dart';
 
 class TileSet extends StatefulWidget {
@@ -16,18 +16,29 @@ class TileSet extends StatefulWidget {
 }
 
 class _TileSetState extends State<TileSet> {
-  final Map<String, List<MapEntry<int, RTileBase>>> typedListMap = {};
+  final Map<String, List<RTileBase>> typedListMap = {};
   late String currTab;
   @override
   void initState() {
     super.initState();
     final allTiles = R.getAllTiles();
-    for (final item in allTiles) {
-      if (!typedListMap.containsKey(item.value.type)) {
-        typedListMap[item.value.type] = [];
+    final Set<RPartialTerrain> terrains = {};
+    for (final tile in allTiles) {
+      // 开辟新的分类
+      if (!typedListMap.containsKey(tile.type)) {
+        typedListMap[tile.type] = [];
       }
-      final list = typedListMap[item.value.type]!;
-      list.add(item);
+      final list = typedListMap[tile.type]!;
+      final terrain = tile.terrain;
+      if (terrain != null) {
+        terrains.add(terrain);
+        continue;
+      }
+      list.add(tile);
+    }
+    for (final terrain in terrains) {
+      final list = typedListMap[terrain.type]!;
+      list.add(R.getTileById(terrain.cover)!);
     }
     currTab = typedListMap.keys.first;
   }
@@ -73,24 +84,24 @@ class _TileSetState extends State<TileSet> {
     );
   }
 
-  Widget _buildItem(MapEntry<int, RTileBase> tileItem) {
+  Widget _buildItem(RTileBase tileItem) {
     return Builder(builder: (context) {
       return InkWell(
         onTap: () {
-          context.editor.setTileId(tileItem.key);
+          context.editor.setTileId(tileItem.id);
         },
         child: Selector<MapEditorProvider, bool>(
-          selector: (_, p) => p.currTileId == tileItem.key,
+          selector: (_, p) => p.currTileId == tileItem.id,
           builder: (context, isSelected, child) {
             return RepaintBoundary(
               child: CustomPaint(
                 painter: TilePainter(
                   selected: isSelected,
-                  tile: tileItem.value as RCombine,
+                  tile: tileItem as RCombine,
                 ),
                 size: Size(
-                  MapEditor.len * tileItem.value.size.x,
-                  MapEditor.len * tileItem.value.size.y,
+                  MapEditor.len * tileItem.size.x,
+                  MapEditor.len * tileItem.size.y,
                 ),
               ),
             );
@@ -100,7 +111,6 @@ class _TileSetState extends State<TileSet> {
     });
   }
 }
-
 
 class SidePanel extends StatelessWidget {
   const SidePanel({Key? key}) : super(key: key);
@@ -139,10 +149,10 @@ class SidePanel extends StatelessWidget {
   }
 
   Widget _buildDraggableDivider(
-      BuildContext context,
-      double minWidth,
-      double maxWidth,
-      ) {
+    BuildContext context,
+    double minWidth,
+    double maxWidth,
+  ) {
     return GestureDetector(
       onPanDown: (_) {
         context.vmSet<bool>(true);

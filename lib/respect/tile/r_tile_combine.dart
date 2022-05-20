@@ -6,12 +6,10 @@ class RTileCombine extends RTileBase with RCombine {
     required int id,
     required String type,
     required String? subType,
-    required String? terrain,
   }) : super(
           id: id,
           type: type,
           subType: subType,
-          terrain: terrain,
         ) {
     combineData = combines;
   }

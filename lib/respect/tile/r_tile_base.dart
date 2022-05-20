@@ -12,41 +12,33 @@ abstract class RTileBase {
   /// 子分类
   final String? subType;
 
-  final String? terrain;
-
   RTileBase({
     required this.id,
     required this.type,
     required this.subType,
-    required this.terrain,
   });
 
   static Future<TileIdMap> load() async {
     final jsonData = await Flame.assets.readJson("${R.jsonPath}tile.json");
     TileIdMap result = {};
     Future<void> _loadJson(Map<String, dynamic> json,
-        [RTilePartialData? partialData]) async {
+        [RPartial? partialData]) async {
       for (final item in json.entries) {
         final _key = int.tryParse(item.key);
         if (_key != null) {
-          if (partialData != null) {
-            /// 补全信息
-            partialData.supplementJson(item.value);
-          }
+          /// 补全信息
+          partialData?.supplement(item.value);
           final tileBase = RTileBase.fromJson(
             id: _key,
             json: item.value,
-            terrain: partialData?.terrain,
           );
-          if (tileBase.terrain != null) {
-            R.addTerrain(tileBase.terrain!, tileBase, item.value);
-          }
+          partialData?.process(tileBase, item.value);
+          // if (tileBase.terrain != null) {
+          //   R.addTerrain(tileBase.terrain!, tileBase, item.value);
+          // }
           result[_key] = tileBase;
         } else {
-          final partialData = RTilePartialData.fromJson(item.value);
-          if (partialData.terrain != null) {
-            R.addTerrainSet(partialData);
-          }
+          final RPartial partialData = RPartial.fromJson(item.value);
           final subJson = await Flame.assets.readJson(
             "${R.jsonPath}${partialData.source}",
           );
@@ -62,7 +54,6 @@ abstract class RTileBase {
   factory RTileBase.fromJson({
     required int id,
     required Map<String, dynamic> json,
-    required String? terrain,
   }) {
     String? pic = json['pic'];
     List<int>? combines = json.getList('combines')?.cast<int>();
@@ -76,7 +67,6 @@ abstract class RTileBase {
           id: id,
           type: type,
           subType: subType,
-          terrain: terrain,
         );
       } else {
         print(json);
@@ -104,7 +94,6 @@ abstract class RTileBase {
         type: type,
         subType: subType,
         combines: combines,
-        terrain: terrain,
       );
     }
     return RTilePic(
@@ -117,7 +106,6 @@ abstract class RTileBase {
       type: type,
       subType: subType,
       combines: combines,
-      terrain: terrain,
     );
   }
 
@@ -151,67 +139,6 @@ abstract class RTileBase {
         scale: RespectMap.scaleFactor,
         offset: position,
       );
-    }
-  }
-}
-
-class RTilePartialData {
-  /// 指定图片名，减少数据冗余
-  final String pic;
-
-  /// 类型 减少数据冗余
-  final String type;
-
-  /// 子类型 减少数据冗余
-  final String? subType;
-
-  /// 路径
-  final String? terrain;
-
-  /// 文件路径
-  final String source;
-
-  final Rect? picA;
-  final Rect? picB;
-
-  RTilePartialData({
-    required this.pic,
-    required this.type,
-    required this.source,
-    required this.terrain,
-    required this.subType,
-    required this.picA,
-    required this.picB,
-  });
-
-  factory RTilePartialData.fromJson(Map<String, dynamic> json) {
-    List<double>? picA = json.getList('picA')?.cast<double>();
-    List<double>? picB = json.getList('picA')?.cast<double>();
-    return RTilePartialData(
-      pic: json["pic"],
-      type: json["type"],
-      source: json["source"],
-      terrain: json["terrain"],
-      subType: json["subType"],
-      picA: picA != null
-          ? Rect.fromLTWH(picA[0], picA[1], picA[2], picA[3])
-          : null,
-      picB: picB != null
-          ? Rect.fromLTWH(picB[0], picB[1], picB[2], picB[3])
-          : null,
-    );
-  }
-
-  /// 补充省略的json字段
-  void supplementJson(Map<String, dynamic> json) {
-    if (json["pic"] == null) {
-      json["pic"] = pic;
-    }
-    if (json["type"] == null) {
-      json["type"] = type;
-    }
-    if (json["subType"] == null) {
-      json["subType"] = subType;
     }
   }
 }

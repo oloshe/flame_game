@@ -23,9 +23,6 @@ class TilePainter extends CustomPainter {
     final _size = unitSize ?? MapEditor.len;
 
     final tileList = tile.getPicTiles();
-    if (tile.id == 50) {
-      print(tileList.map((e) => e.id));
-    }
     for (final _tile in tileList) {
       final sprite = _tile.getSprite();
       sprite.render(

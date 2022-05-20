@@ -129,13 +129,11 @@ class RMapLayerData {
   ];
 
   void setMatix(int x, int y, int id, [bool changed = true]) {
-    // print('x = $x y = $y id = $id changed=$changed');
-    final terrain = R.getTileById(id)?.terrain;
+    final terrain = RPartialTerrain.getTerrainById(id);
     if (terrain != null) {
       final list8 = _getSurrounding(x, y);
-      final result = R.terrainCorrect(terrain, list8, id);
-      // print(result);
-      if (result != null && result.changed) {
+      final result = terrain.terrainCorrect(list8, id);
+      if (result.changed) {
         matrix[y][x] = result.newId!;
         if (changed) {
           // print(result.changedCoord);
