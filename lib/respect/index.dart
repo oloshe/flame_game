@@ -8,6 +8,7 @@ import 'package:game/common.dart';
 import 'package:game/components/characters/player.dart';
 import 'package:game/components/enemies/skeleton.dart';
 import 'package:game/components/respect_map.dart';
+import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/partial/r_partial.dart';
 import 'package:game/respect/partial/r_partial_terrain.dart';
 import 'package:tuple/tuple.dart';

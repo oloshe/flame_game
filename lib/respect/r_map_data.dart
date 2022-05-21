@@ -101,7 +101,7 @@ class RMap {
     });
   }
 
-  void setMatix(String name, int x, int y, int id, [bool spread = true]) {
+  void setMatrix(String name, int x, int y, int id, [bool spread = true]) {
     final layer = layers[name];
     if (layer == null) {
       return;
@@ -123,12 +123,12 @@ class RMap {
       for (var index = 0; index < len; index++) {
         final dx = dir[index].item1 + x;
         final dy = dir[index].item2 + y;
-        setMatix(name, dx, dy, list8[index], false);
+        setMatrix(name, dx, dy, list8[index], false);
       }
     }
   }
 
-  int? getMatix(String? name, int x, int y) {
+  int? getMatrix(String? name, int x, int y) {
     return layers[name]?.matrix.at(y)?.at(x);
   }
 
@@ -149,7 +149,8 @@ class RMapLayerData {
   RMapLayerData({
     required this.index,
     required this.matrix,
-  }) : visible = true;
+    this.visible = true,
+  });
 
   static final List<Tuple2<int, int>> dir = List.unmodifiable(const [
     Tuple2(-1, -1),
@@ -209,6 +210,7 @@ class RMapLayerData {
     return RMapLayerData(
       index: json['index'],
       matrix: matrix,
+      visible: json["visible"] ?? true,
     );
   }
 
@@ -217,6 +219,9 @@ class RMapLayerData {
       "index": index,
       "matrix": matrix,
     };
+    if (visible==false) {
+      result["visible"] = visible;
+    }
     return result;
   }
 }

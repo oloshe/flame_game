@@ -41,7 +41,7 @@ class Skeleton extends MovableHitboxComponent
 
     // XXX
     final srcSize =
-        R.getImageData('skeleton').srcSize ?? RespectMap.srcBase;
+        R.getImageData('skeleton').srcSize;
 
     statusComp = SpriteAnimationGroupComponent(
       animations: animations,

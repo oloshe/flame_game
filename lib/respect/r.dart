@@ -59,7 +59,7 @@ class R {
     return _imagePathAliasMap[alias]!;
   }
 
-  static Future<Image> getImageByAlias(String alias) async {
+  static Image getImageByAlias(String alias) {
     return _imagePathAliasMap[alias]!.image;
   }
 

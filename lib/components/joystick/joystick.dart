@@ -4,17 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flame/sprite.dart';
 import 'package:game/respect/index.dart';
 
-final Future<SpriteSheet> joystickSheet = R.getImageByAlias('joystick').then((img) {
-  return SpriteSheet.fromColumnsAndRows(
-    image: img,
-    columns: 6,
-    rows: 1,
-  );
-});
+final SpriteSheet joystickSheet = SpriteSheet.fromColumnsAndRows(
+  image: R.getImageByAlias('joystick'),
+  columns: 6,
+  rows: 1,
+);
 
 Future<JoystickComponent> createJoystick() async {
   late final JoystickComponent joystick;
-  final sheet = await joystickSheet;
+  final sheet = joystickSheet;
   joystick = JoystickComponent(
     // 旋钮
     knob: SpriteComponent(
@@ -31,7 +29,7 @@ Future<JoystickComponent> createJoystick() async {
 }
 
 Future<HudButtonComponent> createButton(void Function() onButtonPress) async {
-  final sheet = await joystickSheet;
+  final sheet = joystickSheet;
   const double size = 80;
   return HudButtonComponent(
     button: SpriteComponent(

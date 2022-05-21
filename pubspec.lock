@@ -71,13 +71,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.1"
-  flame_forge2d:
-    dependency: "direct main"
-    description:
-      name: flame_forge2d
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.11.0"
   flame_lint:
     dependency: "direct dev"
     description:
@@ -85,13 +78,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.1"
-  flame_tiled:
-    dependency: "direct main"
-    description:
-      name: flame_tiled
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.4.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -121,13 +107,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "8.0.9"
-  forge2d:
-    dependency: transitive
-    description:
-      name: forge2d
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.11.0"
   image:
     dependency: "direct main"
     description:
@@ -259,13 +238,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.4.8"
-  tiled:
-    dependency: "direct main"
-    description:
-      name: tiled
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.8.1"
   tuple:
     dependency: "direct main"
     description:

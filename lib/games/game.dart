@@ -52,6 +52,7 @@ class MyGame extends FlameGame
 
     final rect1 = size.toRect();
     final rect2 = myMap.size.toRect();
+
     camera.followComponent(
       player,
       worldBounds: Rect.fromLTWH(

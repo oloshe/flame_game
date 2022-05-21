@@ -1,7 +1,10 @@
+import 'package:flame/game.dart';
+import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game/common.dart';
 import 'package:game/common/utils/i18n.dart';
+import 'package:game/games/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 import 'package:game/widgets/game_loading.dart';
@@ -46,24 +49,21 @@ class MyApp extends StatelessWidget {
             }
             return null;
           },
-          builder: (context, child) {
-            return FutureBuilder(
-              future: R.assetLoaded,
-              builder: (context, snapshot) {
-                if (snapshot.isDone) {
-                  return child!;
-                } else {
-                  return const GameLoading();
-                }
-              },
-            );
-          },
-          // home: GameWidget(
-          //   game: MyGame(),
-          // ),
-          home: Consumer<Translations>(
-            builder: (context, tr, child) {
-              return const MapEditor();
+          home: FutureBuilder(
+            future: R.assetLoaded,
+            builder: (context, snapshot) {
+              if (snapshot.isDone) {
+                // return GameWidget(
+                //   game: MyGame(),
+                // );
+                return Consumer<Translations>(
+                  builder: (context, tr, child) {
+                    return const MapEditor();
+                  },
+                );
+              } else {
+                return const GameLoading();
+              }
             },
           ),
         );

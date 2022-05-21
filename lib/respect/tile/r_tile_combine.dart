@@ -6,10 +6,12 @@ class RTileCombine extends RTileBase with RCombine {
     required int id,
     required String type,
     required String? subType,
+    required Rect? displayRect,
   }) : super(
           id: id,
           type: type,
           subType: subType,
+          displayRect: displayRect,
         ) {
     combineData = combines;
   }

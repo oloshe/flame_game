@@ -15,11 +15,11 @@ enum PlayerStatus {
 }
 
 class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
-  Player()
+  Player(this.tileObject)
       : super(
           CircleHitbox.relative(
-            0.18,
-            parentSize: RespectMap.characterBase,
+            tileObject.circle ?? 0.18, // 先写死0.18 后面再看看要不要改
+            parentSize: tileObject.srcSize * RespectMap.scaleFactor,
             anchor: Anchor.center,
             position: Vector2.zero(),
           ),
@@ -37,6 +37,8 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
+  final RTileObject tileObject;
+
   @override
   Future<void>? onLoad() async {
     joystick = gameRef.joystick;
@@ -44,8 +46,8 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
       animations: await R.createAnimations(PlayerStatus.values, 'player'),
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
-      size: RespectMap.characterBase,
-      anchor: const Anchor(0.5, 0.8),
+      size: tileObject.srcSize * RespectMap.scaleFactor,
+      anchor: tileObject.anchor ?? Anchor.center // const Anchor(0.5, 0.8),
     );
     await add(statusComp);
     await super.onLoad();
@@ -111,27 +113,27 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
   }
 }
 
-extension JudgeExt on JoystickDirection {
-  Vector2 get sign {
-    switch (this) {
-      case JoystickDirection.idle:
-        return Vector2.zero();
-      case JoystickDirection.upLeft:
-        return Vector2(-1, -1);
-      case JoystickDirection.left:
-        return Vector2(-1, 0);
-      case JoystickDirection.downLeft:
-        return Vector2(-1, 1);
-      case JoystickDirection.up:
-        return Vector2(0, -1);
-      case JoystickDirection.down:
-        return Vector2(0, 1);
-      case JoystickDirection.upRight:
-        return Vector2(1, -1);
-      case JoystickDirection.right:
-        return Vector2(1, 0);
-      case JoystickDirection.downRight:
-        return Vector2(1, 1);
-    }
-  }
-}
+// extension JudgeExt on JoystickDirection {
+//   Vector2 get sign {
+//     switch (this) {
+//       case JoystickDirection.idle:
+//         return Vector2.zero();
+//       case JoystickDirection.upLeft:
+//         return Vector2(-1, -1);
+//       case JoystickDirection.left:
+//         return Vector2(-1, 0);
+//       case JoystickDirection.downLeft:
+//         return Vector2(-1, 1);
+//       case JoystickDirection.up:
+//         return Vector2(0, -1);
+//       case JoystickDirection.down:
+//         return Vector2(0, 1);
+//       case JoystickDirection.upRight:
+//         return Vector2(1, -1);
+//       case JoystickDirection.right:
+//         return Vector2(1, 0);
+//       case JoystickDirection.downRight:
+//         return Vector2(1, 1);
+//     }
+//   }
+// }

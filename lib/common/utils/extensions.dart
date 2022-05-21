@@ -42,6 +42,15 @@ extension SerdeListExt on List<dynamic> {
   Anchor toAnchor() {
     return Anchor(this[0], this[1]);
   }
+
+  Rect toRect() {
+    return Rect.fromLTWH(
+      this[0].toDouble(),
+      this[1].toDouble(),
+      this[2].toDouble(),
+      this[3].toDouble(),
+    );
+  }
 }
 
 extension SerdeNullListExt on List<dynamic>? {
@@ -61,6 +70,7 @@ extension ListExt<T> on List<T> {
 extension AsyncSnapshotExt<T> on AsyncSnapshot<T> {
   bool get isDone => connectionState == ConnectionState.done;
 }
+
 
 // extension OffSetExt on Offset {
 //

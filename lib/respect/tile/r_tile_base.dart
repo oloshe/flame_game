@@ -12,10 +12,14 @@ abstract class RTileBase {
   /// 子分类
   final String? subType;
 
+  /// 作为展示时对于选取图片的区域 [Rect.fromLTWH]
+  final Rect? displayRect;
+
   RTileBase({
     required this.id,
     required this.type,
     required this.subType,
+    required this.displayRect,
   });
 
   static Future<TileIdMap> load() async {
@@ -59,6 +63,7 @@ abstract class RTileBase {
     List<int>? combines = json.getList('combines')?.cast<int>();
     String type = json['type'];
     String? subType = json['subType'];
+    Rect? displayRect = json.getList('displayRect')?.toRect();
     List<dynamic>? pos = json['pos'];
     if (pic == null || pos == null) {
       if (combines != null) {
@@ -67,6 +72,7 @@ abstract class RTileBase {
           id: id,
           type: type,
           subType: subType,
+          displayRect: displayRect,
         );
       } else {
         print(json);
@@ -83,6 +89,7 @@ abstract class RTileBase {
       final anchor = json.getList('anchor')?.toAnchor();
       return RTileHit.create(
         name: name,
+        circle: json['circle'],
         pic: pic,
         polygon: polygon,
         anchor: anchor,
@@ -94,6 +101,7 @@ abstract class RTileBase {
         type: type,
         subType: subType,
         combines: combines,
+        displayRect: displayRect,
       );
     }
     return RTilePic(
@@ -106,12 +114,24 @@ abstract class RTileBase {
       type: type,
       subType: subType,
       combines: combines,
+      displayRect: displayRect,
     );
   }
 
   Vector2 get size => Vector2(1, 1);
 
   Vector2 get spriteSize;
+
+  Vector2 get displaySize {
+    if (displayRect == null) {
+      return spriteSize;
+    }
+    final width = displayRect!.width;
+    final height = displayRect!.height;
+    final scaleFactor = MapEditor.len / width;
+    // print('scaleFactor = $scaleFactor');
+    return Vector2(width, height).scaled(scaleFactor);
+  }
 
   @override
   String toString() {
@@ -124,18 +144,20 @@ abstract class RTileBase {
   ) {
     final tileIter = (this as RCombine).getPicTiles();
     for (final tile in tileIter) {
-      final sprite = tile.getSprite();
       final picAlias = tile.pic;
       if (!batch.containsKey(picAlias)) {
-        batch[picAlias] = SpriteBatch(sprite.image);
+        final image = R.getImageData(picAlias).image;
+        batch[picAlias] = SpriteBatch(image);
       }
+      final sprite = tile.getDisplaySprite();
       batch[picAlias]!.add(
-        source: Rect.fromLTWH(
-          sprite.srcPosition.x,
-          sprite.srcPosition.y,
-          sprite.srcSize.x,
-          sprite.srcSize.y,
-        ),
+        source: tile.displayRect ??
+            Rect.fromLTWH(
+              sprite.srcPosition.x,
+              sprite.srcPosition.y,
+              sprite.srcSize.x,
+              sprite.srcSize.y,
+            ),
         scale: RespectMap.scaleFactor,
         offset: position,
       );

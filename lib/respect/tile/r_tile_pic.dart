@@ -20,10 +20,12 @@ class RTilePic extends RTileBase with RCombine {
     required String type,
     required String? subType,
     required List<int>? combines,
+    required Rect? displayRect,
   }) : super(
           id: id,
           type: type,
           subType: subType,
+          displayRect: displayRect,
         ) {
     combineData = combines;
   }
@@ -38,16 +40,28 @@ class RTilePic extends RTileBase with RCombine {
   Sprite getSprite() {
     RImageData imgData = R.getImageData(pic);
     Vector2 srcPosition = pos.clone();
-    Vector2? srcSize = imgData.srcSize?.clone();
-    if (srcSize != null) {
-      srcPosition.multiply(srcSize);
-      srcSize.multiply(size);
-    }
+    Vector2 srcSize = imgData.srcSize.clone();
+    srcPosition.multiply(srcSize);
+    srcSize.multiply(size);
     return Sprite(
       imgData.image,
       srcSize: srcSize,
       srcPosition: srcPosition,
     );
+  }
+
+  Sprite getDisplaySprite() {
+    if (displayRect != null) {
+      final image = R.getImageByAlias(pic);
+      final rect = displayRect!;
+      return Sprite(
+        image,
+        srcSize: Vector2(rect.width, rect.height),
+        srcPosition: Vector2(rect.left, rect.top),
+      );
+    } else {
+      return getSprite();
+    }
   }
 
   @override

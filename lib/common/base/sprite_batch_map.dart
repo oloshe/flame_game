@@ -10,6 +10,8 @@ class SpriteBatchMap {
     tileData.batchConfiguration(_inner, position);
   }
 
+  bool get isEmpty => _inner.isEmpty;
+
   Iterable<SpriteBatchComponent> intoIter() {
     return _inner.values.map((e) => SpriteBatchComponent(spriteBatch: e));
   }

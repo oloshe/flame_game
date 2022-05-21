@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/utils/provider_helper.dart';
@@ -97,11 +98,9 @@ class _TileSetState extends State<TileSet> {
                 painter: TilePainter(
                   selected: isSelected,
                   tile: tileItem as RCombine,
+                  unitSize: null,
                 ),
-                size: Size(
-                  MapEditor.len * tileItem.size.x,
-                  MapEditor.len * tileItem.size.y,
-                ),
+                size: tileItem.displaySize.toSize(),
               ),
             );
           },

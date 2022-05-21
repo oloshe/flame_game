@@ -131,9 +131,9 @@ class _EditorFooterState extends State<EditorFooter> {
                       ),
                     ),
                     NormalButton(
-                      text: 'cancelSelect'.langWatch,
+                      text: 'delete'.langWatch,
                       onTap: () {
-                        context.editor.setTileId(null);
+                        context.editor.deleteCurr();
                       },
                     ),
                     const SizedBox(width: 10),

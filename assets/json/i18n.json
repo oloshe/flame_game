@@ -37,7 +37,6 @@
     "rowColumn": "行 @row，列 @column",
     "resize": "修改大小",
     "back": "返回",
-    "cancelSelect": "取消选择",
     "preview": "预览",
     "noLayer": "当前没有图层",
     "fillEmpty": "没有选择对象",
@@ -46,7 +45,8 @@
     "fillLayer": "填充",
     "deleteLayer": "删除当前图层",
     "visibleLayer": "显示/隐藏",
-    "autoTerrain": "自动路径"
+    "autoTerrain": "自动路径",
+    "delete": "删除"
   },
   "en_US": {
     "plains": "plains",
@@ -85,7 +85,6 @@
     "rowColumn": "Row @row, Column @column",
     "resize": "Resize",
     "back": "Back",
-    "cancelSelect": "Unselect",
     "preview": "Preview",
     "noLayer": "no layers",
     "fillEmpty": "no selected tile",
@@ -94,6 +93,7 @@
     "fillLayer": "fill",
     "deleteLayer": "delete layer",
     "visibleLayer": "set visible",
-    "autoTerrain": "auto terrains"
+    "autoTerrain": "auto terrains",
+    "delete": "删除"
   }
 }

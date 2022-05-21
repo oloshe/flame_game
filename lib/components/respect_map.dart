@@ -45,7 +45,7 @@ class RespectMap extends PositionComponent with HasGameRef {
     }
     // 如果地图里没有玩家，则创建一个默认玩家
     if (_player == null) {
-      _player = Player();
+      _player = Player(R.getTileById(1000)! as RTileObject);
       player.position = size / 2
         ..add(Vector2(0, 20));
       await add(player);
@@ -55,6 +55,9 @@ class RespectMap extends PositionComponent with HasGameRef {
 
   Future<void> draw(RMap mapData) async {
     await mapData.forEachLayer((layer) async {
+      // if (!layer.visible) {
+      //   return;
+      // }
       SpriteBatchMap batch = SpriteBatchMap();
       for (var y = 0; y < mapData.height; y++) {
         for (var x = 0; x < mapData.width; x++) {
@@ -67,7 +70,9 @@ class RespectMap extends PositionComponent with HasGameRef {
           }
         }
       }
-      await addAll(batch.intoIter());
+      if (!batch.isEmpty) {
+        await addAll(batch.intoIter());
+      }
     });
   }
 
@@ -81,24 +86,26 @@ class RespectMap extends PositionComponent with HasGameRef {
     Vector2 spritePosition = pos..multiply(base);
     if (tileData is RTileHit) {
       if (tileData is RTileObject) {
+        // 把点从leftTop移动到center
+        spritePosition.add(base / 2);
         final object = await tileData.buildObject(spritePosition);
-        print(object);
+        // 没有找到对应的object，不创建
         if (object != null) {
           if (object is Player) {
             _player = object;
           }
           await add(object);
         }
-        return;
+      } else {
+        await add(ShapeSprite.factory(
+          sprite: tileData.getSprite(),
+          size: spriteSize,
+          position: spritePosition,
+          tileData: tileData,
+        ));
       }
-      await add(ShapeSprite.factory(
-        sprite: tileData.getSprite(),
-        size: spriteSize,
-        position: spritePosition,
-        tileData: tileData,
-      ));
-      return;
+    } else {
+      batch.addTile(tileData, pos);
     }
-    batch.addTile(tileData, pos);
   }
 }

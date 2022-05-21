@@ -2,6 +2,7 @@
   "player": {
     "pic": "player",
     "enum": "PlayerStatus",
+    "current": "idle",
     "animations": {
       "idle": {
         "row": 0,
@@ -27,6 +28,7 @@
   "skeleton": {
     "pic": "skeleton",
     "enum": "SkeletonStatus",
+    "current": "idle",
     "animations": {
       "idle": {
         "row": 0,

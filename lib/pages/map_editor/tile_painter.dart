@@ -1,12 +1,13 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 
 class TilePainter extends CustomPainter {
   final bool selected;
   final RCombine tile;
-  final double? unitSize;
+  final Vector2? unitSize;
   static final Paint painter = Paint()
     ..color = Colors.blue
     ..style = PaintingStyle.stroke
@@ -20,14 +21,14 @@ class TilePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final _size = unitSize ?? MapEditor.len;
-
+    final _size = unitSize ?? RespectMap.base;
     final tileList = tile.getPicTiles();
     for (final _tile in tileList) {
-      final sprite = _tile.getSprite();
+      final sprite = _tile.getDisplaySprite();
+      print(sprite.srcPosition);
       sprite.render(
         canvas,
-        size: Vector2(_size * _tile.size.x, _size * _tile.size.y),
+        size: _tile.displaySize,
       );
       if (selected) {
         canvas.drawRect(

@@ -36,7 +36,7 @@ class RAnimationData {
     final sheet = SpriteSheet(
       image: img,
       // 优先获取动画的尺寸，如果没有则拿图片自带的，都没有就报错。
-      srcSize: srcSize ?? imageData.srcSize!,
+      srcSize: srcSize ?? imageData.srcSize,
     );
     return Map.fromEntries(enumValues.map((e) {
       // 获取对应动画

@@ -21,6 +21,7 @@ class MapEditorProvider with ChangeNotifier {
 
   /// 当前选中区域 根据tile大小不同
   Rect? currRect;
+  Coord? currPos;
 
   /// 标记层级版本用于更新
   UniqueKey layersVersion = UniqueKey();
@@ -158,7 +159,7 @@ class MapEditorProvider with ChangeNotifier {
   }
 
   RMapLayerData _createLayer(int index, int w, int h, [int? fill]) {
-    return RMapLayerData(
+    return RMapLayerData    (
       index: index,
       matrix: List.generate(
         h,
@@ -167,11 +168,11 @@ class MapEditorProvider with ChangeNotifier {
     );
   }
 
-  paintCell(int x, int y) {
-    int? id = currTileId;
+  paintCell(int x, int y, [int? _id]) {
+    int? id = _id ?? currTileId;
     Rect? newRect;
     final len = MapEditor.len;
-    final selectId = id ?? rMap.getMatix(currLayerName, x, y);
+    final selectId = id ?? rMap.getMatrix(currLayerName, x, y);
     if (selectId != null) {
       final tile = R.getTileById(selectId);
       final w = tile?.size.x ?? 1;
@@ -180,20 +181,24 @@ class MapEditorProvider with ChangeNotifier {
     } else {
       newRect = Rect.fromLTWH(x * len, y * len, len, len);
     }
-
-    // if (id == null && currCell == newCoord) {
-    //   id = RMapGlobal.emptyTile;
-    // } else {
-    //   currCell = newCoord;
-    // }
     currRect = newRect;
+    currPos = Coord(x, y);
     if (id != null) {
       if (currLayerName != null) {
-        rMap.setMatix(currLayerName!, x, y, id);
+        rMap.setMatrix(currLayerName!, x, y, id);
         layersVersion = UniqueKey();
       }
     }
     notifyListeners();
+  }
+
+  /// 删除当前选中的
+  deleteCurr() {
+    if (currLayerName != null) {
+      if (currPos != null) {
+        paintCell(currPos!.x, currPos!.y, RMapGlobal.emptyTile);
+      }
+    }
   }
 }
 

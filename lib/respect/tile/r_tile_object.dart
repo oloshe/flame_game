@@ -5,8 +5,12 @@ class RTileObject extends RTileHit {
 
   /// tile 名 主要用于对象创建时的区分
   final String name;
+
+  final double? circle;
+
   RTileObject({
     required this.name,
+    required this.circle,
     required List<Vector2>? polygon,
     required Anchor? anchor,
     required String pic,
@@ -18,6 +22,7 @@ class RTileObject extends RTileHit {
     required String type,
     required String? subType,
     required List<int>? combines,
+    required Rect? displayRect,
   }) : super(
           polygon: polygon,
           anchor: anchor,
@@ -30,18 +35,21 @@ class RTileObject extends RTileHit {
           h: h,
           pic: pic,
           combines: combines,
+          displayRect: displayRect,
         );
 
   static initObjectBuilder() {
     _tileObjectMap = {
-      "skeleton": (tileData, position) async {
+      "skeleton": (tileObject, position) async {
         return Skeleton()..position = position;
       },
-      "player": (tileData, position) async {
-        return Player()..position = position;
+      "player": (tileObject, position) async {
+        return Player(tileObject)..position = position;
       }
     };
   }
+
+  Vector2 get srcSize => R.getImageData(pic).srcSize;
 
   RTileObjectMapValue buildObject(Vector2 position) {
     return RTileObject._tileObjectMap[name]?.call(this, position);
@@ -56,6 +64,6 @@ class RTileObject extends RTileHit {
 typedef RTileObjectMapValue = FutureOr<PositionComponent?>;
 
 typedef RTileObjectMapFunction = RTileObjectMapValue Function(
-    RTileBase tileData, Vector2 position);
+    RTileObject tileObject, Vector2 position);
 
 typedef TileObjectMap = Map<String, RTileObjectMapFunction>;
