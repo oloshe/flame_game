@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
+import 'package:game/common/utils/logger.dart';
 import 'package:game/components/joystick/joystick.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:flame/game.dart';

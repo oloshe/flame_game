@@ -50,13 +50,21 @@ class MyApp extends StatelessWidget {
             }
             return null;
           },
+          builder: (context, child) {
+            return Stack(
+              children: [
+                child!,
+                const Console(),
+              ],
+            );
+          },
           home: FutureBuilder(
             future: R.assetLoaded,
             builder: (context, snapshot) {
               if (snapshot.isDone) {
-                // return GameWidget(
-                //   game: MyGame(),
-                // );
+                return GameWidget(
+                  game: MyGame(),
+                );
                 return Consumer<Translations>(
                   builder: (context, tr, child) {
                     return const MapEditor();

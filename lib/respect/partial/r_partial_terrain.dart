@@ -122,7 +122,6 @@ class RPartialTerrain with RPartialData {
       }
     }
     final testResult = (result..sort()).map((e) => e + 1).join('');
-    // print('testResult = $testResult b=$b');
     final resultId = tests[testResult];
     return resultId ?? a;
   }
