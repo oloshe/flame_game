@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common/base/coord.dart';
 import 'package:game/common/base/sprite_batch_map.dart';
+import 'package:game/components/respect_map.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 
@@ -72,10 +73,11 @@ class MapGridPainter extends CustomPainter {
 }
 
 class CurrTilePainter extends CustomPainter {
-  CurrTilePainter(this.rect);
-  final Rect rect;
+  CurrTilePainter(this.coord, this.tileBase);
+  final Coord coord;
+  final RTileBase? tileBase;
   static final Paint borderPainter = Paint()
-    ..color = Colors.orange
+    ..color = Colors.orange.withAlpha(100)
     ..strokeWidth = 2
     ..style = PaintingStyle.stroke;
   static final Paint borderPainterOrigin = Paint()
@@ -84,17 +86,38 @@ class CurrTilePainter extends CustomPainter {
     ..style = PaintingStyle.stroke;
   @override
   void paint(Canvas canvas, Size size) {
+    final x = coord.x.toDouble() * MapEditor.len;
+    final y = coord.y.toDouble() * MapEditor.len;
     // 绘制选中
     canvas.drawRect(
-      rect,
+      Rect.fromLTWH(x, y, MapEditor.len, MapEditor.len),
       borderPainter,
     );
-    if (rect.width > MapEditor.len || rect.height > MapEditor.len) {
-      canvas.drawRect(
-        Rect.fromLTWH(rect.left, rect.top, MapEditor.len, MapEditor.len),
-        borderPainterOrigin,
-      );
+
+    if (tileBase != null) {
+      if (tileBase is RTileHit) {
+        final RTileHit hit = tileBase as RTileHit;
+        final offset =
+            hit.anchor != null ? hit.getAnchorOffset() : Vector2.zero();
+        final imgData = R.getImageData(hit.pic);
+        Vector2 size =
+            (hit.tileSize..multiply(imgData.srcSize)) * RespectMap.scaleFactor;
+        canvas.drawRect(
+            Rect.fromLTWH(
+              x - offset.x,
+              y - offset.y,
+              size.x,
+              size.y,
+            ),
+            borderPainterOrigin);
+      }
     }
+    // if (rect.width > MapEditor.len || rect.height > MapEditor.len) {
+    //   canvas.drawRect(
+    //     Rect.fromLTWH(rect.left, rect.top, MapEditor.len, MapEditor.len),
+    //     borderPainterOrigin,
+    //   );
+    // }
   }
 
   @override

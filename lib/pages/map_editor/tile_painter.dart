@@ -21,11 +21,10 @@ class TilePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final _size = unitSize ?? RespectMap.base;
+    // final _size = unitSize ?? RespectMap.base;
     final tileList = tile.getPicTiles();
     for (final _tile in tileList) {
       final sprite = _tile.getDisplaySprite();
-      print(sprite.srcPosition);
       sprite.render(
         canvas,
         size: _tile.displaySize,

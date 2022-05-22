@@ -6,6 +6,7 @@
       "pic": "plains",
       "type": "plains",
       "terrain": "grass-road",
+      "terrainType": "corner",
       "cover": 8
     }
   },
@@ -16,7 +17,8 @@
       "pic": "fences",
       "type": "fences",
       "terrain": "fence",
-      "cover": 72
+      "terrainType": "edge",
+      "cover": 84
     }
   },
   "88": {

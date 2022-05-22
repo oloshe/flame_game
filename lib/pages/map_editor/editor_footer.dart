@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
+import 'package:game/common/base/coord.dart';
 import 'package:game/games/game.dart';
 import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
@@ -98,9 +99,9 @@ class _EditorFooterState extends State<EditorFooter> {
                               ],
                             ),
                           ),
-                          Selector<MapEditorProvider, Tuple2<Rect?, int?>>(
+                          Selector<MapEditorProvider, Tuple2<Coord?, int?>>(
                             selector: (c, p) => Tuple2(
-                              p.currRect,
+                              p.currPos,
                               p.currTileId,
                             ),
                             builder: (context, t, child) {

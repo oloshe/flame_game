@@ -71,6 +71,11 @@ extension AsyncSnapshotExt<T> on AsyncSnapshot<T> {
   bool get isDone => connectionState == ConnectionState.done;
 }
 
+extension VectorExt on Vector2 {
+  Vector2 toTileCenter() {
+    return this + RespectMap.base / 2;
+  }
+}
 
 // extension OffSetExt on Offset {
 //

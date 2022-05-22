@@ -31,6 +31,7 @@ class _TileSetState extends State<TileSet> {
       }
       final list = typedListMap[tile.type]!;
       final terrain = tile.terrain;
+      // 如果是路径，则单独处理
       if (terrain != null) {
         terrains.add(terrain);
         continue;
@@ -39,6 +40,9 @@ class _TileSetState extends State<TileSet> {
     }
     for (final terrain in terrains) {
       final list = typedListMap[terrain.type]!;
+      if (terrain.b != null) {
+        list.add(R.getTileById(terrain.b)!);
+      }
       list.add(R.getTileById(terrain.cover)!);
     }
     currTab = typedListMap.keys.first;

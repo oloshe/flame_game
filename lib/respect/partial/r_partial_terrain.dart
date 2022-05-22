@@ -24,12 +24,15 @@ class RPartialTerrain with RPartialData {
   /// 路径检测映射
   final Map<String, int> tests;
 
+  final TerrainType terrainType;
+
   RPartialTerrain({
     required this.pic,
     required this.type,
     required this.terrain,
     required this.subType,
     required this.cover,
+    required this.terrainType,
   })  : tests = {},
         collection = {};
 
@@ -40,6 +43,7 @@ class RPartialTerrain with RPartialData {
       terrain: json["terrain"],
       subType: json["subType"],
       cover: json["cover"],
+      terrainType: getTerrainType(json['terrainType']),
     );
     // 添加到全局，以用于编辑路径时的使用
     _allTerrains[result.terrain] = result;
@@ -69,7 +73,8 @@ class RPartialTerrain with RPartialData {
   }
 
   int get a => tests["a"]!;
-  int get b => tests["b"]!;
+  /// b为空代表空白
+  int? get b => tests["b"];
 
   static final Map<int, RPartialTerrain> _idMap = {};
 
@@ -80,17 +85,19 @@ class RPartialTerrain with RPartialData {
     return _idMap[tileId] == this;
   }
 
+
+  static const _tblr = [1, 3, 4, 6];
+  static const _includedCorner = [
+    Tuple3(1, 3, 0),
+    Tuple3(1, 4, 2),
+    Tuple3(3, 6, 5),
+    Tuple3(4, 6, 7),
+  ];
+
   int correct(List<int> list8, int id) {
     if (id == b) {
-      return b;
+      return b!;
     }
-    const tblr = [1, 3, 4, 6];
-    const includedCorner = [
-      Tuple3(1, 3, 0),
-      Tuple3(1, 4, 2),
-      Tuple3(3, 6, 5),
-      Tuple3(4, 6, 7),
-    ];
     List<int> result = [];
     List<bool> bools = List.generate(
       8,
@@ -98,18 +105,20 @@ class RPartialTerrain with RPartialData {
           _sameTerrain(list8[index]) &&
           collection[list8[index]]!.codeUnitAt(0) != 'b'.codeUnitAt(0),
     );
-    for (final idx in tblr) {
+    for (final idx in _tblr) {
       if (bools[idx]) {
         result.add(idx);
       }
     }
     // 上下左右没有连接
     if (result.isEmpty) {
-      return id == b ? b : a;
+      return a;
     }
-    for (final tuple in includedCorner) {
-      if (bools[tuple.item1] && bools[tuple.item2] && bools[tuple.item3]) {
-        result.add(tuple.item3);
+    if (terrainType == TerrainType.corner) {
+      for (final tuple in _includedCorner) {
+        if (bools[tuple.item1] && bools[tuple.item2] && bools[tuple.item3]) {
+          result.add(tuple.item3);
+        }
       }
     }
     final testResult = (result..sort()).map((e) => e + 1).join('');
@@ -123,15 +132,15 @@ class RPartialTerrain with RPartialData {
   }
 }
 
-// class TerrainCorrectResult {
-//   /// 使用新的id
-//   final int? newId;
-//   final int nextId;
-//   bool get changed => newId != null;
-//   final List<Tuple2<int, int>> changedCoord;
-//   TerrainCorrectResult(this.newId, this.nextId, this.changedCoord);
-//   @override
-//   String toString() {
-//     return 'TerrainCorrectResult(newId = $newId, nextId = $nextId, $changedCoord)';
-//   }
-// }
+enum TerrainType {
+  corner,
+  edge,
+}
+
+TerrainType getTerrainType(String name) {
+  switch(name) {
+    case 'corner': return TerrainType.corner;
+    case 'edge': return TerrainType.edge;
+    default: return TerrainType.edge;
+  }
+}

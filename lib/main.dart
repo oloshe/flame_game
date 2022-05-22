@@ -9,6 +9,7 @@ import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 import 'package:game/widgets/game_loading.dart';
 import 'package:provider/provider.dart';
+import 'package:visual_console/visual_console.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

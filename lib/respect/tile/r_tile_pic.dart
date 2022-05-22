@@ -32,17 +32,18 @@ class RTilePic extends RTileBase with RCombine {
 
   Vector2 get pos => Vector2(x.toDouble(), y.toDouble());
   @override
-  Vector2 get size => Vector2(w.toDouble(), h.toDouble());
+  Vector2 get tileSize => Vector2(w.toDouble(), h.toDouble());
 
   @override
-  Vector2 get spriteSize => size..multiply(RespectMap.base);
+  Vector2 get spriteSize =>
+      tileSize..multiply(R.getImageData(pic).srcSize * RespectMap.scaleFactor);
 
   Sprite getSprite() {
     RImageData imgData = R.getImageData(pic);
     Vector2 srcPosition = pos.clone();
     Vector2 srcSize = imgData.srcSize.clone();
     srcPosition.multiply(srcSize);
-    srcSize.multiply(size);
+    srcSize.multiply(tileSize);
     return Sprite(
       imgData.image,
       srcSize: srcSize,

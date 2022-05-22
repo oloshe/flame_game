@@ -17,7 +17,7 @@ class RTileCombine extends RTileBase with RCombine {
   }
 
   @override
-  Vector2 get spriteSize => size..multiply(RespectMap.base);
+  Vector2 get spriteSize => tileSize..multiply(RespectMap.base);
 
   @override
   String toString() {

@@ -20,7 +20,7 @@ class MapEditorProvider with ChangeNotifier {
   int get height => rMap.height;
 
   /// 当前选中区域 根据tile大小不同
-  Rect? currRect;
+  // Rect? currRect;
   Coord? currPos;
 
   /// 标记层级版本用于更新
@@ -170,18 +170,6 @@ class MapEditorProvider with ChangeNotifier {
 
   paintCell(int x, int y, [int? _id]) {
     int? id = _id ?? currTileId;
-    Rect? newRect;
-    final len = MapEditor.len;
-    final selectId = id ?? rMap.getMatrix(currLayerName, x, y);
-    if (selectId != null) {
-      final tile = R.getTileById(selectId);
-      final w = tile?.size.x ?? 1;
-      final h = tile?.size.y ?? 1;
-      newRect = Rect.fromLTWH(x * len, y * len, w * len, h * len);
-    } else {
-      newRect = Rect.fromLTWH(x * len, y * len, len, len);
-    }
-    currRect = newRect;
     currPos = Coord(x, y);
     if (id != null) {
       if (currLayerName != null) {
@@ -198,6 +186,14 @@ class MapEditorProvider with ChangeNotifier {
       if (currPos != null) {
         paintCell(currPos!.x, currPos!.y, RMapGlobal.emptyTile);
       }
+    }
+  }
+
+  int? getCurrPosTileId() {
+    if (currPos != null) {
+      return rMap.getMatrix(currLayerName, currPos!.x, currPos!.y);
+    } else {
+      return null;
     }
   }
 }

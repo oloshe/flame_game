@@ -6,6 +6,7 @@ import 'package:game/pages/map_editor/editor_footer.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/map_painter.dart';
 import 'package:game/pages/map_editor/tile_set.dart';
+import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -151,15 +152,20 @@ class MapEditor extends StatelessWidget {
                         ),
                       ),
                     // 选中框
-                    Selector<MapEditorProvider, Rect?>(
-                      selector: (_, p) => p.currRect,
-                      builder: (_, rect, __) {
-                        if (rect == null) {
+                    Selector<MapEditorProvider,
+                        Tuple3<Coord?, String?, UniqueKey>>(
+                      selector: (_, p) =>
+                          Tuple3(p.currPos, p.currLayerName, p.layersVersion),
+                      builder: (_, tuple, __) {
+                        final pos = tuple.item1;
+                        if (pos == null) {
                           return const SizedBox();
                         }
+                        final currPosTileId = model.getCurrPosTileId();
+                        final tileBase = R.getTileById(currPosTileId);
                         return RepaintBoundary(
                           child: CustomPaint(
-                            painter: CurrTilePainter(rect),
+                            painter: CurrTilePainter(pos, tileBase),
                           ),
                         );
                       },

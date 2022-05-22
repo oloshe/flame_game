@@ -86,6 +86,11 @@ class RTileHit extends RTilePic {
     }
   }
 
+  Vector2 getAnchorOffset() {
+    return (spriteSize..multiply((anchor ?? Anchor.topLeft).toVector2())) -
+        (RespectMap.base / 2);
+  }
+
   @override
   String toString() {
     return 'Hit(${polygon ?? 'fill'};${anchor ?? Anchor.topLeft}})->${super.toString()}';

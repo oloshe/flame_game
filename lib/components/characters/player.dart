@@ -46,7 +46,7 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
       animations: await R.createAnimations(PlayerStatus.values, 'player'),
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
-      size: tileObject.srcSize * RespectMap.scaleFactor,
+      size: tileObject.spriteSize,
       anchor: tileObject.anchor ?? Anchor.center // const Anchor(0.5, 0.8),
     );
     await add(statusComp);

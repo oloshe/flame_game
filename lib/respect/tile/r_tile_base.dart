@@ -118,7 +118,7 @@ abstract class RTileBase {
     );
   }
 
-  Vector2 get size => Vector2(1, 1);
+  Vector2 get tileSize => Vector2(1, 1);
 
   Vector2 get spriteSize;
 
@@ -149,17 +149,21 @@ abstract class RTileBase {
         final image = R.getImageData(picAlias).image;
         batch[picAlias] = SpriteBatch(image);
       }
-      final sprite = tile.getDisplaySprite();
+      final sprite = tile.getSprite();
       batch[picAlias]!.add(
-        source: tile.displayRect ??
-            Rect.fromLTWH(
-              sprite.srcPosition.x,
-              sprite.srcPosition.y,
-              sprite.srcSize.x,
-              sprite.srcSize.y,
-            ),
+        source: Rect.fromLTWH(
+          sprite.srcPosition.x,
+          sprite.srcPosition.y,
+          sprite.srcSize.x,
+          sprite.srcSize.y,
+        ),
         scale: RespectMap.scaleFactor,
-        offset: position,
+        offset: () {
+          if (tile is RTileHit && tile.anchor != null) {
+            return position - tile.getAnchorOffset();
+          }
+          return position;
+        }(),
       );
     }
   }

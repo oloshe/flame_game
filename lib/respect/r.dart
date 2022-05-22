@@ -77,7 +77,8 @@ class R {
     return animationData.getAnimationsMap(enumValues, name);
   }
 
-  static RTileBase? getTileById(int id) {
+  static RTileBase? getTileById(int? id) {
+    if (id == null) return null;
     return _tileDataIdMap[id];
   }
 
