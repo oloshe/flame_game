@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flame/image_composition.dart';
-import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/joystick/joystick.dart';
 import 'package:game/components/respect_map.dart';
@@ -15,7 +14,7 @@ class MyGame extends FlameGame
         HasDraggables,
         HasCollisionDetection,
         HasTappables,
-        AllMovable,
+        // AllMovable,
         FPSCounter {
   MyGame({
     this.mapData,

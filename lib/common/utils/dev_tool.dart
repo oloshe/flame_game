@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DevTool {
   static const debugMode = true;
   static const showCoverBaseline = false;
-  static const showHitbox = false;
+  static const showHitbox = true;
   static const showMovableDebug = false;
   static const showPlayerDebug = false;
   static const showEnemyDebug = false;

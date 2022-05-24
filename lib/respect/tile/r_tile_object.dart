@@ -6,11 +6,8 @@ class RTileObject extends RTileHit {
   /// tile 名 主要用于对象创建时的区分
   final String name;
 
-  final double? circle;
-
   RTileObject({
     required this.name,
-    required this.circle,
     required List<Vector2>? polygon,
     required Anchor? anchor,
     required String pic,
@@ -41,10 +38,13 @@ class RTileObject extends RTileHit {
   static initObjectBuilder() {
     _tileObjectMap = {
       "skeleton": (tileObject, position) async {
-        return Skeleton()..position = position;
+        return Skeleton(tileObject)..position = position;
       },
       "player": (tileObject, position) async {
         return Player(tileObject)..position = position;
+      },
+      "slime": (tileObject, position) async {
+        return Slime(tileObject)..position = position;
       }
     };
   }
@@ -53,6 +53,23 @@ class RTileObject extends RTileHit {
 
   RTileObjectMapValue buildObject(Vector2 position) {
     return RTileObject._tileObjectMap[name]?.call(this, position);
+  }
+
+  /// 创建这个对象的动作组组件
+  Future<SpriteAnimationGroupComponent<T>> buildAnimationGroup<T extends Enum>({
+    required List<T> allValues,
+    required T initialValue,
+    Set<T>? removeOnFinish,
+  }) async {
+    return SpriteAnimationGroupComponent<T>(
+      animations: await R.createAnimations(allValues, name),
+      current: initialValue,
+      size: spriteSize,
+      anchor: anchor ?? Anchor.center,
+      removeOnFinish: removeOnFinish != null
+          ? Map.fromEntries(removeOnFinish.map((e) => MapEntry(e, true)))
+          : null,
+    );
   }
 
   @override

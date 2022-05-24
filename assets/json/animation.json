@@ -1,8 +1,6 @@
 {
   "player": {
     "pic": "player",
-    "enum": "PlayerStatus",
-    "current": "idle",
     "animations": {
       "idle": {
         "row": 0,
@@ -27,8 +25,6 @@
   },
   "skeleton": {
     "pic": "skeleton",
-    "enum": "SkeletonStatus",
-    "current": "idle",
     "animations": {
       "idle": {
         "row": 0,
@@ -52,6 +48,39 @@
       },
       "die": {
         "row": 4,
+        "stepTime": 0.2,
+        "loop": false
+      }
+    }
+  },
+  "slime": {
+    "pic": "slime",
+    "animations": {
+      "idle": {
+        "row": 0,
+        "to": 4,
+        "stepTime": 0.2
+      },
+      "running": {
+        "row": 1,
+        "to": 5,
+        "stepTime": 0.1
+      },
+      "attack": {
+        "row": 2,
+        "to": 5,
+        "stepTime": 0.1,
+        "loop": false
+      },
+      "hurt": {
+        "row": 3,
+        "to": 3,
+        "stepTime": 0.2,
+        "loop": false
+      },
+      "die": {
+        "row": 4,
+        "to": 5,
         "stepTime": 0.2,
         "loop": false
       }

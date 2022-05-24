@@ -11,4 +11,3 @@ import 'package:visual_console/visual_console.dart';
 part 'common/utils/utils.dart';
 part 'common/utils/logger.dart';
 part 'common/utils/extensions.dart';
-part 'common/generated/enums.dart';

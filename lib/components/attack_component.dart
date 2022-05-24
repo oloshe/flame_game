@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/common.dart';
 import 'package:game/common/utils/dev_tool.dart';
 
 class AttackComponent extends PositionComponent with CollisionCallbacks {

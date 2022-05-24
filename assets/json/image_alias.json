@@ -8,7 +8,8 @@
     "srcSize": [64, 64]
   },
   "slime": {
-    "path": "characters/slime.png"
+    "path": "characters/slime.png",
+    "srcSize": [32, 32]
   },
   "rockInWaterA": {
     "path": "objects/rock_in_water_a/rock_in_water_a-sheet.png"

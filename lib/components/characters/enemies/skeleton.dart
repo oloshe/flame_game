@@ -1,15 +1,23 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:game/common.dart';
 import 'package:game/common/mixins/hitbox_mixin.dart';
-import 'package:game/components/enemies/enemy.dart';
+import 'package:game/components/characters/enemy.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
 import 'package:game/respect/index.dart';
 
+enum SkeletonStatus {
+  idle,
+  running,
+  attack,
+  hurt,
+  die,
+}
+
 class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
-  Skeleton()
+  Skeleton(RTileObject tileObject)
       : super(
+          tileObject,
           CircleHitbox.relative(
             0.18,
             parentSize: RespectMap.characterBase,
@@ -21,9 +29,6 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
   @override
   PositionComponent get target => gameRef.player;
 
-  /// 动作状态组件
-  late SpriteAnimationGroupComponent<SkeletonStatus> statusComp;
-
   @override
   double get speed => statusComp.current == SkeletonStatus.attack ? 0 : 80;
 
@@ -31,27 +36,16 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
   // double get sensingDistance => 0;
 
   @override
+  List<Enum> allStatusEnums = SkeletonStatus.values;
+
+  @override
+  Enum initialStatusEnum = SkeletonStatus.idle;
+
+  @override
+  Set<Enum>? get removeOnFinish => {SkeletonStatus.die};
+
+  @override
   Future<void>? onLoad() async {
-    final animations = await R.createAnimations(
-      SkeletonStatus.values,
-      'skeleton',
-    );
-
-    // XXX
-    final srcSize = R.getImageData('skeleton').srcSize;
-
-    statusComp = SpriteAnimationGroupComponent(
-      animations: animations,
-      current: SkeletonStatus.idle,
-      position: Vector2.zero(),
-      size: srcSize * RespectMap.scaleFactor,
-      anchor: const Anchor(0.5, 0.83),
-      removeOnFinish: {
-        SkeletonStatus.die: true,
-      },
-    );
-    await add(statusComp);
-
     await super.onLoad();
   }
 
@@ -116,9 +110,6 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
   void die() {
     if (statusComp.current != SkeletonStatus.die) {
       statusComp.current = SkeletonStatus.die;
-      statusComp.animation!.onComplete = () {
-        removeFromParent();
-      };
     }
   }
 }

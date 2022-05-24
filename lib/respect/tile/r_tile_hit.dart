@@ -69,7 +69,6 @@ class RTileHit extends RTilePic {
     } else {
       return RTileObject(
         name: name,
-        circle: circle,
         polygon: polygon,
         anchor: anchor,
         pic: pic,

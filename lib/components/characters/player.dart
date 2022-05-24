@@ -2,7 +2,6 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/mixins/hitbox_mixin.dart';
-import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/attack_component.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
@@ -16,10 +15,11 @@ enum PlayerStatus {
 }
 
 class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
-  Player(this.tileObject)
+  Player(RTileObject tileObject)
       : super(
+          tileObject,
           CircleHitbox.relative(
-            tileObject.circle ?? 0.18, // 先写死0.18 后面再看看要不要改
+            0.18, // 先写死0.18 后面再看看要不要改
             parentSize: tileObject.srcSize * RespectMap.scaleFactor,
             anchor: Anchor.center,
             position: Vector2.zero(),
@@ -29,34 +29,24 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
   /// 手柄控制
   late final JoystickComponent joystick;
 
-  /// 玩家的动作状态组件
-  late SpriteAnimationGroupComponent<PlayerStatus> statusComp;
-
   /// 移动速度
   double maxSpeed = 150.0;
 
   /// 是否是朝向左边，需要水平翻转
   bool isLeft = false;
 
-  final RTileObject tileObject;
-
   late final AttackComponent attackComponent;
+
+  @override
+  List<Enum> get allStatusEnums => PlayerStatus.values;
+
+  @override
+  Enum get initialStatusEnum => PlayerStatus.idle;
 
   @override
   Future<void>? onLoad() async {
     joystick = gameRef.joystick;
-    statusComp = SpriteAnimationGroupComponent(
-      animations: await R.createAnimations(PlayerStatus.values, 'player'),
-      current: PlayerStatus.idle,
-      // position: Vector2(RespectMap.characterBase.x / 2, 0),
-      size: tileObject.spriteSize,
-      anchor: tileObject.anchor ?? Anchor.center, // const Anchor(0.5, 0.8),
-    );
-    await add(statusComp);
     await super.onLoad();
-    if (DevTool.showPlayerDebug.isDebug) {
-      statusComp.debugMode = true;
-    }
     attackComponent = AttackComponent(
       hitboxes: [
         RectangleHitbox(

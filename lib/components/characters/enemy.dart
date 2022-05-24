@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/components/attack_component.dart';
+import 'package:game/respect/index.dart';
 
 /// 敌人基类
 abstract class Enemy extends MovableHitboxComponent {
@@ -28,7 +29,7 @@ abstract class Enemy extends MovableHitboxComponent {
 
   bool _isFlipHorizontal = false;
 
-  Enemy(ShapeHitbox hitbox) : super(hitbox);
+  Enemy(RTileObject tileObject, ShapeHitbox hitbox) : super(tileObject, hitbox);
 
   @override
   Future<void>? onLoad() async {
