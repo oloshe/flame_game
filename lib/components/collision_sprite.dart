@@ -1,15 +1,13 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game/common.dart';
-import 'package:game/common/mixins/custom_collision.dart';
+import 'package:game/common/mixins/hitbox_mixin.dart';
 import 'package:game/common/utils/dev_tool.dart';
 import 'package:game/common/base/dynamic_priority.dart';
-import 'package:game/components/respect_map.dart';
-import 'package:game/pages/map_editor/map_editor.dart';
-
 import 'package:game/respect/index.dart';
 
-class ShapeSprite extends SpriteComponent with HasHitbox, DynamicPriorityComponent {
+class ShapeSprite extends SpriteComponent
+    with HasHitbox, DynamicPriorityComponent {
   ShapeSprite(
     Sprite sprite, {
     required Vector2 size,

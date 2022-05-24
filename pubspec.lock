@@ -269,10 +269,10 @@ packages:
   visual_console:
     dependency: "direct main"
     description:
-      path: "/Users/jacob/dev/pro/visual_console"
-      relative: false
-    source: path
-    version: "0.3.0+1"
+      name: visual_console
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.4.0"
   xml:
     dependency: transitive
     description:

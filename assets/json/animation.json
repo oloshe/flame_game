@@ -14,7 +14,7 @@
       },
       "attack": {
         "row": 2,
-        "to": 3,
+        "to": 4,
         "stepTime": 0.2,
         "loop": false
       },

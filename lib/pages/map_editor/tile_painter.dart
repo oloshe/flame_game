@@ -1,7 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:game/components/respect_map.dart';
-import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 
 class TilePainter extends CustomPainter {

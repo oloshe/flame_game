@@ -105,7 +105,7 @@ class _EditorFooterState extends State<EditorFooter> {
                               p.currTileId,
                             ),
                             builder: (context, t, child) {
-                              final pos = t.item1;
+                              // final pos = t.item1;
                               final id = t.item2;
                               var texts = [];
                               // if (pos != null) {

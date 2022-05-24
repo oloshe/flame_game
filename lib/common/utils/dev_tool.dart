@@ -8,7 +8,8 @@ class DevTool {
   static const showMovableDebug = false;
   static const showPlayerDebug = false;
   static const showEnemyDebug = false;
-  static const showShapeSpriteDebug = true;
+  static const showShapeSpriteDebug = false;
+  static const showAttackDebug = false;
 
   static bool whenDebug(bool value) {
     return debugMode && value;

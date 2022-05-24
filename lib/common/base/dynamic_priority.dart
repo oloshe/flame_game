@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 
+/// 动态调整层级 根据 position的y值
 mixin DynamicPriorityComponent on PositionComponent {
   @override
   Future<void>? onLoad() async {
@@ -9,6 +10,7 @@ mixin DynamicPriorityComponent on PositionComponent {
     onPositionChange();
     await super.onLoad();
   }
+
   int _oldPriority = 0;
 
   void onPositionChange() {

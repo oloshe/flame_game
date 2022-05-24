@@ -8,9 +8,10 @@ mixin HasHitbox on PositionComponent {
   Future<void>? onLoad() async {
     await super.onLoad();
     if (DevTool.showHitbox.isDebug) {
-      hitbox
-        ..paint = DevTool.hitBoxPaint
-        ..renderShape = true;
+      // hitbox
+      //   ..paint = DevTool.hitBoxPaint
+      //   ..renderShape = true;
+      hitbox.debugMode = true;
     }
     add(hitbox);
   }

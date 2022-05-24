@@ -1,15 +1,13 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game/common.dart';
-import 'package:game/common/base/moveable_hitbox.dart';
-import 'package:game/common/mixins/custom_collision.dart';
+import 'package:game/common/mixins/hitbox_mixin.dart';
 import 'package:game/components/enemies/enemy.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
 import 'package:game/respect/index.dart';
 
-class Skeleton extends MovableHitboxComponent
-    with Enemy, HasGameRef<MyGame>, HasHitbox {
+class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
   Skeleton()
       : super(
           CircleHitbox.relative(
@@ -40,8 +38,7 @@ class Skeleton extends MovableHitboxComponent
     );
 
     // XXX
-    final srcSize =
-        R.getImageData('skeleton').srcSize;
+    final srcSize = R.getImageData('skeleton').srcSize;
 
     statusComp = SpriteAnimationGroupComponent(
       animations: animations,
@@ -79,6 +76,7 @@ class Skeleton extends MovableHitboxComponent
 
   @override
   void attack() {
+    super.attack();
     if (statusComp.current != SkeletonStatus.attack) {
       statusComp.current = SkeletonStatus.attack;
       statusComp.animation!.onComplete = onAttackCompleted;
@@ -89,5 +87,38 @@ class Skeleton extends MovableHitboxComponent
     statusComp.animation!.reset();
     statusComp.current = SkeletonStatus.idle;
     statusComp.animation!.onComplete = null;
+  }
+
+  @override
+  void hurt() {
+    if (statusComp.current == SkeletonStatus.attack) {
+      statusComp.animation!.reset();
+    }
+    statusComp.current = SkeletonStatus.hurt;
+    statusComp.animation!.onComplete = onHurtCompleted;
+    super.hurt();
+  }
+
+  void onHurtCompleted() {
+    statusComp.animation!.reset();
+    statusComp.current = SkeletonStatus.idle;
+    statusComp.animation!.onComplete = null;
+  }
+
+  @override
+  bool canMove() {
+    return statusComp.current != SkeletonStatus.hurt &&
+        statusComp.current != SkeletonStatus.attack &&
+        statusComp.current != SkeletonStatus.die;
+  }
+
+  @override
+  void die() {
+    if (statusComp.current != SkeletonStatus.die) {
+      statusComp.current = SkeletonStatus.die;
+      statusComp.animation!.onComplete = () {
+        removeFromParent();
+      };
+    }
   }
 }

@@ -1,8 +1,12 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
+import 'package:game/common/base/moveable_hitbox.dart';
 import 'package:game/common/utils/dev_tool.dart';
+import 'package:game/components/attack_component.dart';
 
 /// 敌人基类
-mixin Enemy on PositionComponent {
+abstract class Enemy extends MovableHitboxComponent {
   /// 感应敌人的距离
   double sensingDistance = 500;
 
@@ -12,16 +16,25 @@ mixin Enemy on PositionComponent {
   /// 移动速度
   double speed = 10;
 
+  /// 攻击的冷却CD
+  double attackCD = 1;
+  bool _attackInCD = false;
+  double _attackClock = 0;
+
   /// 目标
   PositionComponent? target;
 
+  int life = 3;
+
   bool _isFlipHorizontal = false;
+
+  Enemy(ShapeHitbox hitbox) : super(hitbox);
 
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
     if (DevTool.showEnemyDebug.isDebug) {
-      debugMode = true;
+      // debugMode = true;
     }
   }
 
@@ -37,7 +50,9 @@ mixin Enemy on PositionComponent {
       if (distance > attackDistance) {
         return (playerPos - position).normalized();
       } else {
-        attack();
+        if (!_attackInCD) {
+          attack();
+        }
       }
       return null;
     } else {
@@ -48,6 +63,16 @@ mixin Enemy on PositionComponent {
   @override
   void update(double dt) {
     super.update(dt);
+    if (_attackInCD) {
+      _attackClock += dt;
+      if (_attackClock >= attackCD) {
+        _attackInCD = false;
+        _attackClock = 0;
+      }
+    }
+    if (!canMove()) {
+      return;
+    }
     final delta = checkEnmity();
     if (delta != null) {
       if (delta.x < 0) {
@@ -68,6 +93,8 @@ mixin Enemy on PositionComponent {
     }
   }
 
+  bool canMove();
+
   /// 水平翻转
   void flipHorizontal();
 
@@ -75,5 +102,28 @@ mixin Enemy on PositionComponent {
 
   void idle();
 
-  void attack();
+  @mustCallSuper
+  void attack() {
+    _attackInCD = true;
+  }
+
+  /// 受伤
+  @mustCallSuper
+  void hurt() {
+    life -= 1;
+    if (life <= 0) {
+      die();
+    }
+  }
+
+  void die();
+
+  @override
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is AttackComponent) {
+      hurt();
+    }
+  }
 }

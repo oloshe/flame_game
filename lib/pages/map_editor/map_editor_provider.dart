@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
-import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/respect/index.dart';
 import 'package:provider/provider.dart';
 
@@ -159,7 +158,7 @@ class MapEditorProvider with ChangeNotifier {
   }
 
   RMapLayerData _createLayer(int index, int w, int h, [int? fill]) {
-    return RMapLayerData    (
+    return RMapLayerData(
       index: index,
       matrix: List.generate(
         h,

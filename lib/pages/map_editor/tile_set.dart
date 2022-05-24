@@ -2,7 +2,6 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:game/common.dart';
 import 'package:game/common/utils/provider_helper.dart';
-import 'package:game/pages/map_editor/map_editor.dart';
 import 'package:game/pages/map_editor/map_editor_provider.dart';
 import 'package:game/pages/map_editor/tile_painter.dart';
 import 'package:game/respect/index.dart';

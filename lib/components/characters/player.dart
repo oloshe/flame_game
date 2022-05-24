@@ -1,8 +1,9 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:game/common/base/moveable_hitbox.dart';
-import 'package:game/common/mixins/custom_collision.dart';
+import 'package:game/common/mixins/hitbox_mixin.dart';
 import 'package:game/common/utils/dev_tool.dart';
+import 'package:game/components/attack_component.dart';
 import 'package:game/components/respect_map.dart';
 import 'package:game/games/game.dart';
 import 'package:game/respect/index.dart';
@@ -39,6 +40,8 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
 
   final RTileObject tileObject;
 
+  late final AttackComponent attackComponent;
+
   @override
   Future<void>? onLoad() async {
     joystick = gameRef.joystick;
@@ -47,14 +50,26 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
       current: PlayerStatus.idle,
       // position: Vector2(RespectMap.characterBase.x / 2, 0),
       size: tileObject.spriteSize,
-      anchor: tileObject.anchor ?? Anchor.center // const Anchor(0.5, 0.8),
+      anchor: tileObject.anchor ?? Anchor.center, // const Anchor(0.5, 0.8),
     );
     await add(statusComp);
     await super.onLoad();
     if (DevTool.showPlayerDebug.isDebug) {
       statusComp.debugMode = true;
     }
-    priority = 10000;
+    attackComponent = AttackComponent(
+      hitboxes: [
+        RectangleHitbox(
+          size: Vector2(25, 20),
+          position: Vector2(10, -12),
+        ),
+        // RectangleHitbox(
+        //   size: Vector2(20, 20),
+        //   position: Vector2(4, 0),
+        //   anchor: Anchor.center,
+        // ),
+      ],
+    );
   }
 
   bool get isAttacking => statusComp.current == PlayerStatus.attack;
@@ -87,9 +102,9 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
     if (_isLeft != isLeft) {
       isLeft = _isLeft;
       if (_isLeft) {
-        statusComp.scale = Vector2(-1, 1);
+        scale = Vector2(-1, 1);
       } else {
-        statusComp.scale = Vector2(1, 1);
+        scale = Vector2(1, 1);
       }
     }
   }
@@ -102,12 +117,16 @@ class Player extends MovableHitboxComponent with HasGameRef<MyGame>, HasHitbox {
   /// 攻击
   void attack() {
     statusComp.current = PlayerStatus.attack;
+    if (attackComponent.parent == null) {
+      add(attackComponent);
+    }
     statusComp.animation!.onComplete = onAttackCompleted;
   }
 
   /// 攻击完成的回调函数
   void onAttackCompleted() {
     statusComp.animation!.reset();
+    attackComponent.removeFromParent();
     statusComp.current = PlayerStatus.idle;
     statusComp.animation!.onComplete = null;
   }
