@@ -21,107 +21,18 @@
       "cover": 84
     }
   },
-  "88": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [0, 0]
+  "hill": {
+    "type": "terrain",
+    "source": "terrains/hill.json",
+    "data": {
+      "pic": "plains",
+      "type": "plains",
+      "terrain": "hill",
+      "terrainType": "corner",
+      "cover": 89
+    }
   },
-  "89": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [1, 0]
-  },
-  "90": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [2, 0]
-  },
-  "91": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [3, 0]
-  },
-  "92": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [0, 1]
-  },
-  "93": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [1, 1]
-  },
-  "94": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [2, 1]
-  },
-  "95": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [3, 1]
-  },
-  "96": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [0, 2]
-  },
-  "97": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [1, 2]
-  },
-  "98": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [2, 2]
-  },
-  "99": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [3, 2]
-  },
-  "100": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [0, 3]
-  },
-  "101": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [1, 3]
-  },
-  "102": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [2, 3]
-  },
-  "103": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [3, 3]
-  },
-  "104": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [0, 4]
-  },
-  "105": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [1, 4]
-  },
-  "106": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [2, 4]
-  },
-  "107": {
-    "pic": "decor_16",
-    "type": "decor",
-    "pos": [3, 4]
-  },
-  "108": {
+  "300": {
     "pic": "wooden",
     "pos": [0, 0],
     "type": "floors"
