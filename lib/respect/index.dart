@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:game/common.dart';
+import 'package:game/common/base/coord.dart';
 import 'package:game/components/characters/enemies/skeleton.dart';
 import 'package:game/components/characters/enemies/slime.dart';
 import 'package:game/components/characters/player.dart';

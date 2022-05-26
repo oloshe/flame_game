@@ -172,7 +172,7 @@ class MapEditorProvider with ChangeNotifier {
     currPos = Coord(x, y);
     if (id != null) {
       if (currLayerName != null) {
-        rMap.setMatrix(currLayerName!, x, y, id);
+        rMap.setMatrix(currLayerName!, SetMatrixAction(x, y, id));
         layersVersion = UniqueKey();
       }
     }

@@ -101,7 +101,7 @@ class RMap {
     });
   }
 
-  void setMatrix(String name, int x, int y, int id, [bool spread = true]) {
+  void setMatrixOld(String name, int x, int y, int id, [bool spread = true]) {
     final layer = layers[name];
     if (layer == null) {
       return;
@@ -113,7 +113,7 @@ class RMap {
     final list8 = layer._getSurrounding(x, y);
     final terrain = RPartialTerrain.getTerrainById(id);
     if (terrain != null) {
-      layer.matrix[y][x] = terrain.correct(list8, id);
+      layer.matrix[y][x] = terrain.correct(list8, id) ?? terrain.a;
     } else {
       layer.matrix[y][x] = id;
     }
@@ -121,11 +121,87 @@ class RMap {
       final dir = RMapLayerData.dir;
       final len = dir.length;
       for (var index = 0; index < len; index++) {
-        final dx = dir[index].item1 + x;
-        final dy = dir[index].item2 + y;
-        setMatrix(name, dx, dy, list8[index], false);
+        final dx = dir[index].x + x;
+        final dy = dir[index].y + y;
+        setMatrixOld(name, dx, dy, list8[index], false);
       }
     }
+  }
+
+  /// [name] 图层名
+  /// [auto] 判断是否手动触发，还是自动矫正
+  void setMatrix(
+    String name,
+    SetMatrixAction action, {
+    bool auto = false,
+    void Function()? markAsFail,
+    RPartialTerrain? originTerrain,
+    void Function(int x, int y, int id)? setter,
+  }) {
+    final layer = layers[name];
+    if (layer == null) {
+      return;
+    }
+    final x = action.x;
+    final y = action.y;
+    final id = action.id;
+    if (!contains(x, y)) {
+      return;
+    }
+    final _setter = setter ??
+        (int x, int y, int id) {
+          _setMatrixUnsafe(layer.matrix, x, y, id);
+        };
+    // 周围8个
+    final list8 = layer._getSurrounding(x, y);
+    final terrain = RPartialTerrain.getTerrainById(id);
+    bool fail = false;
+    if (!auto) {
+      final dir = RMapLayerData.dir;
+      final len = dir.length;
+      final tmp = layer.matrix[y][x];
+      _setter(x, y, id);
+
+      final List<SetMatrixAction> actions = [];
+      for (var index = 0; index < len; index++) {
+        final dx = dir[index].x + x;
+        final dy = dir[index].y + y;
+        setMatrix(name, SetMatrixAction(dx, dy, list8[index]),
+            auto: true,
+            originTerrain: terrain,
+            markAsFail: () => fail = true,
+            setter: (int x, int y, int id) {
+              actions.add(SetMatrixAction(x, y, id));
+              // _setter(x, y, id);
+            });
+      }
+      if (!fail) {
+        for (var ac in actions) {
+          _setter(ac.x, ac.y, ac.id);
+        }
+      }
+      _setter(x, y, tmp);
+    } else {}
+    if (terrain != null) {
+      if (fail) {
+        _setter(x, y, terrain.a);
+      } else {
+        final oldId = layer.matrix[y][x];
+        final newId = terrain.correct(list8, id);
+        if (newId == null) {
+          _setter(x, y, oldId);
+          markAsFail?.call();
+        } else {
+          _setter(x, y, newId);
+        }
+      }
+    } else {
+      _setter(x, y, id);
+    }
+  }
+
+  void _setMatrixUnsafe(List<List<int>> matrix, int x, int y, int id) {
+    matrix[y][x] = id;
   }
 
   int? getMatrix(String? name, int x, int y) {
@@ -152,21 +228,21 @@ class RMapLayerData {
     this.visible = true,
   });
 
-  static final List<Tuple2<int, int>> dir = List.unmodifiable(const [
-    Tuple2(-1, -1),
-    Tuple2(0, -1),
-    Tuple2(1, -1),
-    Tuple2(-1, 0),
-    Tuple2(1, 0),
-    Tuple2(-1, 1),
-    Tuple2(0, 1),
-    Tuple2(1, 1),
+  static final List<Coord> dir = List.unmodifiable(const [
+    Coord(-1, -1),
+    Coord(0, -1),
+    Coord(1, -1),
+    Coord(-1, 0),
+    Coord(1, 0),
+    Coord(-1, 1),
+    Coord(0, 1),
+    Coord(1, 1),
   ]);
 
   List<int> _getSurrounding(int x, int y) {
     return List.generate(8, (index) {
-      final dx = dir[index].item1 + x;
-      final dy = dir[index].item2 + y;
+      final dx = dir[index].x + x;
+      final dy = dir[index].y + y;
       return matrix.at(dy)?.at(dx) ?? -1; // 不在矩阵范围内的负值为-1
     });
   }
@@ -219,9 +295,14 @@ class RMapLayerData {
       "index": index,
       "matrix": matrix,
     };
-    if (visible==false) {
+    if (visible == false) {
       result["visible"] = visible;
     }
     return result;
   }
+}
+
+class SetMatrixAction extends Coord {
+  final int id;
+  SetMatrixAction(int x, int y, this.id) : super(x, y);
 }

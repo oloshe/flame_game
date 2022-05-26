@@ -94,7 +94,7 @@ class RPartialTerrain with RPartialData {
     Tuple3(4, 6, 7),
   ];
 
-  int correct(List<int> list8, int id) {
+  int? correct(List<int> list8, int id) {
     if (id == b) {
       return b!;
     }
@@ -122,6 +122,12 @@ class RPartialTerrain with RPartialData {
       }
     }
     final testResult = (result..sort()).map((e) => e + 1).join('');
+    final resultId = tests[testResult];
+    return resultId;
+  }
+
+  emit(List<int> list) {
+    final testResult = list.join('');
     final resultId = tests[testResult];
     return resultId ?? a;
   }

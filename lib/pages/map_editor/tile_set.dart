@@ -29,12 +29,12 @@ class _TileSetState extends State<TileSet> {
         typedListMap[tile.type] = [];
       }
       final list = typedListMap[tile.type]!;
-      final terrain = tile.terrain;
-      // 如果是路径，则单独处理
-      if (terrain != null) {
-        terrains.add(terrain);
-        continue;
-      }
+      // final terrain = tile.terrain;
+      // // 如果是路径，则单独处理
+      // if (terrain != null) {
+      //   terrains.add(terrain);
+      //   continue;
+      // }
       list.add(tile);
     }
     for (final terrain in terrains) {

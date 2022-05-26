@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 void main() async {
-  final tileStr = await File('assets/json/tile.json').readAsString();
+  final tileStr = await File('assets/json/terrains/hill.json').readAsString();
+  const offset = 51;
   final Map<String, dynamic> tileJson =
       (jsonDecode(tileStr) as Map<String, dynamic>);
   final entriesList = tileJson.entries.toList(growable: false);
@@ -11,12 +12,10 @@ void main() async {
       tileJson.length,
       (index) {
         final value = entriesList[index].value;
-        if (value['pos'] != null) {
-          int x = value['pos'][0];
-          int y = value['pos'][1];
-          value['pos'] = double.parse("$x.$y");
-        }
-        return MapEntry((index + 1).toString(), value);
+        // if (value['pos'] != null) {
+        //   value['pos'] = {"x": value['pos'][0], "y": value['pos'][1]};
+        // }
+        return MapEntry((index + offset).toString(), value);
       },
     ),
   );
