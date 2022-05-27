@@ -47,6 +47,11 @@ class Slime extends Enemy with HasGameRef<MyGame>, HasHitbox {
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
+    statusComp.animations?[SlimeStatus.hurt]!.onComplete = onHurtCompleted;
+    statusComp.animations?[SlimeStatus.attack]!.onComplete = onAttackCompleted;
+    statusComp.animations?[SlimeStatus.die]!.onComplete = () {
+      removeFromParent();
+    };
   }
 
   @override
@@ -73,14 +78,12 @@ class Slime extends Enemy with HasGameRef<MyGame>, HasHitbox {
     super.attack();
     if (statusComp.current != SlimeStatus.attack) {
       statusComp.current = SlimeStatus.attack;
-      statusComp.animation!.onComplete = onAttackCompleted;
     }
   }
 
   void onAttackCompleted() {
     statusComp.animation!.reset();
     statusComp.current = SlimeStatus.idle;
-    statusComp.animation!.onComplete = null;
   }
 
   @override
@@ -89,14 +92,12 @@ class Slime extends Enemy with HasGameRef<MyGame>, HasHitbox {
       statusComp.animation!.reset();
     }
     statusComp.current = SlimeStatus.hurt;
-    statusComp.animation!.onComplete = onHurtCompleted;
     super.hurt();
   }
 
   void onHurtCompleted() {
     statusComp.animation!.reset();
     statusComp.current = SlimeStatus.idle;
-    statusComp.animation!.onComplete = null;
   }
 
   @override

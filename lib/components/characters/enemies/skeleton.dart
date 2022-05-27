@@ -47,6 +47,12 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
   @override
   Future<void>? onLoad() async {
     await super.onLoad();
+    statusComp.animations?[SkeletonStatus.hurt]!.onComplete = onHurtCompleted;
+    statusComp.animations?[SkeletonStatus.attack]!.onComplete =
+        onAttackCompleted;
+    statusComp.animations?[SkeletonStatus.die]!.onComplete = () {
+      removeFromParent();
+    };
   }
 
   @override
@@ -73,14 +79,12 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
     super.attack();
     if (statusComp.current != SkeletonStatus.attack) {
       statusComp.current = SkeletonStatus.attack;
-      statusComp.animation!.onComplete = onAttackCompleted;
     }
   }
 
   void onAttackCompleted() {
     statusComp.animation!.reset();
     statusComp.current = SkeletonStatus.idle;
-    statusComp.animation!.onComplete = null;
   }
 
   @override
@@ -89,14 +93,12 @@ class Skeleton extends Enemy with HasGameRef<MyGame>, HasHitbox {
       statusComp.animation!.reset();
     }
     statusComp.current = SkeletonStatus.hurt;
-    statusComp.animation!.onComplete = onHurtCompleted;
     super.hurt();
   }
 
   void onHurtCompleted() {
     statusComp.animation!.reset();
     statusComp.current = SkeletonStatus.idle;
-    statusComp.animation!.onComplete = null;
   }
 
   @override
