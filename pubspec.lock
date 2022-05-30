@@ -269,9 +269,11 @@ packages:
   visual_console:
     dependency: "direct main"
     description:
-      name: visual_console
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "3ba697252d668ba371ebdae5945c04f6fd3cecb2"
+      url: "https://github.com/oloshe/visual_console"
+    source: git
     version: "0.4.0"
   xml:
     dependency: transitive

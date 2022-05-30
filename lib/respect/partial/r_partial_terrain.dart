@@ -26,6 +26,8 @@ class RPartialTerrain with RPartialData {
 
   final TerrainType terrainType;
 
+  final bool? hit;
+
   RPartialTerrain({
     required this.pic,
     required this.type,
@@ -33,6 +35,7 @@ class RPartialTerrain with RPartialData {
     required this.subType,
     required this.cover,
     required this.terrainType,
+    required this.hit,
   })  : tests = {},
         collection = {};
 
@@ -44,6 +47,7 @@ class RPartialTerrain with RPartialData {
       subType: json["subType"],
       cover: json["cover"],
       terrainType: getTerrainType(json['terrainType']),
+      hit: json['hit'],
     );
     // 添加到全局，以用于编辑路径时的使用
     _allTerrains[result.terrain] = result;
@@ -60,6 +64,9 @@ class RPartialTerrain with RPartialData {
     }
     if (json["subType"] == null) {
       json["subType"] = subType;
+    }
+    if (json['hit'] == null) {
+      json['hit'] = hit;
     }
   }
 

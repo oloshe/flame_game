@@ -51,7 +51,9 @@ class MyApp extends StatelessWidget {
             return Stack(
               children: [
                 child!,
-                const Console(),
+                const Console(
+                  alignment: Alignment.bottomRight,
+                ),
               ],
             );
           },

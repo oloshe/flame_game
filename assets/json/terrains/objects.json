@@ -1,0 +1,226 @@
+{
+  "301": {
+    "subType": "sign",
+    "pos": [
+      0,
+      0
+    ],
+    "hit": true
+  },
+  "302": {
+    "subType": "barrel",
+    "pos": [
+      1,
+      0
+    ],
+    "hit": true
+  },
+  "303": {
+    "subType": "box",
+    "pos": [
+      2,
+      0
+    ],
+    "hit": true
+  },
+  "304": {
+    "subType": "barrel",
+    "pos": [
+      3,
+      0
+    ],
+    "hit": true
+  },
+  "305": {
+    "subType": "barrel",
+    "pos": [
+      4,
+      0
+    ],
+    "hit": true
+  },
+  "306": {
+    "subType": "box",
+    "pos": [
+      5,
+      0
+    ],
+    "hit": true
+  },
+  "307": {
+    "subType": "tombstone",
+    "pos": [
+      6,
+      0
+    ],
+    "hit": true
+  },
+  "308": {
+    "subType": "skeleton",
+    "pos": [
+      7,
+      0
+    ],
+    "hit": true
+  },
+  "309": {
+    "subType": "skeleton",
+    "pos": [
+      8,
+      0
+    ],
+    "hit": true
+  },
+  "310": {
+    "subType": "table",
+    "pos": [
+      9,
+      0
+    ],
+    "hit": true
+  },
+  "311": {
+    "subType": "table",
+    "pos": [
+      10,
+      0
+    ],
+    "width": 2,
+    "hit": true
+  },
+  "312": {
+    "subType": "hole",
+    "pos": [
+      8,
+      1
+    ]
+  },
+  "313": {
+    "subType": "table",
+    "pos": [
+      9,
+      1
+    ],
+    "hit": true
+  },
+  "314": {
+    "subType": "table",
+    "pos": [
+      10,
+      1
+    ],
+    "hit": true
+  },
+  "315": {
+    "subType": "table",
+    "pos": [
+      11,
+      1
+    ],
+    "hit": true
+  },
+  "316": {
+    "subType": "stone",
+    "pos": [
+      0,
+      1
+    ],
+    "hit": true
+  },
+  "317": {
+    "subType": "stone",
+    "pos": [
+      1,
+      1
+    ],
+    "hit": true
+  },
+  "318": {
+    "subType": "stone",
+    "pos": [
+      2,
+      1
+    ],
+    "hit": true
+  },
+  "319": {
+    "subType": "bench",
+    "pos": [
+      3,
+      1
+    ],
+    "width": 2,
+    "hit": true
+  },
+  "320": {
+    "subType": "love",
+    "pos": [
+      8,
+      2
+    ]
+  },
+  "321": {
+    "subType": "plants",
+    "pos": [
+      9,
+      2
+    ],
+    "height": 2,
+    "hit": true
+  },
+  "322": {
+    "subType": "plants",
+    "pos": [
+      10,
+      2
+    ],
+    "hit": true
+  },
+  "323": {
+    "subType": "plants",
+    "pos": [
+      10,
+      3
+    ],
+    "hit": true
+  },
+  "324": {
+    "subType": "bed",
+    "pos": [
+      11,
+      2
+    ],
+    "height": 2,
+    "hit": true
+  },
+  "325": {
+    "subType": "shelf",
+    "pos": [
+      12,
+      2
+    ],
+    "height": 2,
+    "hit": true
+  },
+  "326": {
+    "subType": "bottle",
+    "pos": [
+      9,
+      4
+    ]
+  },
+  "327": {
+    "subType": "paper",
+    "pos": [
+      10,
+      4
+    ]
+  },
+  "328": {
+    "subType": "stool",
+    "pos": [
+      11,
+      4
+    ]
+  }
+}

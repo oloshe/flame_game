@@ -1,8 +1,12 @@
 import 'package:game/respect/index.dart';
+import 'package:game/respect/partial/r_partial_normal.dart';
 import 'package:game/respect/partial/r_partial_terrain.dart';
 
 enum PartialType {
+  /// 地形
   terrain,
+  /// 普通分类
+  normal,
 }
 
 class RPartial with RPartialData {
@@ -40,6 +44,8 @@ PartialType _partialTypeFromString(String type) {
   switch (type) {
     case "terrain":
       return PartialType.terrain;
+    case "normal":
+      return PartialType.normal;
     default:
       throw UnimplementedError();
   }
@@ -50,6 +56,8 @@ mixin RPartialData {
     switch (type) {
       case PartialType.terrain:
         return RPartialTerrain.fromJson(json);
+      case PartialType.normal:
+        return RPartialNormal.fromJson(json);
       default:
         throw UnimplementedError();
     }

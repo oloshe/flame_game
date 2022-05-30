@@ -20,7 +20,7 @@ class ShapeSprite extends SpriteComponent
           // position: anchor == null
           //     ? position
           //     : position + (size.clone()..multiply(anchor.toVector2())),
-          position: position.toTileCenter(),
+          position: anchor == null ? position : position.toTileCenter(),
           anchor: anchor,
         ) {
     if (relation != null) {

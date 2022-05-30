@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:game/common.dart';
 import 'package:game/common/base/coord.dart';
 import 'package:game/common/base/sprite_batch_map.dart';
 import 'package:game/components/respect_map.dart';

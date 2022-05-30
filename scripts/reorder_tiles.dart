@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 void main() async {
-  final tileStr = await File('assets/json/terrains/hill.json').readAsString();
-  const offset = 51;
+  final tileStr = await File('assets/json/terrains/objects.json').readAsString();
+  const offset = 301;
   final Map<String, dynamic> tileJson =
       (jsonDecode(tileStr) as Map<String, dynamic>);
   final entriesList = tileJson.entries.toList(growable: false);
